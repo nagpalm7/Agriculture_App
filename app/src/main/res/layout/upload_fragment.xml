@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview1"
+        android:layout_marginHorizontal="16dp"
+        app:cardCornerRadius="15dp"
+        android:elevation="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_marginHorizontal="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_marginTop="16dp"
+                android:id="@+id/uploadinternal"
+                android:src="@mipmap/uploadinternal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/uploadinternal"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:text="Uplaod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:paddingBottom="16dp"
+                android:layout_below="@id/username"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp"
+                android:text="csv file from the drive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:layout_below="@id/cardview1"
+        android:id="@+id/cardview2"
+        android:layout_marginHorizontal="16dp"
+        app:cardCornerRadius="15dp"
+        android:elevation="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_marginHorizontal="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_marginTop="16dp"
+                android:id="@+id/uploadcloud"
+                android:src="@mipmap/uploadcloud"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/username1"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/uploadcloud"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:text="Upload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:paddingBottom="16dp"
+                android:layout_below="@id/username1"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp"
+                android:text="csv from the google drive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
