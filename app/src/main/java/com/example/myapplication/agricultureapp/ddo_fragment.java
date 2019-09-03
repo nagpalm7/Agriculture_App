@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.agricultureapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,8 +20,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.myapplication.R;
+import com.example.myapplication.RecyclerViewAdater;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,28 +32,33 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ado_fragment extends Fragment {
+public class ddo_fragment extends Fragment {
+
     private ArrayList<String> username;
     private ArrayList<String> userinfo;
     private String urlpost = "http://13.235.100.235:8000/api/user/";
-    private String tokenurl = "http://13.235.100.235:8000/api-token-auth/";
+    private final String TAG = "ddo_fragment";
     private RecyclerViewAdater recyclerViewAdater;
     private String token;
 
-    private final String TAG = "ado_fragment";
-
-    public ado_fragment(){
-        username = new ArrayList<String>();
-        userinfo = new ArrayList<String>();
+    public ddo_fragment(){
+        username = new ArrayList<String>(3);
+        userinfo = new ArrayList<String>(3);
     }
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.ado_fragment,container,false);
-        recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo);
-        RecyclerView Rview = view.findViewById(R.id.recyclerViewado);
+        Log.d(TAG, "onCreateView: check1check");
+        View view = inflater.inflate(R.layout.ddo_fragment, container, false);
+        recyclerViewAdater = new RecyclerViewAdater(getActivity(),username,userinfo);
+        RecyclerView Rview = view.findViewById(R.id.recyclerViewddo);
         Rview.setAdapter(recyclerViewAdater);
         Rview.setLayoutManager( new LinearLayoutManager(getActivity()));
+        SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
+        token = preferences.getString("token","");
+        Log.d(TAG, "onCreateView: "+token);
 
         final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 
@@ -66,7 +72,7 @@ public class ado_fragment extends Fragment {
                     for(int i=0; i<jsonArray.length();i++){
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         String type_of_user= jsonObject.getString("typeOfUser");
-                        if(type_of_user.equals("ado") ){
+                        if(type_of_user.equals("dda") ){
                             username.add(jsonObject.getString("name"));
                             userinfo.add(String.valueOf(jsonObject.getInt("id")));
                         }
@@ -84,7 +90,7 @@ public class ado_fragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.e(TAG, "onErrorResponse: " + error );
             }
         }){
 
@@ -98,43 +104,10 @@ public class ado_fragment extends Fragment {
 
         requestQueue.add(jsonArrayRequest);
 
-        JSONObject postparams = new JSONObject();
-        try {
-            postparams.put("username", "admin");
-            postparams.put("password", "root");
-            Log.d(TAG, "params: ");
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, tokenurl, postparams,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            //retrieve the token from server
-                            try {
-                                JSONObject jsonObject = new JSONObject(String.valueOf(response));
-                                token = jsonObject.getString("token");
-                                requestQueue.add(jsonArrayRequest);
-                                Log.d(TAG, "onResponse: Token:" + token);
-                                SharedPreferences.Editor editor = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
-                                editor.putString("token",token);
-                                editor.apply();
-                            } catch (JSONException e) {
-                                Log.d(TAG, "onResponse: error in post catch block: " + e);
-                            }
 
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.d(TAG, "onErrorResponse: some error in post: " + error);
-//                                error.printStackTrace();
-                        }
-                    });
-
-            requestQueue.add(jsonObjectRequest);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         return view;
     }
+
+
 }
