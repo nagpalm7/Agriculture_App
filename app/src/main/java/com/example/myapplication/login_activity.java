@@ -45,7 +45,10 @@ public class login_activity extends AppCompatActivity {
     private EditText editEmail, editPassword;
 
     private String urlget = "http://13.235.100.235:8000/api/get-user/";
+//    private String urlpost = getString(R.string.rooturl)+ "api-token-auth/";
+//    private String urlpost = getString(R.string.rooturl);
     private String urlpost = "http://13.235.100.235:8000/api-token-auth/";
+
     private ProgressBar progressBar;
     private CheckBox checkBox;
 
