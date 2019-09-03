@@ -28,8 +28,9 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="24dp"
             android:layout_marginRight="16dp"
+            android:fontFamily="monospace"
             android:text="@string/username"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
         <androidx.cardview.widget.CardView
             android:layout_marginHorizontal="16dp"
@@ -61,6 +62,7 @@
                     android:layout_marginRight="16dp"
                     android:layout_toRightOf="@id/user"
                     android:background="@android:color/transparent"
+                    android:fontFamily="monospace"
                     android:inputType="textEmailAddress" />
 
 
@@ -74,8 +76,9 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
+            android:fontFamily="monospace"
             android:text="@string/password"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardview2"
@@ -110,6 +113,7 @@
                     android:layout_marginEnd="48dp"
                     android:layout_toRightOf="@id/lock"
                     android:background="@android:color/transparent"
+                    android:fontFamily="monospace"
                     android:inputType="textPassword" />
 
 
@@ -150,7 +154,6 @@
 
 
     </LinearLayout>
-
 
 
 </LinearLayout>
