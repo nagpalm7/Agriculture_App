@@ -27,7 +27,7 @@
 
 
     //menu items
-    <string name="menu_upload">UPLAOD</string>
+    <string name="menu_upload">UPLOAD</string>
     <string name="menu_ddo">DDO</string>
     <string name="menu_ado">ADO</string>
     <string name="menu_location">LOCATION</string>
