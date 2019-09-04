@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.widget.FrameLayout;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -33,4 +34,15 @@ public class TabPageDdaAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return tabcount;
     }
+
+    @Nullable
+    @Override
+    public CharSequence getPageTitle(int fr) {
+        String a = null;
+        if (fr == 0)
+           a = "NOT ASSIGNED" ;
+        else if(fr == 1)
+           a = "ASSIGNED" ;
+
+          return a;}
 }
