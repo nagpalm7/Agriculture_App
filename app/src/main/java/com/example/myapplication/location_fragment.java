@@ -35,7 +35,7 @@ public class location_fragment extends Fragment {
         mpageAdapter = new TabPageAdapter(getChildFragmentManager(),mtablayout.getTabCount());
         pager.setAdapter(mpageAdapter);
 
-        /*mtabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mtablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 pager.setCurrentItem(tab.getPosition());
@@ -52,7 +52,7 @@ public class location_fragment extends Fragment {
             }
         });
 
-        pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mtabLayout));*/
+        pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mtablayout));
         return view;
     }
 
