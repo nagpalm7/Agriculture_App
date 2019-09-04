@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardview1"
+        android:id="@+id/card1"
         android:layout_marginHorizontal="16dp"
         app:cardCornerRadius="15dp"
         android:elevation="8dp"
@@ -50,8 +50,8 @@
 
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
-        android:layout_below="@id/cardview1"
-        android:id="@+id/cardview2"
+        android:layout_below="@id/card1"
+        android:id="@+id/card2"
         android:layout_marginHorizontal="16dp"
         app:cardCornerRadius="15dp"
         android:elevation="8dp"

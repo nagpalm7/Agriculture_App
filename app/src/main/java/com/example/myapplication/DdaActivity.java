@@ -33,6 +33,10 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        if(savedInstanceState==null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaOngoingFragment()).commit();
+        }
     }
 
     @Override
@@ -40,10 +44,15 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
         int id = menuItem.getItemId();
 
         if(id==R.id.ongoing_item){
-
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaOngoingFragment()).commit();
+            Toast.makeText(this,"Ongoing",Toast.LENGTH_LONG).show();
         }else if(id==R.id.completed_item){
-
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaCompletedFragment()).commit();
+            Toast.makeText(this,"Completed",Toast.LENGTH_LONG).show();
         }else if(id==R.id.pending_item){
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaPendingFragment()).commit();
+            Toast.makeText(this,"Pending",Toast.LENGTH_LONG).show();
+        }else {
 
         }
 

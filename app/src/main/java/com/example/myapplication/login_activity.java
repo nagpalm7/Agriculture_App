@@ -185,8 +185,6 @@ public class login_activity extends AppCompatActivity {
                                 } catch (JSONException e) {
                                     Toast.makeText(login_activity.this,"some error occurred",Toast.LENGTH_LONG).show();
                                     progressBar.setVisibility(View.INVISIBLE);
-                                    editEmail.setText("");
-                                    editPassword.setText("");
                                     Log.d(TAG, "onResponse: error in post catch block: " + e);
                                 }
 
@@ -197,8 +195,6 @@ public class login_activity extends AppCompatActivity {
                             public void onErrorResponse(VolleyError error) {
                                 Toast.makeText(login_activity.this,"Invalid User",Toast.LENGTH_LONG).show();
                                 progressBar.setVisibility(View.INVISIBLE);
-                                editEmail.setText("");
-                                editPassword.setText("");
                                 Log.d(TAG, "onErrorResponse: some error in post: " + error);
 //                                error.printStackTrace();
                             }
@@ -212,8 +208,7 @@ public class login_activity extends AppCompatActivity {
                 Log.d(TAG, "Login: Error:"+e);
                 Toast.makeText(login_activity.this,"some error occurred",Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.INVISIBLE);
-                editPassword.setText("");
-                editEmail.setText("");
+
             }
         }
 

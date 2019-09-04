@@ -35,4 +35,7 @@
     <string name="completed">COMPLETED</string>
     <string name="pending">PENDING</string>
     <string name="rooturl">http://13.235.100.235:8000/api-token-auth/</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
