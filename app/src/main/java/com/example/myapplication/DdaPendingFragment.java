@@ -37,6 +37,8 @@ public class DdaPendingFragment extends Fragment {
         mpageAdapter = new TabPageDdaAdapter(getChildFragmentManager(),mtablayout.getTabCount());
         page.setAdapter(mpageAdapter);
 
+        mtablayout.setupWithViewPager(page);
+
         /*mtabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
