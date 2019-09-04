@@ -40,8 +40,8 @@ public class ddo_fragment extends Fragment {
     private String token;
 
     public ddo_fragment(){
-        username = new ArrayList<String>(3);
-        userinfo = new ArrayList<String>(3);
+        username = new ArrayList<String>();
+        userinfo = new ArrayList<String>();
     }
 
 

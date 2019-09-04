@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,7 @@ public class DdapendingAdapter extends RecyclerView.Adapter<DdapendingAdapter.Vi
         return mtextview1.size();
     }
 
-    public class ViewHolderDda extends RecyclerView.ViewHolder{
+    public class ViewHolderDda extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView tv1;
         TextView tv2;
@@ -64,6 +65,19 @@ public class DdapendingAdapter extends RecyclerView.Adapter<DdapendingAdapter.Vi
             tv2 = itemView.findViewById(R.id.date);
             tv3 = itemView.findViewById(R.id.Time);
             tv4 = itemView.findViewById(R.id.address);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Intent intent=null;
+            switch (getAdapterPosition()){
+                case 0:
+                    intent = new Intent(mcontext,DdaselectAdo.class);
+                    break;
+                default:
+            }
+
+            mcontext.startActivity(intent);
         }
     }
 

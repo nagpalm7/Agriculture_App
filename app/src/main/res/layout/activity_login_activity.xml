@@ -118,12 +118,11 @@
 
 
                 <CheckBox
+                    android:layout_alignParentRight="true"
                     android:id="@+id/eyeIcon"
                     android:layout_width="39dp"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="-40dp"
-                    android:layout_toRightOf="@id/editPassword"
                     android:alpha="0.2"
                     android:button="@mipmap/eye"
                     android:contentDescription="@string/eye_image"
