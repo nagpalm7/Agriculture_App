@@ -37,7 +37,7 @@ public class DdaOngoingFragment extends Fragment {
     private ArrayList<String> Time;
     private ArrayList<String> Address;
     private DdapendingAdapter ddapendingAdapter;
-    private String urlget = "http://13.235.100.235:8000/api/locations/pending";
+    private String urlget = "http://13.235.100.235:8000/api/locations/dda/ongoing";
     private String dda;
     private String token;
     private String villagename;

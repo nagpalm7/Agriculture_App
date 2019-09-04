@@ -1,7 +1,9 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BlendMode;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
@@ -180,6 +182,9 @@ public class login_activity extends AppCompatActivity {
                                 try {
                                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                                     token = jsonObject.getString("token");
+                                    SharedPreferences.Editor editor = getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
+                                    editor.putString("token",token);
+                                    editor.apply();
                                     MyRequestQueue.add(jsonObjectRequest1);
                                     Log.d(TAG, "onResponse: Token:" + token);
                                 } catch (JSONException e) {

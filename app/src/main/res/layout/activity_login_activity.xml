@@ -1,326 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:background="@mipmap/backg"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:orientation="vertical"-->
-<!--    android:layout_height="match_parent"-->
-<!--    tools:context=".login_activity">-->
-
-<!--    <LinearLayout-->
-<!--        android:orientation="vertical"-->
-<!--        android:layout_marginHorizontal="16dp"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/image"-->
-<!--            android:layout_width="100dp"-->
-<!--            android:layout_height="100dp"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginTop="30dp"-->
-<!--            android:src="@mipmap/logo" />-->
-
-<!--        <TextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginLeft="16dp"-->
-<!--            android:layout_marginTop="24dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            android:text="@string/username"-->
-<!--            android:textSize="24sp" />-->
-
-<!--        <androidx.cardview.widget.CardView-->
-<!--            android:layout_marginHorizontal="16dp"-->
-<!--            app:cardCornerRadius="15dp"-->
-<!--            android:elevation="8dp"-->
-<!--            android:background="#ffffff"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content">-->
-
-<!--            <RelativeLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="60dp">-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/user"-->
-<!--                    android:layout_marginLeft="16dp"-->
-<!--                    android:layout_centerVertical="true"-->
-<!--                    android:src="@mipmap/user_circle"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content" />-->
-
-<!--                <EditText-->
-<!--                    android:id="@+id/editEmail"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:layout_centerVertical="true"-->
-<!--                    android:layout_marginLeft="8dp"-->
-<!--                    android:layout_marginRight="16dp"-->
-<!--                    android:layout_toRightOf="@id/user"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:inputType="textEmailAddress" />-->
-
-
-<!--            </RelativeLayout>-->
-
-<!--        </androidx.cardview.widget.CardView>-->
-
-<!--        <TextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginLeft="16dp"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            android:text="@string/password"-->
-<!--            android:textSize="24sp" />-->
-
-<!--        <androidx.cardview.widget.CardView-->
-<!--            android:id="@+id/card2-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginHorizontal="16dp"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:background="#ffffff"-->
-<!--            android:elevation="8dp"-->
-<!--            app:cardCornerRadius="15dp">-->
-
-<!--            <RelativeLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="60dp"-->
-<!--                android:clickable="true"-->
-<!--                android:visibility="visible"-->
-<!--                tools:visibility="visible">-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/lock"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_centerVertical="true"-->
-<!--                    android:layout_marginLeft="16dp"-->
-<!--                    android:src="@mipmap/lock_logo" />-->
-
-<!--                <EditText-->
-<!--                    android:id="@+id/editPassword"-->
-<!--                    android:layout_width="294dp"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:layout_marginStart="8dp"-->
-<!--                    android:layout_marginEnd="48dp"-->
-<!--                    android:layout_toRightOf="@id/lock"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:inputType="textPassword" />-->
-
-
-<!--                <CheckBox-->
-<!--                    android:id="@+id/eyeIcon"-->
-<!--                    android:layout_width="39dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_centerVertical="true"-->
-<!--                    android:layout_marginStart="-40dp"-->
-<!--                    android:layout_toRightOf="@id/editPassword"-->
-<!--                    android:alpha="0.2"-->
-<!--                    android:button="@mipmap/eye"-->
-<!--                    android:contentDescription="@string/eye_image"-->
-<!--                    android:src="@mipmap/eye_slash_logo" />-->
-
-<!--            </RelativeLayout>-->
-<!--        </androidx.cardview.widget.CardView>-->
-
-<!--        <Button-->
-<!--            android:id="@+id/login_button"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:layout_marginHorizontal="100dp"-->
-<!--            android:layout_marginTop="48dp"-->
-<!--            android:background="@drawable/shape"-->
-<!--            android:text="@string/login"-->
-<!--            android:textColor="#ffffff" />-->
-
-<!--        <ProgressBar-->
-<!--            android:id="@+id/progressBar"-->
-<!--            style="?android:attr/progressBarStyle"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:visibility="invisible" />-->
-
-
-<!--    </LinearLayout>-->
-
-
-
-<!--</LinearLayout>-->
-
-
-
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:background="@mipmap/backg"
-    tools:context=".login_activity"
-    android:id="@+id/loginlayout"
-    >
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".login_activity">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="127dp"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="133dp"
-        android:src="@mipmap/logo" />
-
-    <TextView
-        android:id="@+id/textusername"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginHorizontal="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/image"
-        android:layout_marginTop="32dp"
-        android:fontFamily="sans-serif"
-        android:padding="8dp"
-        android:text="@string/username"
-        android:textSize="24sp" />
+        android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView
-                android:id="@+id/card1"
-                android:layout_marginHorizontal="8dp"
-                app:cardCornerRadius="15dp"
-                android:elevation="16dp"
-                android:background="#ffffff"
-                android:layout_below="@+id/textusername"
-                android:layout_marginTop="8dp"
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:src="@mipmap/logo" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="16dp"
+            android:fontFamily="monospace"
+            android:text="@string/username"
+            android:textSize="20sp" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_marginHorizontal="16dp"
+            app:cardCornerRadius="15dp"
+            android:elevation="8dp"
+            android:background="#ffffff"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="60dp">
 
-                <RelativeLayout
+                <ImageView
+                    android:id="@+id/user"
+                    android:layout_marginLeft="16dp"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/user_circle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/editEmail"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp">
-
-                    <ImageView
-                        android:id="@+id/user"
-                        android:layout_marginLeft="16dp"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/user_circle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <EditText
-                        android:id="@+id/editEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_toRightOf="@id/user"
-                        android:background="@android:color/transparent"
-                        android:inputType="textEmailAddress" />
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toRightOf="@id/user"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="monospace"
+                    android:inputType="textEmailAddress" />
 
 
-                </RelativeLayout>
+            </RelativeLayout>
 
-            </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/textpassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:layout_below="@+id/card1"
-        android:layout_marginTop="16dp"
-        android:text="@string/password"
-        android:textSize="24sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:fontFamily="monospace"
+            android:text="@string/password"
+            android:textSize="20sp" />
 
-    <androidx.cardview.widget.CardView
-                android:id="@+id/card2"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:background="#ffffff"
+            android:elevation="8dp"
+            app:cardCornerRadius="15dp">
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:layout_below="@+id/textpassword"
-                android:layout_marginTop="8dp"
-                android:background="#ffffff"
-                android:elevation="8dp"
-                app:cardCornerRadius="15dp">
+                android:layout_height="60dp"
+                android:clickable="true"
+                android:visibility="visible"
+                tools:visibility="visible">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:clickable="true"
-                    android:visibility="visible"
-                    tools:visibility="visible">
+                <ImageView
+                    android:id="@+id/lock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:src="@mipmap/lock_logo" />
 
-                    <ImageView
-                        android:id="@+id/lock"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:src="@mipmap/lock_logo" />
-
-                    <EditText
-                        android:id="@+id/editPassword"
-                        android:layout_width="574dp"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="55dp"
-                        android:layout_toRightOf="@id/lock"
-                        android:background="@android:color/transparent"
-                        android:inputType="textPassword" />
+                <EditText
+                    android:id="@+id/editPassword"
+                    android:layout_width="294dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="48dp"
+                    android:layout_toRightOf="@id/lock"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="monospace"
+                    android:inputType="textPassword" />
 
 
-                    <CheckBox
-                        android:id="@+id/eyeIcon"
-                        android:layout_width="24dp"
-                        android:layout_height="19dp"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginStart="-40dp"
-                        android:layout_marginLeft="11dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginEnd="13dp"
-                        android:layout_marginBottom="21dp"
-                        android:layout_toRightOf="@id/editPassword"
-                        android:alpha="0.2"
-                        android:button="@mipmap/eye"
-                        android:contentDescription="@string/eye_image"
-                        android:src="@mipmap/eye_slash_logo" />
+                <CheckBox
+                    android:id="@+id/eyeIcon"
+                    android:layout_width="39dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="-40dp"
+                    android:layout_toRightOf="@id/editPassword"
+                    android:alpha="0.2"
+                    android:button="@mipmap/eye"
+                    android:contentDescription="@string/eye_image"
+                    android:src="@mipmap/eye_slash_logo" />
 
-                </RelativeLayout>
-            </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
 
-    <Button
-        android:id="@+id/login_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/card2"
-        android:layout_centerInParent="true"
-        android:layout_marginHorizontal="100dp"
-        android:layout_marginTop="48dp"
-        android:background="@drawable/shape"
-        android:text="@string/login"
-        android:textColor="#ffffff" />
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="100dp"
+            android:layout_marginTop="48dp"
+            android:background="@drawable/shape"
+            android:text="@string/login"
+            android:textColor="#ffffff" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/login_button"
-        android:layout_centerInParent="true"
-        android:layout_marginVertical="48dp"
-        android:visibility="invisible" />
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:visibility="invisible" />
 
 
-</RelativeLayout>
+    </LinearLayout>
+
+
+</LinearLayout>
