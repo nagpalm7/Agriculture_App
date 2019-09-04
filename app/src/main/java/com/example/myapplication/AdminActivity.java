@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.pm.ProviderInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +27,8 @@ public class AdminActivity extends AppCompatActivity
     private final String TAG = "AdminActivity";
     private final String ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private final String ACCESS_COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private final String READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
+    private final String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private final int RESULT_CODE = 786;
 
     //var
@@ -55,18 +58,27 @@ public class AdminActivity extends AppCompatActivity
     }
 
     private void getPermission() {
-        String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        String[] permission = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE};
 
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                //all permission are granted
-                PERMISSION_GRANTED = true;
+
+                if (ContextCompat.checkSelfPermission(this.getApplicationContext(), READ_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(this.getApplicationContext(), WRITE_EXTERNAL_STORAGE)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        //all permission are granted
+                        PERMISSION_GRANTED = true;
+                    } else {
+                        ActivityCompat.requestPermissions(this, permission, RESULT_CODE);
+                    }
+                } else {
+                    ActivityCompat.requestPermissions(this, permission, RESULT_CODE);
+                }
             } else {
                 ActivityCompat.requestPermissions(this, permission, RESULT_CODE);
             }
-
-
         } else {
             ActivityCompat.requestPermissions(this, permission, RESULT_CODE);
         }
