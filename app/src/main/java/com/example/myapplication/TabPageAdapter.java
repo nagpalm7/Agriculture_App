@@ -22,6 +22,9 @@ public class TabPageAdapter extends FragmentPagerAdapter {
             case 1:
                 frag= new completed_fragment();
                 break;
+            case 2:
+                frag = new OnGoingFragment();
+                break;
         }
 
         return frag;
