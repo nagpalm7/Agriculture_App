@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Admin;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,6 +19,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.myapplication.Admin.AdminLocationAdapter;
+import com.example.myapplication.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +36,7 @@ public class completed_fragment extends Fragment {
     private ArrayList<String> mDateList;
     private ArrayList<String> mTimeList;
     private ArrayList<String> mLocationList;
-    private DdapendingAdapter adapter;
+    private AdminLocationAdapter adapter;
     private String unassignedUrl = "http://13.235.100.235:8000/api/locations/unassigned";
     private String assignedUrl = "http://13.235.100.235:8000/api/locations/assigned";
     private String ongoingUrl = "http://13.235.100.235:8000/api/locations/ongoing";
@@ -51,7 +53,7 @@ public class completed_fragment extends Fragment {
         mDateList = new ArrayList<>();
         mTimeList = new ArrayList<>();
         mLocationList = new ArrayList<>();
-        adapter = new DdapendingAdapter(getActivity(), mIdList, mDateList, mTimeList, mLocationList);
+        adapter = new AdminLocationAdapter(getActivity(), mIdList, mDateList, mTimeList, mLocationList);
         recyclerView.setAdapter(adapter);
         getData();
         return view;

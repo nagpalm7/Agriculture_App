@@ -1,25 +1,18 @@
 package com.example.myapplication;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BlendMode;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.text.method.TransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Checkable;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,7 +23,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.material.textfield.TextInputLayout;
+import com.example.myapplication.Admin.AdminActivity;
+import com.example.myapplication.Ado.AdoActivity;
+import com.example.myapplication.Dda.DdaActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -119,19 +114,19 @@ public class login_activity extends AppCompatActivity {
 
                                     if(typeOfUser.equals("admin")){
                                         progressBar.setVisibility(View.INVISIBLE);
-                                        intent = new Intent(login_activity.this,AdminActivity.class);
+                                        intent = new Intent(login_activity.this, AdminActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }
                                     else if(typeOfUser.equals("dda")){
                                         progressBar.setVisibility(View.INVISIBLE);
-                                        intent = new Intent(login_activity.this,DdaActivity.class);
+                                        intent = new Intent(login_activity.this, DdaActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }
                                     else if (typeOfUser.equals("ado")){
                                         progressBar.setVisibility(View.INVISIBLE);
-                                        intent = new Intent(login_activity.this,AdoActivity.class);
+                                        intent = new Intent(login_activity.this, AdoActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }

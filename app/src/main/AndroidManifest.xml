@@ -11,13 +11,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DdaselectAdo"></activity>
-        <activity android:name=".AdoActivity" />
+        <activity android:name=".Dda.DdaselectAdo"></activity>
+        <activity android:name=".Ado.AdoActivity" />
         <activity
-            android:name=".DdaActivity"
+            android:name=".Dda.DdaActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AdminActivity"
+            android:name=".Admin.AdminActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

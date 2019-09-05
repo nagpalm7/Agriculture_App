@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Ado;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.myapplication.R;
 
 import java.util.ArrayList;
 

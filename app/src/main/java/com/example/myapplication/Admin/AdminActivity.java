@@ -1,8 +1,7 @@
-package com.example.myapplication;
+package com.example.myapplication.Admin;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.content.pm.ProviderInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +18,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.myapplication.R;
 import com.google.android.material.navigation.NavigationView;
 
 public class AdminActivity extends AppCompatActivity

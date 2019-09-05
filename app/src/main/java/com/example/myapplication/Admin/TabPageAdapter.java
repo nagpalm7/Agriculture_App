@@ -1,8 +1,11 @@
-package com.example.myapplication;
+package com.example.myapplication.Admin;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
+import com.example.myapplication.Admin.completed_fragment;
+import com.example.myapplication.Admin.pending_fragment;
 
 public class TabPageAdapter extends FragmentPagerAdapter {
 

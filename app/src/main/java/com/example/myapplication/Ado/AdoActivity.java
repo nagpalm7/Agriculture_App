@@ -1,9 +1,11 @@
-package com.example.myapplication;
+package com.example.myapplication.Ado;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.Toast;
+
+import com.example.myapplication.R;
 
 public class AdoActivity extends AppCompatActivity {
 

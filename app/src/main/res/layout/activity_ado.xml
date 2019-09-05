@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AdoActivity">
+    tools:context=".Ado.AdoActivity">
 
     <TextView
         android:id="@+id/textAdo"

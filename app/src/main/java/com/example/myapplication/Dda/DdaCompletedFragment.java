@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Dda;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.myapplication.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,7 +56,7 @@ public class DdaCompletedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
-        ddacompletedAdapter = new DdapendingAdapter(getActivity(),Date,Time,Address);
+        ddacompletedAdapter = new DdapendingAdapter(getContext(),Date,Time,Address);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddacompletedAdapter);
         review.setLayoutManager( new LinearLayoutManager(getActivity()));

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Dda;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.myapplication.R;
 import com.google.android.material.navigation.NavigationView;
 
 public class DdaActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

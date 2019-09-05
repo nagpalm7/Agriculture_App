@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Dda;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+
+import com.example.myapplication.R;
 
 import java.util.ArrayList;
 
@@ -47,7 +49,7 @@ public class DdapendingAdapter extends RecyclerView.Adapter<DdapendingAdapter.Vi
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: item clicked");
-                Intent intent = new Intent(mcontext,DdaselectAdo.class);
+                Intent intent = new Intent(mcontext, DdaselectAdo.class);
                 mcontext.startActivity(intent);
             }
         });
