@@ -39,7 +39,7 @@ public class completed_fragment extends Fragment {
     private AdminLocationAdapter adapter;
     private String unassignedUrl = "http://13.235.100.235:8000/api/locations/unassigned";
     private String assignedUrl = "http://13.235.100.235:8000/api/locations/assigned";
-    private String ongoingUrl = "http://13.235.100.235:8000/api/locations/ongoing";
+
     private String completedUrl = "http://13.235.100.235:8000/api/locations/completed";
     private String nextUrl;
 
@@ -59,7 +59,7 @@ public class completed_fragment extends Fragment {
         return view;
     }
 
-    public void getData() {
+    private void getData() {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(completedUrl, null,
                 new Response.Listener<JSONObject>() {

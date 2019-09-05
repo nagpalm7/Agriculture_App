@@ -100,7 +100,7 @@ public class pending_fragment extends Fragment {
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        Id.add(c.getString("id"));
+                        Id.add(c.getString("ado"));
                         Date.add(c.getString("acq_date"));
                         Time.add(c.getString("acq_time"));
                         Address.add(villagename + "," + blockname + "," + district + "," + state);
@@ -140,7 +140,7 @@ public class pending_fragment extends Fragment {
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        Id.add(c.getString("id"));
+                        Id.add(c.getString("ado"));
                         Date.add(c.getString("acq_date"));
                         Time.add(c.getString("acq_time"));
                         Address.add(villagename + "," + blockname + "," + district + "," + state);
@@ -166,63 +166,20 @@ public class pending_fragment extends Fragment {
                 return map;
             }
         };
-
-        final JsonObjectRequest jsonObjectRequest3 = new JsonObjectRequest(Request.Method.GET, url_ongoing, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(String.valueOf(response));
-                    next_ongoing_url = jsonObject.getString("next");
-                    JSONArray jsonArray = jsonObject.getJSONArray("results");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject c = jsonArray.getJSONObject(i);
-                        villagename = c.getString("village_name");
-                        blockname = c.getString("block_name");
-                        district = c.getString("district");
-                        state = c.getString("state");
-                        Id.add(c.getString("id"));
-                        Date.add(c.getString("acq_date"));
-                        Time.add(c.getString("acq_time"));
-                        Address.add(villagename + "," + blockname + "," + district + "," + state);
-
-                        recyclerViewAdater.notifyDataSetChanged();
-                    }
-                } catch (JSONException e) {
-                    Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "onErrorResponse: " + error);
-            }
-        }) {
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> map = new HashMap<>();
-                map.put("Authorization", "Token " + token);
-                return map;
-            }
-        };
-
 
         requestQueue.add(jsonObjectRequest1);
         requestQueue.add(jsonObjectRequest2);
-        requestQueue.add(jsonObjectRequest3);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            int totalCount, lastVisibleItemPosition, pastItemCount, visibleItemCount;
+            int totalCount, pastItemCount, visibleItemCount;
 
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
                     totalCount = layoutManager.getItemCount();
-                    lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                     pastItemCount = layoutManager.findFirstVisibleItemPosition();
                     visibleItemCount = layoutManager.getChildCount();
-                    if (totalCount - 3 == lastVisibleItemPosition || (pastItemCount + visibleItemCount) >= totalCount) {
+                    if ((pastItemCount + visibleItemCount) >= totalCount) {
                         progressBar.setVisibility(View.VISIBLE);
                         loadNextLocations();
                     }
@@ -242,10 +199,6 @@ public class pending_fragment extends Fragment {
                 break;
             case 2:
                 get_Assigned();
-                NEXT_LOCATION_COUNT = 3;
-                break;
-            case 3:
-                get_Ongoing();
                 NEXT_LOCATION_COUNT = 1;
                 break;
         }
@@ -255,20 +208,20 @@ public class pending_fragment extends Fragment {
     private void get_Unassigned() {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         if (next_unassigned_url != null || !next_unassigned_url.isEmpty()) {
-            final JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, url_unassigned, null, new Response.Listener<JSONObject>() {
+            final JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, next_unassigned_url, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
                         JSONObject jsonObject = new JSONObject(String.valueOf(response));
                         JSONArray jsonArray = jsonObject.getJSONArray("results");
-
+                        next_unassigned_url = jsonObject.getString("next");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject c = jsonArray.getJSONObject(i);
                             villagename = c.getString("village_name");
                             blockname = c.getString("block_name");
                             district = c.getString("district");
                             state = c.getString("state");
-                            Id.add(c.getString("id"));
+                            Id.add(c.getString("ado"));
                             Date.add(c.getString("acq_date"));
                             Time.add(c.getString("acq_time"));
                             Address.add(villagename + "," + blockname + "," + district + "," + state);
@@ -302,19 +255,20 @@ public class pending_fragment extends Fragment {
     private void get_Assigned() {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         if (next_assigned_url != null || !next_assigned_url.isEmpty()) {
-            final JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.GET, url_assigned, null, new Response.Listener<JSONObject>() {
+            final JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.GET, next_assigned_url, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
                         JSONObject jsonObject = new JSONObject(String.valueOf(response));
                         JSONArray jsonArray = jsonObject.getJSONArray("results");
+                        next_assigned_url = jsonObject.getString("next");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject c = jsonArray.getJSONObject(i);
                             villagename = c.getString("village_name");
                             blockname = c.getString("block_name");
                             district = c.getString("district");
                             state = c.getString("state");
-                            Id.add(c.getString("id"));
+                            Id.add(c.getString("ado"));
                             Date.add(c.getString("acq_date"));
                             Time.add(c.getString("acq_time"));
                             Address.add(villagename + "," + blockname + "," + district + "," + state);
@@ -341,54 +295,6 @@ public class pending_fragment extends Fragment {
                 }
             };
             requestQueue.add(jsonObjectRequest2);
-        }
-        requestFinished(requestQueue);
-    }
-
-    private void get_Ongoing() {
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        if (next_ongoing_url != null || !next_ongoing_url.isEmpty()) {
-            final JsonObjectRequest jsonObjectRequest3 = new JsonObjectRequest(Request.Method.GET, url_ongoing, null, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(String.valueOf(response));
-                        JSONArray jsonArray = jsonObject.getJSONArray("results");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject c = jsonArray.getJSONObject(i);
-                            villagename = c.getString("village_name");
-                            blockname = c.getString("block_name");
-                            district = c.getString("district");
-                            state = c.getString("state");
-                            Id.add(c.getString("id"));
-                            Date.add(c.getString("acq_date"));
-                            Time.add(c.getString("acq_time"));
-                            Address.add(villagename + "," + blockname + "," + district + "," + state);
-
-                            recyclerViewAdater.notifyDataSetChanged();
-                        }
-                    } catch (JSONException e) {
-                        Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e(TAG, "onErrorResponse: " + error);
-                }
-            }) {
-
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put("Authorization", "Token " + token);
-                    return map;
-                }
-            };
-
-
-            requestQueue.add(jsonObjectRequest3);
         }
         requestFinished(requestQueue);
     }
