@@ -32,13 +32,11 @@ import java.util.Map;
 public class DdaOngoingFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     private static final String TAG = "DdaOngoingFragment";
-    private ArrayList<String> Id;
     private ArrayList<String> Date;
     private ArrayList<String> Time;
     private ArrayList<String> Address;
     private DdapendingAdapter ddapendingAdapter;
     private String urlget = "http://13.235.100.235:8000/api/locations/dda/ongoing";
-    private String dda;
     private String token;
     private String villagename;
     private String blockname;
@@ -46,7 +44,6 @@ public class DdaOngoingFragment extends Fragment {
     private String state;
 
     public DdaOngoingFragment() {
-        Id = new ArrayList<String>(3);
         Date = new ArrayList<String>(3);
         Time = new ArrayList<String>(3);
         Address = new ArrayList<String>(3);
@@ -57,7 +54,7 @@ public class DdaOngoingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
-        ddapendingAdapter = new DdapendingAdapter(getActivity(),Id,Date,Time,Address);
+        ddapendingAdapter = new DdapendingAdapter(getActivity(),Date,Time,Address);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddapendingAdapter);
         review.setLayoutManager( new LinearLayoutManager(getActivity()));
@@ -77,19 +74,13 @@ public class DdaOngoingFragment extends Fragment {
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
-                        dda = c.getString("dda");
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        if(dda!=null && !dda.isEmpty()){
-                            Id.add(c.getString("id"));
                             Date.add(c.getString("acq_date"));
                             Time.add(c.getString("acq_time"));
                             Address.add(villagename+","+blockname+","+district+","+state);
-                        }else {
-                            Log.d(TAG, "onResponse: some error in if");
-                        }
                         ddapendingAdapter.notifyDataSetChanged();
                     }
                 }catch (JSONException e){

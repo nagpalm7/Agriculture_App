@@ -18,20 +18,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/lid"
-                android:layout_marginTop="16dp"
-                android:textColor="@color/colorPrimaryDark"
-                android:textStyle="bold"
-                android:textSize="24sp"
-                android:text="Location Id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+<!--            <TextView-->
+<!--                android:id="@+id/lid"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:textColor="@color/colorPrimaryDark"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textSize="24sp"-->
+<!--                android:text="Location Id"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content" />-->
 
             <TextView
                 android:id="@+id/date"
                 android:paddingBottom="16dp"
-                android:layout_below="@id/lid"
                 android:textSize="18sp"
                 android:textColor="@color/colorPrimaryDark"
                 android:text="Date"
@@ -53,7 +52,7 @@
                 android:layout_below="@+id/Time"
                 android:textSize="18sp"
                 android:textColor="@color/colorPrimaryDark"
-                android:text="Address:"
+                android:text="Address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 />

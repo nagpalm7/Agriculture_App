@@ -1,15 +1,18 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -32,7 +35,6 @@ import java.util.Map;
 public class notassignedfragment extends Fragment {
 
     private static final String TAG = "notassignedfragment";
-    private ArrayList<String>Id;
     private ArrayList<String>Date;
     private ArrayList<String>Time;
     private ArrayList<String> Address;
@@ -43,10 +45,8 @@ public class notassignedfragment extends Fragment {
     private String district;
     private String state;
     private String token;
-    private String dda;
 
     public notassignedfragment(){
-        Id = new ArrayList<String>(3);
         Date = new ArrayList<String>(3);
         Time = new ArrayList<String>(3);
         Address = new ArrayList<String>(3);
@@ -58,7 +58,7 @@ public class notassignedfragment extends Fragment {
         // Inflate the layout for this fragment
         Log.d(TAG, "onCreateView: in notassignedfragment");
         View view = inflater.inflate(R.layout.fragment_notassignedfragment, container, false);
-        notassignedDdapendingadapter = new DdapendingAdapter(getActivity(),Id,Date,Time, Address);
+        notassignedDdapendingadapter = new DdapendingAdapter(getActivity(),Date,Time, Address);
         RecyclerView notassignedreview = view.findViewById(R.id.recyclerViewnotassigned);
         notassignedreview.setAdapter(notassignedDdapendingadapter);
         notassignedreview.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -77,19 +77,14 @@ public class notassignedfragment extends Fragment {
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
-                        dda = c.getString("dda");
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        if(dda!=null && !dda.isEmpty()){
-                            Id.add(c.getString("id"));
-                            Date.add(c.getString("acq_date"));
-                            Time.add(c.getString("acq_time"));
-                            Address.add(villagename+","+blockname+","+district+","+state);
-                        }else {
-                            Log.d(TAG, "onResponse: some error in if");
-                        }
+                        Date.add(c.getString("acq_date"));
+                        Time.add(c.getString("acq_time"));
+                        Address.add(villagename+","+blockname+","+district+","+state);
+
                         notassignedDdapendingadapter.notifyDataSetChanged();
                     }
                 }catch (JSONException e){

@@ -31,7 +31,6 @@ import java.util.Map;
 
 public class DdaCompletedFragment extends Fragment {
     private static final String TAG = "DdaCompletedFragment";
-    private ArrayList<String> Id;
     private ArrayList<String> Date;
     private ArrayList<String> Time;
     private ArrayList<String> Address;
@@ -46,7 +45,6 @@ public class DdaCompletedFragment extends Fragment {
 
     public DdaCompletedFragment() {
         // Required empty public constructor
-        Id = new ArrayList<String>(3);
         Date = new ArrayList<String>(3);
         Time = new ArrayList<String>(3);
         Address = new ArrayList<String>(3);
@@ -57,7 +55,7 @@ public class DdaCompletedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
-        ddacompletedAdapter = new DdapendingAdapter(getActivity(),Id,Date,Time,Address);
+        ddacompletedAdapter = new DdapendingAdapter(getActivity(),Date,Time,Address);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddacompletedAdapter);
         review.setLayoutManager( new LinearLayoutManager(getActivity()));
@@ -83,7 +81,6 @@ public class DdaCompletedFragment extends Fragment {
                         district = c.getString("district");
                         state = c.getString("state");
                         if(dda!=null && !dda.isEmpty()){
-                            Id.add(c.getString("id"));
                             Date.add(c.getString("acq_date"));
                             Time.add(c.getString("acq_time"));
                             Address.add(villagename+","+blockname+","+district+","+state);

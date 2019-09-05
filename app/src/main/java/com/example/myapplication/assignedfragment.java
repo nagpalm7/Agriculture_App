@@ -33,13 +33,11 @@ import java.util.Map;
 public class assignedfragment extends Fragment {
 
     private static final String TAG = "assignedfragment";
-    private ArrayList<String> Id;
     private ArrayList<String> Date;
     private ArrayList<String> Time;
     private ArrayList<String> Address;
     private DdapendingAdapter ddaassignedAdapter;
     private String urlget = "http://13.235.100.235:8000/api/locations/dda/assigned";
-    private String dda;
     private String token;
     private String villagename;
     private String blockname;
@@ -47,7 +45,6 @@ public class assignedfragment extends Fragment {
     private String state;
 
     public assignedfragment() {
-        Id = new ArrayList<String>(3);
         Date = new ArrayList<String>(3);
         Time = new ArrayList<String>(3);
         Address = new ArrayList<String>(3);
@@ -56,7 +53,7 @@ public class assignedfragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
-        ddaassignedAdapter = new DdapendingAdapter(getActivity(),Id,Date,Time,Address);
+        ddaassignedAdapter = new DdapendingAdapter(getActivity(),Date,Time,Address);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddaassignedAdapter);
         review.setLayoutManager( new LinearLayoutManager(getActivity()));
@@ -76,19 +73,13 @@ public class assignedfragment extends Fragment {
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
-                        dda = c.getString("dda");
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        if(dda!=null && !dda.isEmpty()){
-                            Id.add(c.getString("id"));
-                            Date.add(c.getString("acq_date"));
-                            Time.add(c.getString("acq_time"));
-                            Address.add(villagename+","+blockname+","+district+","+state);
-                        }else {
-                            Log.d(TAG, "onResponse: some error in if");
-                        }
+                        Date.add(c.getString("acq_date"));
+                        Time.add(c.getString("acq_time"));
+                        Address.add(villagename+","+blockname+","+district+","+state);
                         ddaassignedAdapter.notifyDataSetChanged();
                     }
                 }catch (JSONException e){
