@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Dda;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -21,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.Dda.DdapendingAdapter;
+import com.example.myapplication.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,42 +31,40 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class notassignedfragment extends Fragment {
+public class assignedfragment extends Fragment {
 
-    private static final String TAG = "notassignedfragment";
-    private ArrayList<String>Date;
-    private ArrayList<String>Time;
+    private static final String TAG = "assignedfragment";
+    private ArrayList<String> Date;
+    private ArrayList<String> Time;
     private ArrayList<String> Address;
-    private DdapendingAdapter notassignedDdapendingadapter;
-    private String urlget = "http://13.235.100.235:8000/api/locations/dda/unassigned";
+    private DdapendingAdapter ddaassignedAdapter;
+    private String urlget = "http://13.235.100.235:8000/api/locations/dda/assigned";
+    private String token;
     private String villagename;
     private String blockname;
     private String district;
     private String state;
-    private String token;
 
-    public notassignedfragment(){
+    public assignedfragment() {
         Date = new ArrayList<String>(3);
         Time = new ArrayList<String>(3);
         Address = new ArrayList<String>(3);
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        Log.d(TAG, "onCreateView: in notassignedfragment");
-        View view = inflater.inflate(R.layout.fragment_notassignedfragment, container, false);
-        notassignedDdapendingadapter = new DdapendingAdapter(getActivity(),Date,Time, Address);
-        RecyclerView notassignedreview = view.findViewById(R.id.recyclerViewnotassigned);
-        notassignedreview.setAdapter(notassignedDdapendingadapter);
-        notassignedreview.setLayoutManager(new LinearLayoutManager(getActivity()));
+        View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
+        ddaassignedAdapter = new DdapendingAdapter(getActivity(),Date,Time,Address);
+        RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
+        review.setAdapter(ddaassignedAdapter);
+        review.setLayoutManager( new LinearLayoutManager(getActivity()));
 
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token","");
         Log.d(TAG, "onCreateView: "+token);
 
-        final RequestQueue unassignedrequestqueue = Volley.newRequestQueue(getActivity());
+        Log.d(TAG, "onCreateView: inflated fragment_ongoing");
+        final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlget, null, new Response.Listener<JSONObject>() {
             @Override
@@ -82,8 +81,7 @@ public class notassignedfragment extends Fragment {
                         Date.add(c.getString("acq_date"));
                         Time.add(c.getString("acq_time"));
                         Address.add(villagename+","+blockname+","+district+","+state);
-
-                        notassignedDdapendingadapter.notifyDataSetChanged();
+                        ddaassignedAdapter.notifyDataSetChanged();
                     }
                 }catch (JSONException e){
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
@@ -105,8 +103,7 @@ public class notassignedfragment extends Fragment {
             }
         };
 
-        unassignedrequestqueue.add(jsonObjectRequest);
-
+        requestQueue.add(jsonObjectRequest);
         return view;
     }
 }

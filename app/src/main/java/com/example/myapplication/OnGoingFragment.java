@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.myapplication.Admin.AdminLocationAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -152,7 +153,7 @@ public class OnGoingFragment extends Fragment {
                                             + singleObject.getString("district") + ", " + singleObject.getString("state");
                                     mLocationList.add(location);
                                 }
-                                adapter.notifyDataSetChanged();
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

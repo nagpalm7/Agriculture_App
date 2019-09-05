@@ -1,11 +1,12 @@
-package com.example.myapplication;
-
-import android.widget.FrameLayout;
+package com.example.myapplication.Dda;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
+import com.example.myapplication.Dda.assignedfragment;
+import com.example.myapplication.Dda.notassignedfragment;
 
 public class TabPageDdaAdapter extends FragmentPagerAdapter {
 

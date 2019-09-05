@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.myapplication.Admin.completed_fragment;
 import com.example.myapplication.Admin.pending_fragment;
+import com.example.myapplication.OnGoingFragment;
 
 public class TabPageAdapter extends FragmentPagerAdapter {
 
