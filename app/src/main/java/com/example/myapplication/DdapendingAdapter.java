@@ -72,6 +72,7 @@ public class DdapendingAdapter extends RecyclerView.Adapter<DdapendingAdapter.Vi
             tv1 = itemView.findViewById(R.id.date);
             tv2 = itemView.findViewById(R.id.Time);
             tv3 = itemView.findViewById(R.id.address);
+
         }
 
     }

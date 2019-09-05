@@ -54,7 +54,7 @@ public class pending_fragment extends Fragment {
     private String next_assigned_url;
     private String next_ongoing_url;
     private LinearLayoutManager layoutManager;
-    private DdapendingAdapter recyclerViewAdater;
+    private AdminLocationAdapter recyclerViewAdater;
     private ProgressBar progressBar;
     private Integer NEXT_LOCATION_COUNT = 1;
 
@@ -72,7 +72,7 @@ public class pending_fragment extends Fragment {
         View view = inflater.inflate(R.layout.pending_fragment, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewpending);
         progressBar = view.findViewById(R.id.locations_loading);
-        recyclerViewAdater = new DdapendingAdapter(getContext(), Id, Date, Time, Address);
+        recyclerViewAdater = new AdminLocationAdapter(getContext(), Id, Date, Time, Address);
         recyclerView.setAdapter(recyclerViewAdater);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
