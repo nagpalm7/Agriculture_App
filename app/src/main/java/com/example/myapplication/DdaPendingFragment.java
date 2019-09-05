@@ -39,10 +39,10 @@ public class DdaPendingFragment extends Fragment {
 
         mtablayout.setupWithViewPager(page);
 
-        /*mtabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mtablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                pager.setCurrentItem(tab.getPosition());
+                page.setCurrentItem(tab.getPosition());
             }
 
             @Override
@@ -56,7 +56,7 @@ public class DdaPendingFragment extends Fragment {
             }
         });
 
-        pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mtabLayout));*/
+        page.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mtablayout));
         return view;
 
     }

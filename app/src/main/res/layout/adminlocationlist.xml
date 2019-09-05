@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parentnotassigned">
+
+    <androidx.cardview.widget.CardView
+        app:cardCornerRadius="15dp"
+        android:elevation="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_marginHorizontal="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:paddingBottom="16dp"
+                android:id="@+id/title"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:text="Location Id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/date1"
+                android:paddingBottom="16dp"
+                android:layout_below="@id/title"
+                android:textSize="18sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="Date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/Time1"
+                android:paddingBottom="16dp"
+                android:layout_below="@+id/date1"
+                android:textSize="18sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="Time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:id="@+id/address1"
+                android:paddingBottom="16dp"
+                android:layout_below="@+id/Time1"
+                android:textSize="18sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="Address:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
