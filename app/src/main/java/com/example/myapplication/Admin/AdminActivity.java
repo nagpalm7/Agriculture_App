@@ -1,6 +1,9 @@
 package com.example.myapplication.Admin;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +22,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.myapplication.R;
+import com.example.myapplication.login_activity;
 import com.google.android.material.navigation.NavigationView;
 
 public class AdminActivity extends AppCompatActivity
@@ -190,8 +194,15 @@ public class AdminActivity extends AppCompatActivity
             } else {
                 Toast.makeText(this, "ACCESS DENIED", Toast.LENGTH_SHORT).show();
             }
-        }
+        }else if(id==R.id.logoutadmin){
+            SharedPreferences.Editor editor = getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
+            editor.clear();
+            editor.apply();
+           Intent intent = new Intent(this,login_activity.class);
+           startActivity(intent);
+        }else {
 
+        }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
