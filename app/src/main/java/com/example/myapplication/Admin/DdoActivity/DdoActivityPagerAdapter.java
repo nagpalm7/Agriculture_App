@@ -24,11 +24,11 @@ public class DdoActivityPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position) {
-            case 1:
+            case 0:
                 return "Pending";
-            case 2:
+            case 1:
                 return "Ongoing";
-            case 3:
+            case 2:
                 return "Completed";
         }
         return super.getPageTitle(position);
