@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.myapplication.Admin.AdminLocationAdapter;
 import com.example.myapplication.R;
 
 import org.json.JSONArray;
@@ -110,7 +111,6 @@ public class OnGoingFragment extends Fragment {
                                         + singleObject.getString("district") + ", " + singleObject.getString("state");
                                 mLocationList.add(location);
                             }
-                            adapter.mShowShimmer = false;
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -137,7 +137,7 @@ public class OnGoingFragment extends Fragment {
     private void get_Ongoing() {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         if (next_ongoing_url != null || !next_ongoing_url.isEmpty()) {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(ongoingUrl, null,
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(next_ongoing_url, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -154,7 +154,7 @@ public class OnGoingFragment extends Fragment {
                                             + singleObject.getString("district") + ", " + singleObject.getString("state");
                                     mLocationList.add(location);
                                 }
-                                adapter.notifyDataSetChanged();
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -178,6 +178,7 @@ public class OnGoingFragment extends Fragment {
         }
         requestFinished(requestQueue);
     }
+
 
     private void requestFinished(RequestQueue queue) {
 
