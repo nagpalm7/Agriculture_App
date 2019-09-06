@@ -45,7 +45,9 @@ public class DdaselectAdo extends AppCompatActivity {
         setContentView(R.layout.activity_ddaselect_ado);
         Toast.makeText(this,"List of Ado's",Toast.LENGTH_LONG).show();
 
-        RecyclerView review = (RecyclerView) findViewById(R.id.recyclerViewAdoList);
+        //make your own adapter harsh in dda fragment
+
+      /*  RecyclerView review = (RecyclerView) findViewById(R.id.recyclerViewAdoList);
         adoListAdapter = new AdoListAdapter(this,Name);
         review.setAdapter(adoListAdapter);
         review.setLayoutManager(new LinearLayoutManager(this));
@@ -88,6 +90,6 @@ public class DdaselectAdo extends AppCompatActivity {
         };
 
         adolistrequestqueue.add(jsonObjectRequest);
-
+*/
     }
 }
