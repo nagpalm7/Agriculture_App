@@ -7,45 +7,22 @@
         <item
             android:title="@string/menu_home"
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:iconTint="@color/PrimaryDark" />
+            android:icon="@drawable/ic_home_black_24dp" />
         <item
             android:id="@+id/nav_upload"
-            android:icon="@mipmap/upload"
-            android:title="@string/menu_upload"
-            android:iconTint="@color/PrimaryDark"/>
+            android:icon="@drawable/ic_upload"
+            android:title="@string/menu_upload" />
         <item
             android:id="@+id/nav_ddo"
-            android:icon="@mipmap/usera"
-            android:title="@string/menu_ddo"
-            android:iconTint="@color/PrimaryDark"/>
+            android:icon="@drawable/ic_user"
+            android:title="@string/menu_ddo" />
         <item
             android:id="@+id/nav_ado"
-            android:icon="@mipmap/userb"
-            android:title="@string/menu_ado"
-            android:iconTint="@color/PrimaryDark"/>
+            android:icon="@drawable/ic_group"
+            android:title="@string/menu_ado" />
         <item
             android:id="@+id/nav_location"
-            android:icon="@mipmap/location"
-            android:title="@string/menu_location"
-            android:iconTint="@color/PrimaryDark"/>
-        <item
-            android:id="@+id/logoutadmin"
-            android:title="LOGOUT"
-            android:iconTint="@color/PrimaryDark"/>
+            android:icon="@drawable/ic_locations"
+            android:title="@string/menu_location" />
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/menu_share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/menu_send" />
-        </menu>
-    </item>
-
 </menu>
