@@ -1,6 +1,8 @@
 package com.example.myapplication.Admin;
 
 import android.Manifest;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +21,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.myapplication.R;
+import com.example.myapplication.login_activity;
 import com.google.android.material.navigation.NavigationView;
 
 public class AdminActivity extends AppCompatActivity
@@ -142,7 +145,13 @@ public class AdminActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            SharedPreferences.Editor editor = getSharedPreferences("tokenFile", MODE_PRIVATE).edit();
+            editor.remove("token");
+            editor.commit();
+            Intent intent = new Intent(AdminActivity.this, login_activity.class);
+            startActivity(intent);
+            finish();
             return true;
         }
 
