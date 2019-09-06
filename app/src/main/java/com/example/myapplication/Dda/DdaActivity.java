@@ -7,15 +7,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.google.android.material.navigation.NavigationView;
 
 public class DdaActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +29,7 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout_dda);
         NavigationView navigationView = findViewById(R.id.navofdda);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
@@ -35,8 +37,10 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
+
         if(savedInstanceState==null){
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaOngoingFragment()).commit();
+            getSupportActionBar().setTitle("Dda Home");
         }
     }
 
@@ -46,15 +50,17 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
 
         if(id==R.id.ongoing_item){
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaOngoingFragment()).commit();
+            getSupportActionBar().setTitle("Ongoing Locations");
             Toast.makeText(this,"Ongoing",Toast.LENGTH_LONG).show();
         }else if(id==R.id.completed_item){
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaCompletedFragment()).commit();
+            getSupportActionBar().setTitle("Completed Locations");
             Toast.makeText(this,"Completed",Toast.LENGTH_LONG).show();
         }else if(id==R.id.pending_item){
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaPendingFragment()).commit();
+            getSupportActionBar().setTitle("Pending Locations");
             Toast.makeText(this,"Pending",Toast.LENGTH_LONG).show();
-        }else {
-
+        }else if(id==R.id.logout){
         }
 
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_dda);
