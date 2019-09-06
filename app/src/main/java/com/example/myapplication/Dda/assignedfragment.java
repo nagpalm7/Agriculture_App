@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Dda;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -21,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.Dda.DdapendingAdapter;
+import com.example.myapplication.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +37,7 @@ public class assignedfragment extends Fragment {
     private ArrayList<String> Date;
     private ArrayList<String> Time;
     private ArrayList<String> Address;
-    private DdapendingAdapter ddaassignedAdapter;
+    private DdapendingassignedAdapter ddaassignedAdapter;
     private String urlget = "http://13.235.100.235:8000/api/locations/dda/assigned";
     private String token;
     private String villagename;
@@ -53,7 +54,7 @@ public class assignedfragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
-        ddaassignedAdapter = new DdapendingAdapter(getActivity(),Date,Time,Address);
+        ddaassignedAdapter = new DdapendingassignedAdapter(getActivity(),Date,Time,Address);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddaassignedAdapter);
         review.setLayoutManager( new LinearLayoutManager(getActivity()));

@@ -1,11 +1,10 @@
-package com.example.myapplication;
-
-import android.widget.FrameLayout;
+package com.example.myapplication.Dda;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
 
 public class TabPageDdaAdapter extends FragmentPagerAdapter {
 
@@ -40,9 +39,9 @@ public class TabPageDdaAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int fr) {
         String a = null;
         if (fr == 0)
-           a = "NOT ASSIGNED" ;
-        else if(fr == 1)
            a = "ASSIGNED" ;
+        else if(fr == 1)
+           a = "NOT ASSIGNED" ;
 
           return a;}
 }

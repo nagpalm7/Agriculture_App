@@ -29,6 +29,10 @@
             android:icon="@mipmap/location"
             android:title="@string/menu_location"
             android:iconTint="@color/PrimaryDark"/>
+        <item
+            android:id="@+id/logoutadmin"
+            android:title="LOGOUT"
+            android:iconTint="@color/PrimaryDark"/>
     </group>
 
     <item android:title="Communicate">

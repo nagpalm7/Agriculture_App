@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myapplication">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE " />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,7 +18,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".Dda.DdaselectAdo"></activity>
-        <activity android:name=".Ado.AdoActivity" />
+        <activity android:name=".Ado.AdoActivity" android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Dda.DdaActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -48,10 +54,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAUKi9N7ZNLUj3QjYK9Zn-7PxVMw85koOY" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE " />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
