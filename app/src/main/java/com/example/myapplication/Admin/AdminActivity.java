@@ -33,6 +33,7 @@ public class AdminActivity extends AppCompatActivity
     private final String READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
     private final String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private final int RESULT_CODE = 786;
+    private NavigationView navigationView;
 
     //var
     private Boolean PERMISSION_GRANTED = false;
@@ -52,7 +53,7 @@ public class AdminActivity extends AppCompatActivity
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -63,12 +64,15 @@ public class AdminActivity extends AppCompatActivity
     private void getPermission() {
         String[] permission = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE};
 
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
 
-            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_COARSE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
 
                 if (ContextCompat.checkSelfPermission(this.getApplicationContext(), READ_EXTERNAL_STORAGE) ==
                         PackageManager.PERMISSION_GRANTED) {
+
                     if (ContextCompat.checkSelfPermission(this.getApplicationContext(), WRITE_EXTERNAL_STORAGE)
                             == PackageManager.PERMISSION_GRANTED) {
                         //all permission are granted
@@ -106,6 +110,7 @@ public class AdminActivity extends AppCompatActivity
                         //call a method
                         showMap();
                     }
+                    navigationView.setCheckedItem(R.id.nav_home);
                 }
 
 
