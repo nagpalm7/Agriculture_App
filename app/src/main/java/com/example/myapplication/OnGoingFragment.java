@@ -178,6 +178,7 @@ public class OnGoingFragment extends Fragment {
         requestFinished(requestQueue);
     }
 
+
     private void requestFinished(RequestQueue queue) {
 
         queue.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<Object>() {

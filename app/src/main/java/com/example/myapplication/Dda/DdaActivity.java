@@ -7,15 +7,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
+import com.example.myapplication.login_activity;
 import com.google.android.material.navigation.NavigationView;
 
 public class DdaActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    login_activity logg = new login_activity();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +58,15 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
         }else if(id==R.id.pending_item){
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaPendingFragment()).commit();
             Toast.makeText(this,"Pending",Toast.LENGTH_LONG).show();
-        }else {
+        }else if(id==R.id.logout){
+            {
+                SharedPreferences.Editor editor = getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
+                editor.clear();
+                editor.apply();
+                Intent intent = new Intent(this,login_activity.class);
+                startActivity(intent);
+            }
+        } else {
 
         }
 

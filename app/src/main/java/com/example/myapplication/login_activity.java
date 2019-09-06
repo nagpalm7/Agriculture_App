@@ -37,6 +37,7 @@ import java.util.Map;
 public class login_activity extends AppCompatActivity {
 
     private String token;
+    private String token1;
     private String typeOfUser;
     private static final String TAG = "login_activity";
     private EditText editEmail, editPassword;
@@ -54,6 +55,18 @@ public class login_activity extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login_activity);
+
+        final SharedPreferences sp = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
+         String Usertype = sp.getString("typeOfUser","");
+          if(sp.contains("token"))
+          {
+              if(Usertype.equals("dda"))
+              { startActivity(new Intent(this,DdaActivity.class));}
+              else if(Usertype.equals("ado"))
+              { startActivity(new Intent(this,AdoActivity.class));}
+              else if(Usertype.equals("admin"))
+              { startActivity(new Intent(this,AdminActivity.class));}
+          }
 
             editEmail = findViewById(R.id.editEmail);
             editPassword = findViewById(R.id.editPassword);
@@ -73,6 +86,7 @@ public class login_activity extends AppCompatActivity {
                  }
              }
          });
+
 
             btnLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -107,6 +121,10 @@ public class login_activity extends AppCompatActivity {
 
                                     JSONObject c = new JSONObject(String.valueOf(response));
                                     typeOfUser = c.getString("typeOfUser");
+                                    SharedPreferences.Editor editor = getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
+                                    editor.putString("typeOfUser",typeOfUser);
+                                    editor.apply();
+
                                     Log.d(TAG, "onResponse: typeOfUser:" + typeOfUser);
 
 
@@ -210,6 +228,7 @@ public class login_activity extends AppCompatActivity {
                 progressBar.setVisibility(View.INVISIBLE);
 
             }
+
         }
 
     }
