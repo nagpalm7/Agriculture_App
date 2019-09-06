@@ -40,7 +40,7 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
 
         if(savedInstanceState==null){
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaOngoingFragment()).commit();
-            getSupportActionBar().setTitle("Dda Home");
+            getSupportActionBar().setTitle("Ongoing Locations");
         }
     }
 

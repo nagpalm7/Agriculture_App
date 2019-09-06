@@ -136,7 +136,7 @@ public class OnGoingFragment extends Fragment {
     private void get_Ongoing() {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         if (next_ongoing_url != null || !next_ongoing_url.isEmpty()) {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(ongoingUrl, null,
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(next_ongoing_url, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
