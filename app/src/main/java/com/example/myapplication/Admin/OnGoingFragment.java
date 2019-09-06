@@ -110,6 +110,7 @@ public class OnGoingFragment extends Fragment {
                                         + singleObject.getString("district") + ", " + singleObject.getString("state");
                                 mLocationList.add(location);
                             }
+                            adapter.mShowShimmer = false;
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
