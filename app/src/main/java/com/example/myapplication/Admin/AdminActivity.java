@@ -58,18 +58,23 @@ public class AdminActivity extends AppCompatActivity
     }
 
     private void getPermission() {
-        String[] permission = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE};
+        String[] permission = {ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE};
 
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "getPermission: first if");
 
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "getPermission: 2nd if");
 
-                if (ContextCompat.checkSelfPermission(this.getApplicationContext(), READ_EXTERNAL_STORAGE) ==
-                        PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(this.getApplicationContext(), WRITE_EXTERNAL_STORAGE)
-                            == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(this.getApplicationContext(), READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+
+                    Log.d(TAG, "getPermission: 3rd if");
+
+                    if (ContextCompat.checkSelfPermission(this.getApplicationContext(), WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                         //all permission are granted
                         PERMISSION_GRANTED = true;
+                        Log.d(TAG, "getPermission: inside al ifs");
+
                     } else {
                         ActivityCompat.requestPermissions(this, permission, RESULT_CODE);
                     }
@@ -83,6 +88,8 @@ public class AdminActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this, permission, RESULT_CODE);
         }
 
+        Log.d(TAG, "getPermission: ");
+
     }
 
     @Override
@@ -91,7 +98,9 @@ public class AdminActivity extends AppCompatActivity
 
         switch (requestCode) {
             case RESULT_CODE: {
+
                 for (int i = 0; i < grantResults.length; i++) {
+                    Log.d(TAG, "onRequestPermissionsResult: "+ grantResults[i]);
                     if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                         //user again denied the permission
                         Log.d(TAG, "onRequestPermissionsResult: user denied the permission");
@@ -163,11 +172,11 @@ public class AdminActivity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_ado) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container,new ado_fragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ado_fragment()).commit();
 
 
         } else if (id == R.id.nav_location) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container,new location_fragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new location_fragment()).commit();
 
 
         } else if (id == R.id.nav_share) {
