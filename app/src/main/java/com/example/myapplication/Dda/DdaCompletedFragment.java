@@ -35,7 +35,7 @@ public class DdaCompletedFragment extends Fragment {
     private ArrayList<String> Date;
     private ArrayList<String> Time;
     private ArrayList<String> Address;
-    private DdapendingAdapter ddacompletedAdapter;
+    private DdacompletedAdapter ddacompletedAdapter;
     private String urlget = "http://13.235.100.235:8000/api/locations/dda/completed";
     private String dda;
     private String token;
@@ -56,7 +56,7 @@ public class DdaCompletedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
-        ddacompletedAdapter = new DdapendingAdapter(getContext(),Date,Time,Address);
+        ddacompletedAdapter = new DdacompletedAdapter(getContext(),Date,Time,Address);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddacompletedAdapter);
         review.setLayoutManager( new LinearLayoutManager(getActivity()));
