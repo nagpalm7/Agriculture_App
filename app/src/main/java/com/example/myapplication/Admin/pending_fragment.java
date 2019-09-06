@@ -22,7 +22,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.myapplication.Admin.AdminLocationAdapter;
 import com.example.myapplication.R;
 
 import org.json.JSONArray;
@@ -51,21 +50,15 @@ public class pending_fragment extends Fragment {
     private static final String TAG = "pending_fragment";
     private String url_unassigned = "http://13.235.100.235:8000/api/locations/unassigned";
     private String url_assigned = "http://13.235.100.235:8000/api/locations/assigned";
-    private String url_ongoing = "http://13.235.100.235:8000/api/locations/ongoing";
     private String next_unassigned_url;
     private String next_assigned_url;
-    private String next_ongoing_url;
     private LinearLayoutManager layoutManager;
     private AdminLocationAdapter recyclerViewAdater;
     private ProgressBar progressBar;
     private Integer NEXT_LOCATION_COUNT = 1;
 
     public pending_fragment() {
-        Id = new ArrayList<String>();
-        Date = new ArrayList<String>();
-        Time = new ArrayList<String>();
-        Address = new ArrayList<String>();
-
+        // Required empty public constructor
     }
 
     @Nullable
@@ -74,11 +67,14 @@ public class pending_fragment extends Fragment {
         View view = inflater.inflate(R.layout.pending_fragment, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewpending);
         progressBar = view.findViewById(R.id.locations_loading);
-        recyclerViewAdater = new AdminLocationAdapter(getContext(), Id, Date, Time, Address);
+        Id = new ArrayList<>();
+        Date = new ArrayList<>();
+        Time = new ArrayList<>();
+        Address = new ArrayList<>();
+        recyclerViewAdater = new AdminLocationAdapter(getActivity(), Id, Date, Time, Address);
         recyclerView.setAdapter(recyclerViewAdater);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-
         final SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
         Log.d(TAG, "onCreateView: " + token);
@@ -104,7 +100,7 @@ public class pending_fragment extends Fragment {
                         Date.add(c.getString("acq_date"));
                         Time.add(c.getString("acq_time"));
                         Address.add(villagename + "," + blockname + "," + district + "," + state);
-
+                        recyclerViewAdater.mShowShimmer = false;
                         recyclerViewAdater.notifyDataSetChanged();
                     }
                 } catch (JSONException e) {
@@ -144,7 +140,7 @@ public class pending_fragment extends Fragment {
                         Date.add(c.getString("acq_date"));
                         Time.add(c.getString("acq_time"));
                         Address.add(villagename + "," + blockname + "," + district + "," + state);
-
+                        recyclerViewAdater.mShowShimmer = false;
                         recyclerViewAdater.notifyDataSetChanged();
                     }
                 } catch (JSONException e) {

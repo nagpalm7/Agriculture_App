@@ -1,7 +1,6 @@
 package com.example.myapplication.Admin;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -34,6 +33,7 @@ public class AdminActivity extends AppCompatActivity
     private final String READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
     private final String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private final int RESULT_CODE = 786;
+    private NavigationView navigationView;
 
     //var
     private Boolean PERMISSION_GRANTED = false;
@@ -53,7 +53,7 @@ public class AdminActivity extends AppCompatActivity
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -62,23 +62,21 @@ public class AdminActivity extends AppCompatActivity
     }
 
     private void getPermission() {
-        String[] permission = {ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE};
+        String[] permission = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE};
 
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "getPermission: first if");
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
 
-            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "getPermission: 2nd if");
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_COARSE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
 
-                if (ContextCompat.checkSelfPermission(this.getApplicationContext(), READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(this.getApplicationContext(), READ_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_GRANTED) {
 
-                    Log.d(TAG, "getPermission: 3rd if");
-
-                    if (ContextCompat.checkSelfPermission(this.getApplicationContext(), WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(this.getApplicationContext(), WRITE_EXTERNAL_STORAGE)
+                            == PackageManager.PERMISSION_GRANTED) {
                         //all permission are granted
                         PERMISSION_GRANTED = true;
-                        Log.d(TAG, "getPermission: inside al ifs");
-
                     } else {
                         ActivityCompat.requestPermissions(this, permission, RESULT_CODE);
                     }
@@ -92,8 +90,6 @@ public class AdminActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this, permission, RESULT_CODE);
         }
 
-        Log.d(TAG, "getPermission: ");
-
     }
 
     @Override
@@ -102,9 +98,7 @@ public class AdminActivity extends AppCompatActivity
 
         switch (requestCode) {
             case RESULT_CODE: {
-
                 for (int i = 0; i < grantResults.length; i++) {
-                    Log.d(TAG, "onRequestPermissionsResult: "+ grantResults[i]);
                     if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                         //user again denied the permission
                         Log.d(TAG, "onRequestPermissionsResult: user denied the permission");
@@ -116,6 +110,7 @@ public class AdminActivity extends AppCompatActivity
                         //call a method
                         showMap();
                     }
+                    navigationView.setCheckedItem(R.id.nav_home);
                 }
 
 
@@ -155,7 +150,13 @@ public class AdminActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            SharedPreferences.Editor editor = getSharedPreferences("tokenFile", MODE_PRIVATE).edit();
+            editor.remove("token");
+            editor.commit();
+            Intent intent = new Intent(AdminActivity.this, login_activity.class);
+            startActivity(intent);
+            finish();
             return true;
         }
 
@@ -176,11 +177,11 @@ public class AdminActivity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_ado) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ado_fragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,new ado_fragment()).commit();
 
 
         } else if (id == R.id.nav_location) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new location_fragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,new location_fragment()).commit();
 
 
         } else if (id == R.id.nav_share) {
@@ -194,15 +195,8 @@ public class AdminActivity extends AppCompatActivity
             } else {
                 Toast.makeText(this, "ACCESS DENIED", Toast.LENGTH_SHORT).show();
             }
-        }else if(id==R.id.logoutadmin){
-            SharedPreferences.Editor editor = getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
-            editor.clear();
-            editor.apply();
-           Intent intent = new Intent(this,login_activity.class);
-           startActivity(intent);
-        }else {
-
         }
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

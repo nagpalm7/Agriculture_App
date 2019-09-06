@@ -20,10 +20,10 @@ public class TabPageAdapter extends FragmentPagerAdapter {
                 frag= new pending_fragment();
                 break;
             case 1:
-                frag= new completed_fragment();
+                frag = new OnGoingFragment();
                 break;
             case 2:
-                frag = new OnGoingFragment();
+                frag = new completed_fragment();
                 break;
         }
 
