@@ -76,14 +76,6 @@ public class login_activity extends AppCompatActivity {
             progressBar = findViewById(R.id.progressBar);
             checkBox = findViewById(R.id.eyeIcon);
 
-        SharedPreferences preferences = getSharedPreferences("tokenFile", MODE_PRIVATE);
-        String token = preferences.getString("token", "");
-        if (!token.isEmpty() || !token.equals("")) {
-            Intent intent = new Intent(login_activity.this, AdminActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
          checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
              @Override
              public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
