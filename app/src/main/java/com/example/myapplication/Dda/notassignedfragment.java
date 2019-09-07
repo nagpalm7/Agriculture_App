@@ -20,7 +20,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.myapplication.Dda.DdapendingAdapter;
 import com.example.myapplication.R;
 
 import org.json.JSONArray;
@@ -34,10 +33,11 @@ import java.util.Map;
 public class notassignedfragment extends Fragment {
 
     private static final String TAG = "notassignedfragment";
+    private ArrayList<String>Id;
     private ArrayList<String>Date;
     private ArrayList<String>Time;
     private ArrayList<String> Address;
-    private DdapendingAdapter notassignedDdapendingadapter;
+    private DdapendingUnassignedAdapter ddapendingUnassignedAdapter;
     private String urlget = "http://13.235.100.235:8000/api/locations/dda/unassigned";
     private String villagename;
     private String blockname;
@@ -46,6 +46,7 @@ public class notassignedfragment extends Fragment {
     private String token;
 
     public notassignedfragment(){
+        Id = new ArrayList<String>(3);
         Date = new ArrayList<String>(3);
         Time = new ArrayList<String>(3);
         Address = new ArrayList<String>(3);
@@ -55,11 +56,10 @@ public class notassignedfragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.d(TAG, "onCreateView: in notassignedfragment");
         View view = inflater.inflate(R.layout.fragment_notassignedfragment, container, false);
-        notassignedDdapendingadapter = new DdapendingAdapter(getActivity(),Date,Time, Address);
+        ddapendingUnassignedAdapter = new DdapendingUnassignedAdapter(getActivity(),Id,Date,Time, Address);
         RecyclerView notassignedreview = view.findViewById(R.id.recyclerViewnotassigned);
-        notassignedreview.setAdapter(notassignedDdapendingadapter);
+        notassignedreview.setAdapter(ddapendingUnassignedAdapter);
         notassignedreview.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
@@ -80,11 +80,12 @@ public class notassignedfragment extends Fragment {
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
+                        Id.add(c.getString("id"));
                         Date.add(c.getString("acq_date"));
                         Time.add(c.getString("acq_time"));
                         Address.add(villagename+","+blockname+","+district+","+state);
 
-                        notassignedDdapendingadapter.notifyDataSetChanged();
+                        ddapendingUnassignedAdapter.notifyDataSetChanged();
                     }
                 }catch (JSONException e){
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());

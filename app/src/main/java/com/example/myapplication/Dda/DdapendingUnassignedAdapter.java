@@ -17,18 +17,20 @@ import com.example.myapplication.R;
 
 import java.util.ArrayList;
 
-public class DdapendingAdapter extends RecyclerView.Adapter<DdapendingAdapter.ViewHolderPendingDda>{
-    private static final String TAG = "DdapendingAdapter";
+public class DdapendingUnassignedAdapter extends RecyclerView.Adapter<DdapendingUnassignedAdapter.ViewHolderPendingDda>{
+    private static final String TAG = "DdaUnassignedAdapter";
     ArrayList<String> mtextview1;
     ArrayList<String> mtextview2;
     ArrayList<String> mtextview3;
+    ArrayList<String> mtextview4;
     Context mcontext;
 
-    public DdapendingAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2,ArrayList<String> mtextview3) {
+    public DdapendingUnassignedAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3,ArrayList<String> mtextview4) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         this.mtextview3 = mtextview3;
+        this.mtextview4 = mtextview4;
     }
 
     @NonNull
@@ -44,6 +46,8 @@ public class DdapendingAdapter extends RecyclerView.Adapter<DdapendingAdapter.Vi
         holder.tv1.setText(mtextview1.get(position));
         holder.tv2.setText(mtextview2.get(position));
         holder.tv3.setText(mtextview3.get(position));
+        holder.tv4.setText(mtextview4.get(position));
+
 
         holder.parentnotassigned.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,15 +69,17 @@ public class DdapendingAdapter extends RecyclerView.Adapter<DdapendingAdapter.Vi
         TextView tv1;
         TextView tv2;
         TextView tv3;
+        TextView tv4;
         RelativeLayout parentnotassigned;
 
         public ViewHolderPendingDda(@NonNull View itemView) {
             super(itemView);
             mcontext = itemView.getContext();
             parentnotassigned = itemView.findViewById(R.id.parentnotassigned);
-            tv1 = itemView.findViewById(R.id.date);
-            tv2 = itemView.findViewById(R.id.Time);
-            tv3 = itemView.findViewById(R.id.address);
+            tv1 = itemView.findViewById(R.id.lid);
+            tv2 = itemView.findViewById(R.id.date);
+            tv3 = itemView.findViewById(R.id.Time);
+            tv4 = itemView.findViewById(R.id.address);
 
         }
 

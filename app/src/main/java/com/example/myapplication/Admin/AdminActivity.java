@@ -218,7 +218,7 @@ public class AdminActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
             SharedPreferences.Editor editor = getSharedPreferences("tokenFile", MODE_PRIVATE).edit();
-            editor.remove("token");
+            editor.clear();
             editor.commit();
             Intent intent = new Intent(AdminActivity.this, login_activity.class);
             startActivity(intent);
