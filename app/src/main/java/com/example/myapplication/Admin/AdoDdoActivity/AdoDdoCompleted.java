@@ -1,4 +1,4 @@
-package com.example.myapplication.Admin.DdoActivity;
+package com.example.myapplication.Admin.AdoDdoActivity;
 
 
 import android.os.Bundle;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DdoCompleted extends Fragment {
+public class AdoDdoCompleted extends Fragment {
 
     private String mDdoId;
     private ArrayList<String> locationNames;
@@ -40,21 +40,28 @@ public class DdoCompleted extends Fragment {
     private LinearLayoutManager layoutManager;
     private AdoListAdapter adapter;
     private String nextUrl;
+    private boolean isDdo;
 
 
-    public DdoCompleted() {
+    public AdoDdoCompleted() {
         // Required empty public constructor
     }
 
-    public DdoCompleted(String mDdoId) {
+    public AdoDdoCompleted(String mDdoId, boolean isDdo) {
         this.mDdoId = mDdoId;
+        this.isDdo = isDdo;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ddo_completed, container, false);
-        String mUrl = "http://13.235.100.235:8000/api/admin/dda/" + mDdoId + "/completed";
+        String role;
+        if (isDdo)
+            role = "dda";
+        else
+            role = "ado";
+        String mUrl = "http://13.235.100.235:8000/api/admin/" + role + "/" + mDdoId + "/completed";
         progressBar = view.findViewById(R.id.Ddo_completed_loading);
         recyclerView = view.findViewById(R.id.Ddo_completed_recyclerview);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -100,6 +107,7 @@ public class DdoCompleted extends Fragment {
                                         singleObject.getString("block_name") + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
+                                adapter.mshowshimmer = false;
                                 adapter.notifyDataSetChanged();
                             }
                         } catch (JSONException e) {

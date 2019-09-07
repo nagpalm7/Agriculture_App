@@ -17,30 +17,30 @@
             android:layout_alignBottom="@id/laddress"
             android:layout_alignParentEnd="true"
             android:layout_marginHorizontal="16dp"
+            android:id="@+id/img"
             android:src="@drawable/loaction" />
 
         <TextView
             android:background="@color/shimmer_bg"
             android:id="@+id/laddress"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="16dp"
-            android:text="location address,location address"
+            android:layout_toLeftOf="@id/img"
             android:textSize="18sp" />
 
         <TextView
             android:background="@color/shimmer_bg"
             android:id="@+id/lname"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/laddress"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="2dp"
-            android:paddingTop="15dp"
-            android:text="location name"
+            android:layout_marginBottom="8dp"
             android:textColor="@color/colorPrimaryDark"
+            android:layout_toLeftOf="@id/img"
             android:textSize="24sp" />
 
 

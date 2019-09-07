@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.Admin.DdoActivity.DdoActivity;
+import com.example.myapplication.Admin.AdoDdoActivity.AdoDdoActivity;
 import com.example.myapplication.R;
 
 import java.util.ArrayList;
@@ -36,16 +36,18 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mcontext).inflate(R.layout.listusers,parent,false);
         final ViewHolder viewHolder = new ViewHolder(view);
-        if (isDdoFragment) {
-            viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(mcontext, DdoActivity.class);
-                    intent.putExtra("ddoId", mtextview2.get(viewHolder.getAdapterPosition()));
-                    mcontext.startActivity(intent);
-                }
+        viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mcontext, AdoDdoActivity.class);
+                intent.putExtra("Id", mtextview2.get(viewHolder.getAdapterPosition()));
+                if (isDdoFragment)
+                    intent.putExtra("isDdo", true);
+                else
+                    intent.putExtra("isDdo", false);
+                mcontext.startActivity(intent);
+            }
             });
-        }
         return viewHolder;
     }
 

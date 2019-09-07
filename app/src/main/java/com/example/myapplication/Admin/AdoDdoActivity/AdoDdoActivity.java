@@ -1,4 +1,4 @@
-package com.example.myapplication.Admin.DdoActivity;
+package com.example.myapplication.Admin.AdoDdoActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,27 +10,36 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.myapplication.R;
 import com.google.android.material.tabs.TabLayout;
 
-public class DdoActivity extends AppCompatActivity {
-    private DdoActivityPagerAdapter adapter;
+public class AdoDdoActivity extends AppCompatActivity {
+    private AdoDdoActivityPagerAdapter adapter;
+    private boolean isDdo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ddo);
         Intent intent = getIntent();
-        String ddoId = intent.getStringExtra("ddoId");
-        Log.d("ddoId", "onCreate: " + ddoId);
+        String id = intent.getStringExtra("Id");
+        isDdo = intent.getBooleanExtra("isDdo", false);
+        Log.d("ddoId", "onCreate: " + id);
         TabLayout tabLayout = findViewById(R.id.ddo_activity_tablayout);
         tabLayout.addTab(tabLayout.newTab());
         tabLayout.addTab(tabLayout.newTab());
-        tabLayout.addTab(tabLayout.newTab());
+        if (isDdo)
+            tabLayout.addTab(tabLayout.newTab());
         ViewPager viewPager = findViewById(R.id.ddo_activity_viewpager);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Ddo Name");
-        adapter = new DdoActivityPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new DdoPending(ddoId));
-        adapter.addFragment(new DdoOngoing(ddoId));
-        adapter.addFragment(new DdoCompleted(ddoId));
+        int tabCount;
+        if (isDdo)
+            tabCount = 3;
+        else
+            tabCount = 2;
+        adapter = new AdoDdoActivityPagerAdapter(getSupportFragmentManager(), tabCount);
+        adapter.addFragment(new AdoDdoPending(id, isDdo));
+        if (isDdo)
+            adapter.addFragment(new AdoDdoOngoing(id, isDdo));
+        adapter.addFragment(new AdoDdoCompleted(id, isDdo));
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
     }

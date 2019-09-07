@@ -1,4 +1,4 @@
-package com.example.myapplication.Admin.DdoActivity;
+package com.example.myapplication.Admin.AdoDdoActivity;
 
 
 import android.os.Bundle;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DdoOngoing extends Fragment {
+public class AdoDdoPending extends Fragment {
 
     private String mDdoId;
     private ArrayList<String> locationNames;
@@ -39,30 +39,46 @@ public class DdoOngoing extends Fragment {
     private ProgressBar progressBar;
     private LinearLayoutManager layoutManager;
     private AdoListAdapter adapter;
-    private String nextUrl;
+    private int NEXT_LOCATION_COUNT = 1;
+    private String nextAssignedUrl;
+    private String nextUnAssignedUrl;
+    private String nextPendingUrl;  //for ADO
+    private boolean isDdo;
 
-    public DdoOngoing() {
+    public AdoDdoPending() {
         // Required empty public constructor
     }
 
-    public DdoOngoing(String mDdoId) {
+    public AdoDdoPending(String mDdoId, boolean isDdo) {
         this.mDdoId = mDdoId;
+        this.isDdo = isDdo;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ddo_ongoing, container, false);
-        String mUrl = "http://13.235.100.235:8000/api/admin/dda/" + mDdoId + "/ongoing";
-        progressBar = view.findViewById(R.id.Ddo_ongoing_loading);
-        recyclerView = view.findViewById(R.id.Ddo_ongoing_recyclerview);
+        View view = inflater.inflate(R.layout.fragment_ddo_pending, container, false);
+        progressBar = view.findViewById(R.id.Ddo_pending_loading);
+        recyclerView = view.findViewById(R.id.Ddo_pending_recyclerview);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         locationNames = new ArrayList<>();
         locationAddresses = new ArrayList<>();
         adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses);
         recyclerView.setAdapter(adapter);
-        getData(mUrl);
+        String role;
+        if (isDdo) {
+            role = "dda";
+            String mUrlAssigned = "http://13.235.100.235:8000/api/admin/" + role + "/" + mDdoId + "/assigned";
+            String mUrlUnAssigned = "http://13.235.100.235:8000/api/admin/" + role + "/" + mDdoId + "/unassigned";
+            getData(mUrlAssigned, true);
+            getData(mUrlUnAssigned, false);
+        } else {
+            role = "ado";
+            String mUrlPending = "http://13.235.100.235:8000/api/admin/" + role + "/" + mDdoId + "/pending";
+            getData(mUrlPending, true); //just passed true and Set it accordingly in the function called
+        }
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -72,7 +88,7 @@ public class DdoOngoing extends Fragment {
                     pastItemCount = layoutManager.findFirstVisibleItemPosition();
                     visibleItemCount = layoutManager.getChildCount();
                     if ((pastItemCount + visibleItemCount) >= totalCount) {
-                        loadNextLocations(nextUrl);
+                        loadNextLocations();
                     }
                 }
                 super.onScrolled(recyclerView, dx, dy);
@@ -81,7 +97,7 @@ public class DdoOngoing extends Fragment {
         return view;
     }
 
-    private void getData(String url) {
+    private void getData(String url, final boolean isAssigned) {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -90,7 +106,15 @@ public class DdoOngoing extends Fragment {
                     public void onResponse(JSONObject response) {
                         try {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
-                            nextUrl = rootObject.getString("next");
+                            String nextUrl = rootObject.getString("next");
+                            if (isAssigned) {
+                                if (isDdo)
+                                    nextAssignedUrl = nextUrl;
+                                else
+                                    nextPendingUrl = nextUrl;
+                            }
+                            else
+                                nextUnAssignedUrl = nextUrl;
                             JSONArray resultsArray = rootObject.getJSONArray("results");
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
@@ -99,6 +123,7 @@ public class DdoOngoing extends Fragment {
                                         singleObject.getString("block_name") + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
+                                adapter.mshowshimmer = false;
                                 adapter.notifyDataSetChanged();
                             }
                         } catch (JSONException e) {
@@ -116,7 +141,24 @@ public class DdoOngoing extends Fragment {
         queue.add(jsonObjectRequest);
     }
 
-    private void loadNextLocations(String url) {
+    private void loadNextLocations() {
+        if (isDdo) {
+            switch (NEXT_LOCATION_COUNT) {
+                case 1:
+                    makeRequest(nextAssignedUrl);
+                    NEXT_LOCATION_COUNT = 2;
+                    break;
+                case 2:
+                    makeRequest(nextUnAssignedUrl);
+                    NEXT_LOCATION_COUNT = 1;
+                    break;
+            }
+        } else {
+            makeRequest(nextPendingUrl);
+        }
+    }
+
+    private void makeRequest(String url) {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         if (!url.isEmpty()) {
             progressBar.setVisibility(View.VISIBLE);
