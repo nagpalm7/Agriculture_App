@@ -37,7 +37,7 @@ public class AdoActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.container_ado, new ado_pending_fragment());
 
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
         drawer = findViewById(R.id.drawer_layout1);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -46,9 +46,13 @@ public class AdoActivity extends AppCompatActivity {
 
                     case R.id.nav_home1:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container_ado, new ado_pending_fragment()).commit();
+                        navigationView.getMenu().getItem(0).setChecked(true);
+                        getSupportActionBar().setTitle("Pending Locations");
                         break;
                     case R.id.nav_slideshow1:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container_ado, new ado_complete_fragment()).commit();
+                        navigationView.getMenu().getItem(1).setChecked(true);
+                        getSupportActionBar().setTitle("Ongoing Locations");
                         break;
                 }
 
