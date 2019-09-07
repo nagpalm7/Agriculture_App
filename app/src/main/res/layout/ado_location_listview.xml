@@ -1,49 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ado_location_shimmer"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/ado_location_shimmer">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/ado_loaction_parent"
         android:layout_width="match_parent"
-        android:layout_height="100dp">
-
+        android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/img"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignBottom="@id/laddress"
             android:layout_alignParentEnd="true"
             android:layout_marginHorizontal="16dp"
-            android:id="@+id/img"
             android:src="@drawable/loaction" />
 
         <TextView
-            android:background="@color/shimmer_bg"
-            android:id="@+id/laddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_toLeftOf="@id/img"
-            android:textSize="18sp" />
-
-        <TextView
-            android:background="@color/shimmer_bg"
             android:id="@+id/lname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/laddress"
+            android:layout_alignParentTop="true"
             android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
-            android:textColor="@color/colorPrimaryDark"
             android:layout_toLeftOf="@id/img"
-            android:textSize="24sp" />
+            android:background="@color/shimmer_bg"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp" />
 
-
+        <TextView
+            android:id="@+id/laddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lname"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_toLeftOf="@id/img"
+            android:background="@color/shimmer_bg"
+            android:textSize="16sp" />
     </RelativeLayout>
 
 </com.facebook.shimmer.ShimmerFrameLayout>

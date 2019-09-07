@@ -55,7 +55,8 @@ public class ado_complete_fragment extends Fragment {
         adoListAdapter = new AdoListAdapter(getContext(), mtextview1, mtextview2);
         recyclerView.setAdapter(adoListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL);
+        recyclerView.addItemDecoration(divider);
 
         return view;
     }
