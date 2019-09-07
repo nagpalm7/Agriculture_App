@@ -1,13 +1,15 @@
 package com.example.myapplication.Dda;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -16,9 +18,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+
 import com.android.volley.toolbox.Volley;
-import com.example.myapplication.Ado.AdoListAdapter;
 import com.example.myapplication.R;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,38 +33,37 @@ import java.util.Map;
 
 public class DdaselectAdo extends AppCompatActivity {
     private static final String TAG = "DdaselectAdo";
-    private ArrayList<String> Name;
-    private DdaAdolistAdapter DdaAdolistAdapter;
+    private ArrayList<String> nameofado;
+
     private String urlget = "http://13.235.100.235:8000/api/ado/";
     private String token;
+    Spinner spinner;
 
-    public DdaselectAdo(){
-        Name = new ArrayList<String>(3);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ddaselect_ado);
-        Toast.makeText(this,"List of Ado's",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "List of Ado's", Toast.LENGTH_LONG).show();
+        loadSpinnerData(urlget);
 
-        RecyclerView review = (RecyclerView) findViewById(R.id.recyclerViewAdoList);
-        DdaAdolistAdapter = new DdaAdolistAdapter(this,Name);
-        review.setAdapter(DdaAdolistAdapter);
-        //make your own adapter harsh in dda fragment
-
-      /*  RecyclerView review = (RecyclerView) findViewById(R.id.recyclerViewAdoList);
-        adoListAdapter = new AdoListAdapter(this,Name);
-        review.setAdapter(adoListAdapter);
->>>>>>> 00346294bdf7c96a3f3a823fca3f9e00875e1134
-        review.setLayoutManager(new LinearLayoutManager(this));
 
         SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
-        token = preferences.getString("token","");
-        Log.d(TAG, "onCreateView: "+token);
+        token = preferences.getString("token", "");
+        Log.d(TAG, "onCreateView: " + token);
 
-        final RequestQueue adolistrequestqueue = Volley.newRequestQueue(this);
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlget, null, new Response.Listener<JSONObject>() {
+    }
+
+    private void loadSpinnerData(String url){
+
+        //make volley request
+        nameofado = new ArrayList<String>();
+        spinner = (Spinner) findViewById(R.id.listofado);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -69,19 +71,31 @@ public class DdaselectAdo extends AppCompatActivity {
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
-                        Name.add(c.getString("name"));
-                        DdaAdolistAdapter.notifyDataSetChanged();
+                        nameofado.add(c.getString("name"));
+                        Log.d(TAG, "onResponse: "+c.getString("name"));
                     }
+                    Log.d(TAG, "onResponse: name of ado is fetched");
+                    
+                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            Log.d(TAG, "onItemSelected: item is selected");
+                            adapterView.addView(view,0);
+                        }
 
-                }catch (JSONException e){
-                    Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
-                    e.printStackTrace();
-                }
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                        }
+                    });
+                    
+                }catch (JSONException e){ e.printStackTrace();}
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "onErrorResponse: " + error );
+                error.printStackTrace();
             }
         }){
             @Override
@@ -90,10 +104,9 @@ public class DdaselectAdo extends AppCompatActivity {
                 map.put("Authorization", "Token " + token);
                 return map;
             }
-
         };
 
-        adolistrequestqueue.add(jsonObjectRequest);
-*/
+        requestQueue.add(jsonObjectRequest);
+
     }
 }
