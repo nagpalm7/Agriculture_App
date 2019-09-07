@@ -17,10 +17,6 @@
             android:id="@+id/pending_item"
             android:icon="@drawable/arrow"
             android:title="@string/pending" />
-        <item
-            android:id="@+id/logout"
-            android:icon="@drawable/arrow"
-            android:title="LOGOUT" />
     </group>
 
 <!--    <item android:title="Communicate">-->

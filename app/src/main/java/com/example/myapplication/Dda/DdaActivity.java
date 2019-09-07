@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.Admin.AdminActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.login_activity;
 import com.google.android.material.navigation.NavigationView;
@@ -88,14 +89,7 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
             navigationView.getMenu().getItem(2).setChecked(true);
             getSupportActionBar().setTitle("Pending Locations");
             Toast.makeText(this,"Pending",Toast.LENGTH_LONG).show();
-        }else if(id==R.id.logout){
-            SharedPreferences.Editor editor = getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
-            editor.clear();
-            editor.apply();
-            Intent intent = new Intent(this, login_activity.class);
-            startActivity(intent);
         }
-
 
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_dda);
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -107,6 +101,27 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main,menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_logout) {
+            SharedPreferences.Editor editor = getSharedPreferences("tokenFile", MODE_PRIVATE).edit();
+            editor.clear();
+            editor.commit();
+            Intent intent = new Intent(DdaActivity.this, login_activity.class);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
