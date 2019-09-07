@@ -31,7 +31,7 @@ import java.util.Map;
 public class DdaselectAdo extends AppCompatActivity {
     private static final String TAG = "DdaselectAdo";
     private ArrayList<String> Name;
-    private AdoListAdapter adoListAdapter;
+    private DdaAdolistAdapter DdaAdolistAdapter;
     private String urlget = "http://13.235.100.235:8000/api/ado/";
     private String token;
 
@@ -46,8 +46,8 @@ public class DdaselectAdo extends AppCompatActivity {
         Toast.makeText(this,"List of Ado's",Toast.LENGTH_LONG).show();
 
         RecyclerView review = (RecyclerView) findViewById(R.id.recyclerViewAdoList);
-        adoListAdapter = new AdoListAdapter(this,Name);
-        review.setAdapter(adoListAdapter);
+        DdaAdolistAdapter = new DdaAdolistAdapter(this,Name);
+        review.setAdapter(DdaAdolistAdapter);
         review.setLayoutManager(new LinearLayoutManager(this));
 
         SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
@@ -64,7 +64,7 @@ public class DdaselectAdo extends AppCompatActivity {
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
                         Name.add(c.getString("name"));
-                        adoListAdapter.notifyDataSetChanged();
+                        DdaAdolistAdapter.notifyDataSetChanged();
                     }
 
                 }catch (JSONException e){

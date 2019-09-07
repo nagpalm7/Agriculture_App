@@ -37,8 +37,8 @@ import java.util.Map;
 public class login_activity extends AppCompatActivity {
 
     private String token;
-    private String token1;
     private String typeOfUser;
+    private String nameOfUser;
     private static final String TAG = "login_activity";
     private EditText editEmail, editPassword;
 
@@ -55,6 +55,7 @@ public class login_activity extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login_activity);
+
 
         final SharedPreferences sp = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
          String Usertype = sp.getString("typeOfUser","");
@@ -121,8 +122,10 @@ public class login_activity extends AppCompatActivity {
 
                                     JSONObject c = new JSONObject(String.valueOf(response));
                                     typeOfUser = c.getString("typeOfUser");
+                                    nameOfUser = c.getString("name");
                                     SharedPreferences.Editor editor = getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
                                     editor.putString("typeOfUser",typeOfUser);
+                                    editor.putString("nameOfUser",nameOfUser);
                                     editor.apply();
 
                                     Log.d(TAG, "onResponse: typeOfUser:" + typeOfUser);
@@ -158,7 +161,7 @@ public class login_activity extends AppCompatActivity {
 
                                 } catch (JSONException e) {
                                     Log.d(TAG, "onResponse: error in get catch block :" + e.getMessage());
-                                    Toast.makeText(login_activity.this,"some error occurred",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(login_activity.this,"Please try again",Toast.LENGTH_LONG).show();
                                     progressBar.setVisibility(View.INVISIBLE);
                                     editEmail.setText("");
                                     editPassword.setText("");
@@ -168,7 +171,7 @@ public class login_activity extends AppCompatActivity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(login_activity.this,"Invalid User",Toast.LENGTH_LONG).show();
+                                Toast.makeText(login_activity.this,"Check your internet connection",Toast.LENGTH_LONG).show();
                                 progressBar.setVisibility(View.INVISIBLE);
                                 editEmail.setText("");
                                 editPassword.setText("");
