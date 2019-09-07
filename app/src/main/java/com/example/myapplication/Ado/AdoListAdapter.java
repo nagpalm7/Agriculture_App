@@ -10,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
@@ -23,7 +22,7 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
     private static final String TAG = "AdoListAdapter";
     private ArrayList<String> mtextview1;
     private ArrayList<String> mtextview2;
-    Boolean mshowshimmer = true;
+    public Boolean mshowshimmer = true;
     private int shimmer_count = 5;
     Context mcontext;
 
@@ -39,13 +38,16 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
 //        Context context = parent.getContext();
         View view = LayoutInflater.from(mcontext).inflate(R.layout.ado_location_listview, parent, false);
         AdoListHolder adoListHolder = new AdoListHolder(view);
-        adoListHolder.Adolistlayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mcontext,ado_map_activity.class);
-                mcontext.startActivity(intent);
-            }
-        });
+        if (!mshowshimmer) {
+            adoListHolder.Adolistlayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mcontext, ado_map_activity.class);
+                    mcontext.startActivity(intent);
+                }
+            });
+        }
+
         Log.d(TAG, "onCreateViewHolder: error in this");
         return adoListHolder;
     }
