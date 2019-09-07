@@ -55,7 +55,7 @@ public class pending_fragment extends Fragment {
     private LinearLayoutManager layoutManager;
     private AdminLocationAdapter recyclerViewAdater;
     private ProgressBar progressBar;
-    private Integer NEXT_LOCATION_COUNT = 1;
+    private int NEXT_LOCATION_COUNT = 1;
 
     public pending_fragment() {
         // Required empty public constructor

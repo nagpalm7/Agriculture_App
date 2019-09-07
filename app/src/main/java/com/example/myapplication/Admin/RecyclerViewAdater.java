@@ -41,7 +41,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(mcontext, DdoActivity.class);
-                    intent.putExtra("ddoId", viewHolder.getAdapterPosition());
+                    intent.putExtra("ddoId", mtextview2.get(viewHolder.getAdapterPosition()));
                     mcontext.startActivity(intent);
                 }
             });
