@@ -43,9 +43,6 @@ public class AdoActivity extends AppCompatActivity {
                     case R.id.nav_home1:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container_ado, new ado_pending_fragment()).commit();
                         break;
-                    case R.id.nav_gallery1:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container_ado,new ado_ongoing_fragment()).commit();
-                        break;
                     case R.id.nav_slideshow1:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container_ado, new ado_complete_fragment()).commit();
                         break;
@@ -58,20 +55,18 @@ public class AdoActivity extends AppCompatActivity {
             }
         });
 
-        ActionBarDrawerToggle toogle= new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toogle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toogle);
         toogle.syncState();
-
 
 
     }
 
     @Override
     public void onBackPressed() {
-        if(drawer.isDrawerOpen(GravityCompat.START)){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else{
+        } else {
             super.onBackPressed();
         }
 

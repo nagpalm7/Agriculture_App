@@ -1,6 +1,8 @@
 package com.example.myapplication.Dda;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,7 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
     ArrayList<String> mtextviewid;
     Context mcontext;
 
-    public DdaongoingAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3,ArrayList<String> mtextviewid) {
+    public DdaongoingAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3, ArrayList<String> mtextviewid) {
         this.mcontext = mcontext;
         this.mtextviewid = mtextviewid;
         this.mtextview1 = mtextview1;
@@ -35,7 +37,7 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
     @NonNull
     @Override
     public ViewHolderOngoingDda onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mcontext).inflate(R.layout.notassignedlist,parent,false);
+        View view = LayoutInflater.from(mcontext).inflate(R.layout.notassignedlist, parent, false);
         ViewHolderOngoingDda viewHolderOngoingDda = new ViewHolderOngoingDda(view);
         return viewHolderOngoingDda;
     }
@@ -47,14 +49,14 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
         holder.tv2.setText(mtextview2.get(position));
         holder.tv3.setText(mtextview3.get(position));
 
-//        holder.parentnotassigned.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Log.d(TAG, "onClick: item clicked");
-//                Intent intent = new Intent(mcontext, DdaselectAdo.class);
-//                mcontext.startActivity(intent);
-//            }
-//        });
+        holder.parentnotassigned.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: item clicked");
+                Intent intent = new Intent(mcontext, DdaselectAdo.class);
+                mcontext.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -62,7 +64,7 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
         return mtextview1.size();
     }
 
-    public class ViewHolderOngoingDda extends RecyclerView.ViewHolder{
+    public class ViewHolderOngoingDda extends RecyclerView.ViewHolder {
 
         TextView tv1;
         TextView tv2;

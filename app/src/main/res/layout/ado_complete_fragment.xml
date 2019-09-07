@@ -4,10 +4,22 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_centerInParent="true"
-        android:text="complete"
+        android:id="@+id/completed_tv"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginTop="16dp"
+        android:text="LOCATION"
+        android:layout_marginHorizontal="16dp"
+        android:textSize="28sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="16dp"
+        android:id="@+id/ado_completed_rv"
+        android:layout_below="@id/completed_tv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 
 </RelativeLayout>

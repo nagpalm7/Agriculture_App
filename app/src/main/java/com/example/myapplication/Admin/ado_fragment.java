@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -51,7 +50,7 @@ public class ado_fragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.ado_fragment,container,false);
-        recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo);
+        recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, false);
         RecyclerView Rview = view.findViewById(R.id.recyclerViewado);
         Rview.setAdapter(recyclerViewAdater);
         Rview.setLayoutManager( new LinearLayoutManager(getActivity()));

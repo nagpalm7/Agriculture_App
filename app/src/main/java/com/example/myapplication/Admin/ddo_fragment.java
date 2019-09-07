@@ -51,7 +51,7 @@ public class ddo_fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: check1check");
         View view = inflater.inflate(R.layout.ddo_fragment, container, false);
-        recyclerViewAdater = new RecyclerViewAdater(getActivity(),username,userinfo);
+        recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, true);
         RecyclerView Rview = view.findViewById(R.id.recyclerViewddo);
         Rview.setAdapter(recyclerViewAdater);
         Rview.setLayoutManager( new LinearLayoutManager(getActivity()));

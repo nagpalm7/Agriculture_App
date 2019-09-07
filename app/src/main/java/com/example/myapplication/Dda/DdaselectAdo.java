@@ -48,6 +48,12 @@ public class DdaselectAdo extends AppCompatActivity {
         RecyclerView review = (RecyclerView) findViewById(R.id.recyclerViewAdoList);
         DdaAdolistAdapter = new DdaAdolistAdapter(this,Name);
         review.setAdapter(DdaAdolistAdapter);
+        //make your own adapter harsh in dda fragment
+
+      /*  RecyclerView review = (RecyclerView) findViewById(R.id.recyclerViewAdoList);
+        adoListAdapter = new AdoListAdapter(this,Name);
+        review.setAdapter(adoListAdapter);
+>>>>>>> 00346294bdf7c96a3f3a823fca3f9e00875e1134
         review.setLayoutManager(new LinearLayoutManager(this));
 
         SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
@@ -88,6 +94,6 @@ public class DdaselectAdo extends AppCompatActivity {
         };
 
         adolistrequestqueue.add(jsonObjectRequest);
-
+*/
     }
 }

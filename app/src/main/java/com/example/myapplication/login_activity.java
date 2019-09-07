@@ -49,6 +49,7 @@ public class login_activity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private CheckBox checkBox;
+    private Button btnLogin;
 
 
     @Override
@@ -71,9 +72,17 @@ public class login_activity extends AppCompatActivity {
 
             editEmail = findViewById(R.id.editEmail);
             editPassword = findViewById(R.id.editPassword);
-            final Button btnLogin = findViewById(R.id.login_button);
+        btnLogin = findViewById(R.id.login_button);
             progressBar = findViewById(R.id.progressBar);
             checkBox = findViewById(R.id.eyeIcon);
+
+        SharedPreferences preferences = getSharedPreferences("tokenFile", MODE_PRIVATE);
+        String token = preferences.getString("token", "");
+        if (!token.isEmpty() || !token.equals("")) {
+            Intent intent = new Intent(login_activity.this, AdminActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
          checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
              @Override
@@ -96,6 +105,7 @@ public class login_activity extends AppCompatActivity {
                     String mPass = editPassword.getText().toString().trim();
 
                     if (!mEmail.isEmpty() || !mPass.isEmpty()) {
+                        btnLogin.setEnabled(false);
                         Login(mEmail, mPass);
                     } else {
                         editEmail.setError("Please insert email.");
@@ -163,6 +173,7 @@ public class login_activity extends AppCompatActivity {
                                     Log.d(TAG, "onResponse: error in get catch block :" + e.getMessage());
                                     Toast.makeText(login_activity.this,"Please try again",Toast.LENGTH_LONG).show();
                                     progressBar.setVisibility(View.INVISIBLE);
+                                    btnLogin.setEnabled(true);
                                     editEmail.setText("");
                                     editPassword.setText("");
                                 }
@@ -172,6 +183,8 @@ public class login_activity extends AppCompatActivity {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 Toast.makeText(login_activity.this,"Check your internet connection",Toast.LENGTH_LONG).show();
+
+                                btnLogin.setEnabled(true);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 editEmail.setText("");
                                 editPassword.setText("");
@@ -206,6 +219,7 @@ public class login_activity extends AppCompatActivity {
                                 } catch (JSONException e) {
                                     Toast.makeText(login_activity.this,"some error occurred",Toast.LENGTH_LONG).show();
                                     progressBar.setVisibility(View.INVISIBLE);
+                                    btnLogin.setEnabled(true);
                                     Log.d(TAG, "onResponse: error in post catch block: " + e);
                                 }
 
@@ -216,6 +230,7 @@ public class login_activity extends AppCompatActivity {
                             public void onErrorResponse(VolleyError error) {
                                 Toast.makeText(login_activity.this,"Invalid User",Toast.LENGTH_LONG).show();
                                 progressBar.setVisibility(View.INVISIBLE);
+                                btnLogin.setEnabled(true);
                                 Log.d(TAG, "onErrorResponse: some error in post: " + error);
 //                                error.printStackTrace();
                             }
@@ -229,6 +244,7 @@ public class login_activity extends AppCompatActivity {
                 Log.d(TAG, "Login: Error:"+e);
                 Toast.makeText(login_activity.this,"some error occurred",Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.INVISIBLE);
+                btnLogin.setEnabled(true);
 
             }
 
