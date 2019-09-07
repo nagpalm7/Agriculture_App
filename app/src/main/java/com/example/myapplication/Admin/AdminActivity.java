@@ -1,10 +1,13 @@
 package com.example.myapplication.Admin;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -23,6 +27,11 @@ import androidx.fragment.app.FragmentManager;
 import com.example.myapplication.R;
 import com.example.myapplication.login_activity;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AdminActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -36,7 +45,7 @@ public class AdminActivity extends AppCompatActivity
     private NavigationView navigationView;
 
     //var
-    private Boolean PERMISSION_GRANTED = false;
+    private boolean PERMISSION_GRANTED = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,16 +53,15 @@ public class AdminActivity extends AppCompatActivity
         setContentView(R.layout.activity_admin);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        getPermission();
-
-        if (PERMISSION_GRANTED) {
+        navigationView = findViewById(R.id.nav_view);
+        if (getPermission()) {
             Log.d(TAG, "onCreate: permission" + PERMISSION_GRANTED);
+            navigationView.setCheckedItem(R.id.nav_home);
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt()).commit();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -61,34 +69,34 @@ public class AdminActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void getPermission() {
-        String[] permission = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE};
-
+    private boolean getPermission() {
+        List<String> Permission = new ArrayList();
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-
-            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_COARSE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-
-                if (ContextCompat.checkSelfPermission(this.getApplicationContext(), READ_EXTERNAL_STORAGE) ==
-                        PackageManager.PERMISSION_GRANTED) {
-
-                    if (ContextCompat.checkSelfPermission(this.getApplicationContext(), WRITE_EXTERNAL_STORAGE)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        //all permission are granted
-                        PERMISSION_GRANTED = true;
-                    } else {
-                        ActivityCompat.requestPermissions(this, permission, RESULT_CODE);
-                    }
-                } else {
-                    ActivityCompat.requestPermissions(this, permission, RESULT_CODE);
-                }
-            } else {
-                ActivityCompat.requestPermissions(this, permission, RESULT_CODE);
-            }
-        } else {
-            ActivityCompat.requestPermissions(this, permission, RESULT_CODE);
+                != PackageManager.PERMISSION_GRANTED) {
+            Permission.add(ACCESS_FINE_LOCATION);
         }
+
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            Permission.add(ACCESS_COARSE_LOCATION);
+        }
+
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            Permission.add(READ_EXTERNAL_STORAGE);
+        }
+
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            Permission.add(WRITE_EXTERNAL_STORAGE);
+        }
+
+        if (!Permission.isEmpty()) {
+            String[] permissions = Permission.toArray(new String[Permission.size()]);
+            ActivityCompat.requestPermissions(this, permissions, RESULT_CODE);
+            return false;
+        } else
+            return true;
 
     }
 
@@ -96,26 +104,84 @@ public class AdminActivity extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PERMISSION_GRANTED = false;
 
-        switch (requestCode) {
-            case RESULT_CODE: {
-                for (int i = 0; i < grantResults.length; i++) {
-                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                        //user again denied the permission
-                        Log.d(TAG, "onRequestPermissionsResult: user denied the permission");
-                        PERMISSION_GRANTED = false;
-                    } else {
-                        //permission granted
-                        Log.d(TAG, "onRequestPermissionsResult: permission granted");
-                        PERMISSION_GRANTED = true;
-                        //call a method
-                        showMap();
-                    }
-                    navigationView.setCheckedItem(R.id.nav_home);
+        if (requestCode == RESULT_CODE) {
+            HashMap<String, Integer> permissionResults = new HashMap<>();
+            int deniedCount = 0;
+
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                    permissionResults.put(permissions[i], grantResults[i]);
+                    deniedCount++;
                 }
+            }
 
+            if (deniedCount == 0) {
+                navigationView.setCheckedItem(R.id.nav_home);
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt()).commit();
 
+            } else {
+                for (Map.Entry<String, Integer> entry : permissionResults.entrySet()) {
+                    String permName = entry.getKey();
+                    int permResult = entry.getValue();
+
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, permName)) {
+                        showDialog("", "This app needs location and files permissions to work without any problems.",
+                                "Yes, Grant permissions",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                        getPermission();
+                                    }
+                                },
+                                "No, Exit app",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                        finish();
+                                    }
+                                }, false);
+                    } else {
+                        showDialog("",
+                                "You have denied some permissions. Allow all the permissions at [Setting] > [Permissions]",
+                                "Go to Settings",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                                Uri.fromParts("package", getPackageName(), null));
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                }, "No, Exit App",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                        finish();
+                                    }
+                                }, false);
+                        break;
+                    }
+                }
             }
         }
+    }
+
+    private AlertDialog showDialog(String title, String msg, String positiveLabel, DialogInterface.OnClickListener positiveOnclick,
+                                   String negativeLabel, DialogInterface.OnClickListener negativeOnclick,
+                                   boolean isCancelable) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setPositiveButton(positiveLabel, positiveOnclick);
+        builder.setNegativeButton(negativeLabel, negativeOnclick);
+        builder.setCancelable(isCancelable);
+        AlertDialog alert = builder.create();
+        alert.show();
+        return alert;
     }
 
     private void showMap() {
