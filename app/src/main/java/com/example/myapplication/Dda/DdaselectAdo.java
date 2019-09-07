@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
 
@@ -31,13 +33,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.R.layout.simple_spinner_item;
+
 public class DdaselectAdo extends AppCompatActivity {
     private static final String TAG = "DdaselectAdo";
     private ArrayList<String> nameofado;
 
     private String urlget = "http://13.235.100.235:8000/api/ado/";
     private String token;
-    Spinner spinner;
+    private Spinner spinner;
 
 
     @Override
@@ -60,12 +64,12 @@ public class DdaselectAdo extends AppCompatActivity {
         nameofado = new ArrayList<String>();
         spinner = (Spinner) findViewById(R.id.listofado);
 
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
 
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        StringRequest jsonObjectRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>  () {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
@@ -80,7 +84,6 @@ public class DdaselectAdo extends AppCompatActivity {
                         @Override
                         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                             Log.d(TAG, "onItemSelected: item is selected");
-                            adapterView.addView(view,0);
                         }
 
                         @Override
@@ -88,6 +91,10 @@ public class DdaselectAdo extends AppCompatActivity {
 
                         }
                     });
+
+                    ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(DdaselectAdo.this, simple_spinner_item, nameofado);
+                    spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+                    spinner.setAdapter(spinnerArrayAdapter);
                     
                 }catch (JSONException e){ e.printStackTrace();}
 
@@ -95,7 +102,7 @@ public class DdaselectAdo extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }){
             @Override

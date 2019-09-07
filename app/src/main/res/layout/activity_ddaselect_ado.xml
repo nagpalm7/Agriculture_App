@@ -8,17 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#000"
-        android:textSize="20sp"
-        android:layout_margin="10dp"
-        android:text="Fetching JSON Data with Volley and Populating below spinner with JSON Data"/>
+        android:textSize="24sp"
+        android:layout_margin="16dp"
+        android:text="SELECT from the list of ado's below:"/>
 
     <Spinner
         android:id="@+id/listofado"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="25dp"
+        android:layout_height="64dp"
+        android:layout_margin="16dp"
         android:background="@drawable/spinner"
         android:spinnerMode="dropdown" />
 
