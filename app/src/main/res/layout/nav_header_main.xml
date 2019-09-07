@@ -26,7 +26,7 @@
         android:id="@+id/nameOfUserLoggedIn"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:textSize="24dp"
+        android:textSize="18sp"
         android:text="Name"
         android:textColor="#ffffff"/>
 

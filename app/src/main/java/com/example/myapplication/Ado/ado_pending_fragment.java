@@ -76,7 +76,7 @@ public class ado_pending_fragment extends Fragment {
 
                             }
 
-
+                            adoListAdapter.mshowshimmer = false;
                             adoListAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();

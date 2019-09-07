@@ -7,13 +7,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.login_activity;
@@ -38,6 +41,12 @@ public class AdoActivity extends AppCompatActivity {
 
 
         final NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView user_name = headerView.findViewById(R.id.nameOfUserLoggedIn);
+        SharedPreferences pref = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
+        String username = pref.getString("nameOfUser","");
+        user_name.setText(username);
+
         drawer = findViewById(R.id.drawer_layout1);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,6 +50,8 @@ public class ado_complete_fragment extends Fragment {
         getData();
 
         recyclerView = view.findViewById(R.id.ado_completed_rv);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),DividerItemDecoration.HORIZONTAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
         adoListAdapter = new AdoListAdapter(getContext(), mtextview1, mtextview2);
         recyclerView.setAdapter(adoListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -76,6 +79,7 @@ public class ado_complete_fragment extends Fragment {
                                 mtextview2.add(location_address);
 
                             }
+                            adoListAdapter.mshowshimmer = false;
                             adoListAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
