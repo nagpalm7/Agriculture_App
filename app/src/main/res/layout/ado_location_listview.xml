@@ -1,39 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:id="@+id/ado_loaction_parent">
 
-    <TextView
-        android:layout_marginBottom="2dp"
-        android:layout_above="@id/laddress"
-        android:id="@+id/lname"
-        android:paddingTop="15dp"
-        android:layout_marginHorizontal="16dp"
-        android:textSize="24sp"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="location name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/ado_location_shimmer">
 
-    <TextView
-        android:layout_marginBottom="16dp"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/laddress"
-        android:textSize="18sp"
-        android:text="location address,location address"
-        android:layout_marginHorizontal="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <ImageView
-        android:src="@drawable/loaction"
-        android:layout_alignBottom="@id/laddress"
-        android:layout_marginHorizontal="16dp"
-        android:layout_alignParentEnd="true"
-        android:layout_width="50dp"
-        android:layout_height="50dp"/>
+    <RelativeLayout
+        android:id="@+id/ado_loaction_parent"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
 
 
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@id/laddress"
+            android:layout_alignParentEnd="true"
+            android:layout_marginHorizontal="16dp"
+            android:src="@drawable/loaction" />
 
-</RelativeLayout>
+        <TextView
+            android:background="@color/shimmer_bg"
+            android:id="@+id/laddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="location address,location address"
+            android:textSize="18sp" />
+
+        <TextView
+            android:background="@color/shimmer_bg"
+            android:id="@+id/lname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/laddress"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="2dp"
+            android:paddingTop="15dp"
+            android:text="location name"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="24sp" />
+
+
+    </RelativeLayout>
+
+</com.facebook.shimmer.ShimmerFrameLayout>
