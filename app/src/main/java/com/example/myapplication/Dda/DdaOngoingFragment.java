@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -168,7 +169,7 @@ public class DdaOngoingFragment extends Fragment {
                                             + singleObject.getString("district") + ", " + singleObject.getString("state");
                                     Address.add(location);
                                     ddaongoingAdapter.notifyDataSetChanged();
-                                    Log.d(TAG, "onResponse: hello in next url");
+                                    Log.d(TAG, "onResponse: in next url");
                                 }
 
                             } catch (JSONException e) {

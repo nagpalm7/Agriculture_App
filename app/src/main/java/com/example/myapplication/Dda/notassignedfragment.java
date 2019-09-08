@@ -7,9 +7,11 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -44,6 +46,10 @@ public class notassignedfragment extends Fragment {
     private String district;
     private String state;
     private String token;
+    private View view;
+    private View v;
+
+    SwipeRefreshLayout swipeRefreshLayout;
 
     public notassignedfragment(){
         Id = new ArrayList<String>(3);
@@ -56,7 +62,9 @@ public class notassignedfragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_notassignedfragment, container, false);
+        view = inflater.inflate(R.layout.fragment_notassignedfragment, container, false);
+        v = inflater.inflate(R.layout.notassignedlist,container,false);
+        swipeRefreshLayout = v.findViewById(R.id.swiperefresh);
         ddapendingUnassignedAdapter = new DdapendingUnassignedAdapter(getActivity(),Id,Date,Time, Address);
         RecyclerView notassignedreview = view.findViewById(R.id.recyclerViewnotassigned);
         notassignedreview.setAdapter(ddapendingUnassignedAdapter);
@@ -65,7 +73,17 @@ public class notassignedfragment extends Fragment {
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token","");
         Log.d(TAG, "onCreateView: "+token);
+        view = getdata();
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                view = getdata();
+            }
+        });
 
+        return view;
+    }
+    private View getdata(){
         final RequestQueue unassignedrequestqueue = Volley.newRequestQueue(getActivity());
 
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlget, null, new Response.Listener<JSONObject>() {
@@ -108,7 +126,22 @@ public class notassignedfragment extends Fragment {
         };
 
         unassignedrequestqueue.add(jsonObjectRequest);
-
+        if(swipeRefreshLayout.isRefreshing()){
+            swipeRefreshLayout.setRefreshing(false);
+        }
         return view;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_refresh:
+                Log.i(TAG, "onOptionsItemSelected: Refresh menu item selected");
+                swipeRefreshLayout.setRefreshing(true);
+                getdata();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

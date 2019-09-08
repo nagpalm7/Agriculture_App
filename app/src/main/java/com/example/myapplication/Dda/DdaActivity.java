@@ -56,7 +56,7 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
         textView = view.findViewById(R.id.nameOfUserLoggedIn);
 
         final SharedPreferences preferences = getSharedPreferences("tokenFile",Context.MODE_PRIVATE);
-        final String nameOfUser = preferences.getString("nameOfUser","");
+        final String nameOfUser = preferences.getString("Name","");
         Toast.makeText(this,nameOfUser,Toast.LENGTH_LONG).show();
         textView.setText(nameOfUser);
         //close

@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<!--<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    android:id="@+id/shimmer_notassigned"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content">-->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/parentnotassigned">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
         app:cardCornerRadius="15dp"
@@ -20,92 +32,96 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/locationtext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
-                android:textSize="24dp"
-                android:textColor="@color/colorPrimaryDark"
-                android:text="Id:"/>
-            <TextView
-                android:id="@+id/lid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_toRightOf="@+id/datetext"
-                android:textSize="24dp"
-                android:text="Id"/>
+                <TextView
+                    android:id="@+id/locationtext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:textSize="24dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="Id:"/>
+                <TextView
+                    android:id="@+id/lid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_toRightOf="@+id/datetext"
+                    android:textSize="24dp"
+                    android:text="Id"/>
 
-            <TextView
-                android:id="@+id/datetext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/locationtext"
-                android:paddingBottom="16dp"
-                android:textSize="18dp"
-                android:textColor="@color/colorPrimaryDark"
-                android:text="Date:"/>
+                <TextView
+                    android:id="@+id/datetext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/locationtext"
+                    android:paddingBottom="16dp"
+                    android:textSize="18dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="Date:"/>
 
-            <TextView
-                android:id="@+id/date"
-                android:layout_below="@+id/locationtext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_toRightOf="@+id/datetext"
-                android:paddingBottom="16dp"
-                android:text="Date"
-                android:textSize="18sp" />
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_below="@+id/locationtext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_toRightOf="@+id/datetext"
+                    android:paddingBottom="16dp"
+                    android:text="Date"
+                    android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/timetext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/datetext"
-                android:paddingBottom="16dp"
-                android:textSize="18sp"
-                android:textColor="@color/colorPrimaryDark"
-                android:text="Time:"/>
+                <TextView
+                    android:id="@+id/timetext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/datetext"
+                    android:paddingBottom="16dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="Time:"/>
 
-            <TextView
-                android:id="@+id/Time"
-                android:paddingBottom="16dp"
-                android:layout_below="@+id/date"
-                android:layout_toRightOf="@+id/timetext"
-                android:layout_marginLeft="16dp"
-                android:textSize="18sp"
-                android:text="Time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
+                <TextView
+                    android:id="@+id/Time"
+                    android:paddingBottom="16dp"
+                    android:layout_below="@+id/date"
+                    android:layout_toRightOf="@+id/timetext"
+                    android:layout_marginLeft="16dp"
+                    android:textSize="18sp"
+                    android:text="Time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
 
-            <TextView
-                android:id="@+id/addresstext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/timetext"
-                android:paddingBottom="16dp"
-                android:textSize="18sp"
-                android:textColor="@color/colorPrimaryDark"
-                android:text="Address:"/>
+                <TextView
+                    android:id="@+id/addresstext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/timetext"
+                    android:paddingBottom="16dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="Address:"/>
 
-            <TextView
-                android:id="@+id/address"
-                android:paddingBottom="16dp"
-                android:layout_below="@+id/Time"
-                android:layout_toRightOf="@+id/Time"
-                android:layout_marginLeft="16dp"
-                android:textSize="18sp"
-                android:text="Address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
+                <TextView
+                    android:id="@+id/address"
+                    android:paddingBottom="16dp"
+                    android:layout_below="@+id/Time"
+                    android:layout_toRightOf="@+id/Time"
+                    android:layout_marginLeft="16dp"
+                    android:textSize="18sp"
+                    android:text="Address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
 
-        </RelativeLayout>
+            </RelativeLayout>
 
-    </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-</RelativeLayout>
+    </RelativeLayout>
+
+<!--</com.facebook.shimmer.ShimmerFrameLayout>-->
