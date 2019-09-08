@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/adolistlayout">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="15dp"
+        android:elevation="8dp"
+        android:layout_marginHorizontal="16dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp">
+
+            <Button
+                android:id="@+id/btnAssign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/nameofado"
+                android:layout_marginTop="8dp"
+                android:text="Assign" />
+
+            <TextView
+                android:id="@+id/nameofvillage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nameofado"
+                android:layout_marginTop="8dp"
+                android:text="VillageName"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/nameofado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AdoName"
+                android:textColor="@color/colorPrimary"
+                android:textSize="24dp" />
+
+            <!--    <Spinner-->
+            <!--        android:id="@+id/listofado"-->
+            <!--        android:layout_width="match_parent"-->
+            <!--        android:layout_height="64dp"-->
+            <!--        android:layout_margin="16dp"-->
+            <!--        android:background="@drawable/spinner"-->
+            <!--        android:spinnerMode="dropdown" />-->
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

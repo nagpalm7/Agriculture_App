@@ -15,6 +15,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment" />
 
     <Button
+        android:onClick="onClickNavigation"
         android:layout_alignParentBottom="true"
         android:elevation="8dp"
         android:background="@drawable/shape"
@@ -23,9 +24,10 @@
         android:layout_marginVertical="16dp"
         android:layout_marginHorizontal="16dp"
         android:layout_width="150dp"
-        android:layout_height="60dp"/>
+        android:layout_height="50dp"/>
 
     <Button
+        android:onClick="onClickCheckIn"
         android:layout_alignParentBottom="true"
         android:elevation="8dp"
         android:background="@drawable/shape"
@@ -35,6 +37,6 @@
         android:layout_marginVertical="16dp"
         android:layout_marginHorizontal="16dp"
         android:layout_width="150dp"
-        android:layout_height="60dp"/>
+        android:layout_height="50dp"/>
 
 </RelativeLayout>

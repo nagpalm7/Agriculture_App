@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ import com.google.android.material.navigation.NavigationView;
 public class DdaActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private TextView textView;
     private NavigationView navigationView;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +53,11 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        //problem in these below 5 lines the name is not visible in the header
-        View view = LayoutInflater.from(this).inflate(R.layout.nav_header_main,null,false);
-        textView = view.findViewById(R.id.nameOfUserLoggedIn);
+        //setting header dynamically\
+        View header = navigationView.getHeaderView(0);
+        textView = (TextView) header.findViewById(R.id.nameOfUserLoggedIn);
+        imageView = (ImageView) header.findViewById(R.id.imageView);
+        imageView.setImageResource(R.mipmap.white_logo);
 
         final SharedPreferences preferences = getSharedPreferences("tokenFile",Context.MODE_PRIVATE);
         final String nameOfUser = preferences.getString("Name","");
