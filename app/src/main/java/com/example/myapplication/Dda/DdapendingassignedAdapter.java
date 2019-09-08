@@ -18,14 +18,12 @@ public class DdapendingassignedAdapter extends RecyclerView.Adapter<Ddapendingas
     private static final String TAG = "DdapendingassignedAdapt";
     ArrayList<String> mtextview1;
     ArrayList<String> mtextview2;
-    ArrayList<String> mtextview3;
     Context mcontext;
 
-    public DdapendingassignedAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3) {
+    public DdapendingassignedAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
-        this.mtextview3 = mtextview3;
     }
 
     @NonNull
@@ -40,7 +38,6 @@ public class DdapendingassignedAdapter extends RecyclerView.Adapter<Ddapendingas
     public void onBindViewHolder(@NonNull DdapendingassignedAdapter.ViewHolderAssignedDda holder, int position) {
         holder.tv1.setText(mtextview1.get(position));
         holder.tv2.setText(mtextview2.get(position));
-        holder.tv3.setText(mtextview3.get(position));
     }
 
     @Override
@@ -52,16 +49,14 @@ public class DdapendingassignedAdapter extends RecyclerView.Adapter<Ddapendingas
 
         TextView tv1;
         TextView tv2;
-        TextView tv3;
         RelativeLayout parentnotassigned;
 
         public ViewHolderAssignedDda(@NonNull View itemView) {
             super(itemView);
             mcontext = itemView.getContext();
             parentnotassigned = itemView.findViewById(R.id.parentnotassigned);
-            tv1 = itemView.findViewById(R.id.date);
-            tv2 = itemView.findViewById(R.id.Time);
-            tv3 = itemView.findViewById(R.id.address);
+            tv1 = itemView.findViewById(R.id.lid);
+            tv2 = itemView.findViewById(R.id.address);
 
         }
 
