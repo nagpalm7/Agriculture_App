@@ -38,7 +38,7 @@ public class login_activity extends AppCompatActivity {
 
     private String token;
     private String typeOfUser;
-    private String nameOfUser;
+    private String Name;
     private static final String TAG = "login_activity";
     private EditText editEmail, editPassword;
 
@@ -123,11 +123,12 @@ public class login_activity extends AppCompatActivity {
                                 try {
 
                                     JSONObject c = new JSONObject(String.valueOf(response));
-                                    typeOfUser = c.getString("typeOfUser");
-                                    nameOfUser = c.getString("name");
+                                    JSONObject a = c.getJSONObject("auth_user");
+                                    typeOfUser = a.getString("type_of_user");
+                                    Name = c.getString("name");
                                     SharedPreferences.Editor editor = getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
                                     editor.putString("typeOfUser",typeOfUser);
-                                    editor.putString("nameOfUser",nameOfUser);
+                                    editor.putString("Name", Name);
                                     editor.apply();
 
                                     Log.d(TAG, "onResponse: typeOfUser:" + typeOfUser);
@@ -156,8 +157,6 @@ public class login_activity extends AppCompatActivity {
                                     else {
                                         progressBar.setVisibility(View.INVISIBLE);
                                         Toast.makeText(login_activity.this, "Invalid User", Toast.LENGTH_SHORT).show();
-                                        editEmail.setText("");
-                                        editPassword.setText("");
                                     }
 
 
@@ -166,8 +165,7 @@ public class login_activity extends AppCompatActivity {
                                     Toast.makeText(login_activity.this,"Please try again",Toast.LENGTH_LONG).show();
                                     progressBar.setVisibility(View.INVISIBLE);
                                     btnLogin.setEnabled(true);
-                                    editEmail.setText("");
-                                    editPassword.setText("");
+//
                                 }
                             }
                         },
@@ -220,7 +218,7 @@ public class login_activity extends AppCompatActivity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(login_activity.this,"Invalid User",Toast.LENGTH_LONG).show();
+                                Toast.makeText(login_activity.this,"Network error",Toast.LENGTH_LONG).show();
                                 progressBar.setVisibility(View.INVISIBLE);
                                 btnLogin.setEnabled(true);
                                 Log.d(TAG, "onErrorResponse: some error in post: " + error);
