@@ -22,6 +22,8 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
     private static final String TAG = "AdoListAdapter";
     private ArrayList<String> mtextview1;
     private ArrayList<String> mtextview2;
+    private ArrayList<String> longitude;
+    private ArrayList<String> latitude;
     public Boolean mshowshimmer = true;
     private int shimmer_count = 5;
     Context mcontext;
@@ -37,12 +39,15 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
     public AdoListAdapter.AdoListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 //        Context context = parent.getContext();
         View view = LayoutInflater.from(mcontext).inflate(R.layout.ado_location_listview, parent, false);
-        AdoListHolder adoListHolder = new AdoListHolder(view);
+        final AdoListHolder adoListHolder = new AdoListHolder(view);
         if (!mshowshimmer) {
             adoListHolder.Adolistlayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(mcontext, ado_map_activity.class);
+                    int position = adoListHolder.getAdapterPosition();
+                    intent.putExtra("longitude",longitude.get(position));
+                    intent.putExtra("latitude",latitude.get(position));
                     mcontext.startActivity(intent);
                 }
             });
@@ -89,5 +94,12 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
             Log.d(TAG, "AdoListHolder: error in this");
 
         }
+    }
+
+    public void sendPostion(ArrayList<String> longitude, ArrayList<String> latitdue){
+        this.longitude = longitude;
+        this.latitude = latitdue;
+
+
     }
 }

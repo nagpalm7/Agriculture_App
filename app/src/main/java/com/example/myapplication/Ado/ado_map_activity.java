@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,22 +15,31 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 
 import com.example.myapplication.Admin.map_fragemnt;
 import com.example.myapplication.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class ado_map_activity extends AppCompatActivity {
 
     private final String ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private final String ACCESS_COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private double longitude;
+    private double latitude;
 
     private final int RESULT_CODE = 786;
     private GoogleMap map=null;
@@ -38,6 +48,15 @@ public class ado_map_activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ado_map_activity);
+        getPermission();
+        Intent intent = getIntent();
+        longitude = Double.parseDouble(intent.getStringExtra("longitude"));
+        latitude = Double.parseDouble(intent.getStringExtra("latitude"));
+
+        //marking positions
+        map.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title("edar aaa").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+
     }
 
     private boolean getPermission() {
@@ -83,8 +102,38 @@ public class ado_map_activity extends AppCompatActivity {
                     public void onMapReady(GoogleMap googleMap) {
                         map=googleMap;
 
+                        //get latlong for corners for specified city
 
+                        LatLng one = new LatLng(7.798000, 68.14712);
+                        LatLng two = new LatLng(37.090000, 97.34466);
+
+                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                        //add them to builder
+                        builder.include(one);
+                        builder.include(two);
+
+                        LatLngBounds bounds = builder.build();
+
+                        //get width and height to current display screen
+                        int width = getResources().getDisplayMetrics().widthPixels;
+                        int height = getResources().getDisplayMetrics().heightPixels;
+
+                        // 20% padding
+                        int padding = (int) (width * 0.20);
+
+                        //set latlong bounds
+                        map.setLatLngBoundsForCameraTarget(bounds);
+
+                        //move camera to fill the bound to screen
+                        map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+
+                        //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
+                        map.setMinZoomPreference(map.getCameraPosition().zoom);
                     }
+
+
+
                 });
 
 
@@ -154,8 +203,14 @@ public class ado_map_activity extends AppCompatActivity {
     }
 
 
+    public void onClickNavigation(View view) {
+        String uri = String.format(Locale.ENGLISH, "geo:%lf,%lf", latitude, longitude);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        startActivity(intent);
+    }
 
-
-
+    public void onClickCheckIn(View view) {
+        //check in code
+    }
 }
 
