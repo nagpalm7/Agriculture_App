@@ -10,6 +10,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:indeterminateDrawable="@drawable/progress"
+        android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView

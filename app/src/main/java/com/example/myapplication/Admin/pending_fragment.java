@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -36,10 +38,9 @@ import java.util.Map;
 public class pending_fragment extends Fragment {
 
     //vars
-    private ArrayList<String> Id;
-    private ArrayList<String> Date;
-    private ArrayList<String> Time;
-    private ArrayList<String> Address;
+    private ArrayList<String> mDdaName;
+    private ArrayList<String> mAdaName;
+    private ArrayList<String> mAddress;
     private String token;
     private String villagename;
     private String blockname;
@@ -67,11 +68,10 @@ public class pending_fragment extends Fragment {
         View view = inflater.inflate(R.layout.pending_fragment, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewpending);
         progressBar = view.findViewById(R.id.locations_loading);
-        Id = new ArrayList<>();
-        Date = new ArrayList<>();
-        Time = new ArrayList<>();
-        Address = new ArrayList<>();
-        recyclerViewAdater = new AdminLocationAdapter(getActivity(), Id, Date, Time, Address);
+        mDdaName = new ArrayList<>();
+        mAdaName = new ArrayList<>();
+        mAddress = new ArrayList<>();
+        recyclerViewAdater = new AdminLocationAdapter(getActivity(), mDdaName, mAdaName, mAddress);
         recyclerView.setAdapter(recyclerViewAdater);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -96,10 +96,13 @@ public class pending_fragment extends Fragment {
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        Id.add(c.getString("ado"));
-                        Date.add(c.getString("acq_date"));
-                        Time.add(c.getString("acq_time"));
-                        Address.add(villagename + "," + blockname + "," + district + "," + state);
+                        mDdaName.add(c.getString("dda"));
+                        String adoName = c.getString("ado");
+                        if (adoName.isEmpty())
+                            mAdaName.add("Not Assigned");
+                        else
+                            mAdaName.add(adoName);
+                        mAddress.add(villagename + "," + blockname + "," + district + "," + state);
                         recyclerViewAdater.mShowShimmer = false;
                         recyclerViewAdater.notifyDataSetChanged();
                     }
@@ -111,6 +114,8 @@ public class pending_fragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (error instanceof NoConnectionError)
+                    Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "onErrorResponse: " + error);
             }
         }) {
@@ -136,10 +141,13 @@ public class pending_fragment extends Fragment {
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        Id.add(c.getString("ado"));
-                        Date.add(c.getString("acq_date"));
-                        Time.add(c.getString("acq_time"));
-                        Address.add(villagename + "," + blockname + "," + district + "," + state);
+                        mDdaName.add(c.getString("dda"));
+                        String adoName = c.getString("ado");
+                        if (adoName.isEmpty())
+                            mAdaName.add("Not Assigned");
+                        else
+                            mAdaName.add(adoName);
+                        mAddress.add(villagename + "," + blockname + "," + district + "," + state);
                         recyclerViewAdater.mShowShimmer = false;
                         recyclerViewAdater.notifyDataSetChanged();
                     }
@@ -217,11 +225,13 @@ public class pending_fragment extends Fragment {
                             blockname = c.getString("block_name");
                             district = c.getString("district");
                             state = c.getString("state");
-                            Id.add(c.getString("ado"));
-                            Date.add(c.getString("acq_date"));
-                            Time.add(c.getString("acq_time"));
-                            Address.add(villagename + "," + blockname + "," + district + "," + state);
-
+                            mDdaName.add(c.getString("dda"));
+                            String adoName = c.getString("ado");
+                            if (adoName.isEmpty())
+                                mAdaName.add("Not Assigned");
+                            else
+                                mAdaName.add(adoName);
+                            mAddress.add(villagename + "," + blockname + "," + district + "," + state);
                             recyclerViewAdater.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {
@@ -232,6 +242,8 @@ public class pending_fragment extends Fragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    if (error instanceof NoConnectionError)
+                        Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "onErrorResponse: " + error);
                 }
             }) {
@@ -264,11 +276,13 @@ public class pending_fragment extends Fragment {
                             blockname = c.getString("block_name");
                             district = c.getString("district");
                             state = c.getString("state");
-                            Id.add(c.getString("ado"));
-                            Date.add(c.getString("acq_date"));
-                            Time.add(c.getString("acq_time"));
-                            Address.add(villagename + "," + blockname + "," + district + "," + state);
-
+                            mDdaName.add(c.getString("dda"));
+                            String adoName = c.getString("ado");
+                            if (adoName.isEmpty())
+                                mAdaName.add("Not Assigned");
+                            else
+                                mAdaName.add(adoName);
+                            mAddress.add(villagename + "," + blockname + "," + district + "," + state);
                             recyclerViewAdater.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {
@@ -279,6 +293,8 @@ public class pending_fragment extends Fragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    if (error instanceof NoConnectionError)
+                        Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "onErrorResponse: " + error);
                 }
             }) {

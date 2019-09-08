@@ -3,10 +3,13 @@ package com.example.myapplication.Admin;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,11 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
@@ -35,44 +38,50 @@ import java.util.Map;
 public class ado_fragment extends Fragment {
     private ArrayList<String> username;
     private ArrayList<String> userinfo;
-    private String urlpost = "http://13.235.100.235:8000/api/user/";
-    private String tokenurl = "http://13.235.100.235:8000/api-token-auth/";
+    private String mUrl = "http://13.235.100.235:8000/api/users-list/ado/";
     private RecyclerViewAdater recyclerViewAdater;
     private String token;
+    private String nextUrl;
+    private ProgressBar progressBar;
+    private LinearLayoutManager layoutManager;
 
     private final String TAG = "ado_fragment";
 
-    public ado_fragment(){
-        username = new ArrayList<String>();
-        userinfo = new ArrayList<String>();
+    public ado_fragment() {
+        username = new ArrayList<>();
+        userinfo = new ArrayList<>();
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.ado_fragment,container,false);
+        View view = inflater.inflate(R.layout.ado_fragment, container, false);
+        progressBar = view.findViewById(R.id.ado_list_progressbar);
         recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, false);
         RecyclerView Rview = view.findViewById(R.id.recyclerViewado);
         Rview.setAdapter(recyclerViewAdater);
-        Rview.setLayoutManager( new LinearLayoutManager(getActivity()));
+        SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
+        token = preferences.getString("token", "");
+        layoutManager = new LinearLayoutManager(getActivity());
+        Rview.setLayoutManager(layoutManager);
 
         final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 
 
-        final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, urlpost, null, new Response.Listener<JSONArray>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mUrl, null, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONArray response) {
-
+            public void onResponse(JSONObject response) {
                 try {
-                    JSONArray jsonArray = new JSONArray(String.valueOf(response));
-                    for(int i=0; i<jsonArray.length();i++){
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        String type_of_user= jsonObject.getString("typeOfUser");
-                        if(type_of_user.equals("ado") ){
-                            username.add(jsonObject.getString("name"));
-                            userinfo.add(String.valueOf(jsonObject.getInt("id")));
-                        }
+                    JSONObject rootObject = new JSONObject(String.valueOf(response));
+                    nextUrl = rootObject.getString("next");
+                    Log.d(TAG, "onResponse: " + nextUrl);
+                    JSONArray resultsArray = rootObject.getJSONArray("results");
+                    for (int i = 0; i < resultsArray.length(); i++) {
+                        JSONObject singleObject = resultsArray.getJSONObject(i);
+                        username.add(singleObject.getString("name"));
+                        userinfo.add(singleObject.getString("village_name"));
                     }
-                    Log.d(TAG, "onResponse: "+username);
+                    Log.d(TAG, "onResponse: " + username);
                     recyclerViewAdater.notifyDataSetChanged();
 
 
@@ -85,57 +94,96 @@ public class ado_fragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                if (error instanceof NoConnectionError)
+                    Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onErrorResponse: " + error);
             }
-        }){
+        }) {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> map = new HashMap<>();
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Authorization", "Token " + token);
+                return map;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
+        Rview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                int totalCount, pastItemCount, visibleItemCount;
+                if (dy > 0) {
+                    totalCount = layoutManager.getItemCount();
+                    pastItemCount = layoutManager.findFirstVisibleItemPosition();
+                    visibleItemCount = layoutManager.getChildCount();
+                    if ((pastItemCount + visibleItemCount) >= totalCount) {
+                        if (!(TextUtils.isEmpty(nextUrl)))
+                            getNextAdos();
+                    }
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+        return view;
+    }
+
+    private void getNextAdos() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        progressBar.setVisibility(View.VISIBLE);
+        final JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(Request.Method.GET, nextUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject rootObject = new JSONObject(String.valueOf(response));
+                    nextUrl = rootObject.getString("next");
+                    JSONArray resultsArray = rootObject.getJSONArray("results");
+                    for (int i = 0; i < resultsArray.length(); i++) {
+                        JSONObject singleObject = resultsArray.getJSONObject(i);
+                        username.add(singleObject.getString("name"));
+                        userinfo.add(singleObject.getString("village_name"));
+                    }
+                    Log.d(TAG, "onResponse: " + username);
+                    recyclerViewAdater.notifyDataSetChanged();
+
+
+                } catch (JSONException e) {
+                    Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
+                    e.printStackTrace();
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error instanceof NoConnectionError)
+                    Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
                 map.put("Authorization", "Token " + token);
                 return map;
             }
         };
 
         requestQueue.add(jsonArrayRequest);
+        requestFinished(requestQueue);
 
-        JSONObject postparams = new JSONObject();
-        try {
-            postparams.put("username", "admin");
-            postparams.put("password", "root");
-            Log.d(TAG, "params: ");
+    }
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, tokenurl, postparams,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            //retrieve the token from server
-                            try {
-                                JSONObject jsonObject = new JSONObject(String.valueOf(response));
-                                token = jsonObject.getString("token");
-                                requestQueue.add(jsonArrayRequest);
-                                Log.d(TAG, "onResponse: Token:" + token);
-                                SharedPreferences.Editor editor = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
-                                editor.putString("token",token);
-                                editor.apply();
-                            } catch (JSONException e) {
-                                Log.d(TAG, "onResponse: error in post catch block: " + e);
-                            }
+    private void requestFinished(RequestQueue queue) {
 
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.d(TAG, "onErrorResponse: some error in post: " + error);
-//                                error.printStackTrace();
-                        }
-                    });
+        queue.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<Object>() {
 
-            requestQueue.add(jsonObjectRequest);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return view;
+            @Override
+            public void onRequestFinished(Request<Object> request) {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+
     }
 }

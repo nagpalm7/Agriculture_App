@@ -21,17 +21,15 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
     ArrayList<String> mtextview1;
     ArrayList<String> mtextview2;
     ArrayList<String> mtextview3;
-    ArrayList<String> mtextview4;
     boolean mShowShimmer = true;
     private int SHIMMER_ITEM_NO = 5;
     Context mcontext;
 
-    public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2,ArrayList<String> mtextview3,ArrayList<String> mtextview4) {
+    public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         this.mtextview3 = mtextview3;
-        this.mtextview4 = mtextview4;
     }
 
     @NonNull
@@ -53,10 +51,10 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
             holder.tv2.setBackground(null);
             holder.tv3.setBackground(null);
             holder.tv4.setBackground(null);
-            holder.tv1.setText(mtextview1.get(position));
-            holder.tv2.setText(mtextview2.get(position));
-            holder.tv3.setText(mtextview3.get(position));
-            holder.tv4.setText(mtextview4.get(position));
+            holder.tv1.setText("DDO     : " + mtextview1.get(position));
+            holder.tv2.setText("ADO     : " + mtextview2.get(position));
+            holder.tv3.setText("ADDRESS : " + mtextview3.get(position));
+            holder.tv4.setText(position + 1);
         }
     }
 
@@ -77,10 +75,10 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             parentnotassigned = itemView.findViewById(R.id.parentnotassigned);
-            tv1 = itemView.findViewById(R.id.title);
-            tv2 = itemView.findViewById(R.id.date1);
-            tv3 = itemView.findViewById(R.id.Time1);
-            tv4 = itemView.findViewById(R.id.address1);
+            tv1 = itemView.findViewById(R.id.dda_name);
+            tv2 = itemView.findViewById(R.id.ada_name);
+            tv3 = itemView.findViewById(R.id.address);
+            tv4 = itemView.findViewById(R.id.serial_no);
             shimmerFrameLayout = itemView.findViewById(R.id.locations_shimmer);
         }
 
