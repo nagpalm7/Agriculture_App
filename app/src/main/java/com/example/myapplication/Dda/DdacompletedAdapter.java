@@ -18,14 +18,12 @@ public class DdacompletedAdapter extends RecyclerView.Adapter<DdacompletedAdapte
     private static final String TAG = "DdacompletedAdapter";
     ArrayList<String> mtextview1;
     ArrayList<String> mtextview2;
-    ArrayList<String> mtextview3;
     Context mcontext;
 
-    public DdacompletedAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3) {
+    public DdacompletedAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
-        this.mtextview3 = mtextview3;
     }
 
     @NonNull
@@ -40,7 +38,6 @@ public class DdacompletedAdapter extends RecyclerView.Adapter<DdacompletedAdapte
     public void onBindViewHolder(@NonNull DdacompletedAdapter.ViewHolderCompletedDda holder, int position) {
         holder.tv1.setText(mtextview1.get(position));
         holder.tv2.setText(mtextview2.get(position));
-        holder.tv3.setText(mtextview3.get(position));
     }
 
     @Override
@@ -52,16 +49,15 @@ public class DdacompletedAdapter extends RecyclerView.Adapter<DdacompletedAdapte
 
         TextView tv1;
         TextView tv2;
-        TextView tv3;
+
         RelativeLayout parentnotassigned;
 
         public ViewHolderCompletedDda(@NonNull View itemView) {
             super(itemView);
             mcontext = itemView.getContext();
             parentnotassigned = itemView.findViewById(R.id.parentnotassigned);
-            tv1 = itemView.findViewById(R.id.date);
-            tv2 = itemView.findViewById(R.id.Time);
-            tv3 = itemView.findViewById(R.id.address);
+            tv1 = itemView.findViewById(R.id.lid);
+            tv2 = itemView.findViewById(R.id.address);
 
         }
 

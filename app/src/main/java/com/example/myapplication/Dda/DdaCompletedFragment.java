@@ -32,8 +32,7 @@ import java.util.Map;
 
 public class DdaCompletedFragment extends Fragment {
     private static final String TAG = "DdaCompletedFragment";
-    private ArrayList<String> Date;
-    private ArrayList<String> Time;
+    private ArrayList<String> Id;
     private ArrayList<String> Address;
     private DdacompletedAdapter ddacompletedAdapter;
     private String urlget = "http://13.235.100.235:8000/api/locations/dda/completed";
@@ -46,8 +45,7 @@ public class DdaCompletedFragment extends Fragment {
 
     public DdaCompletedFragment() {
         // Required empty public constructor
-        Date = new ArrayList<String>(3);
-        Time = new ArrayList<String>(3);
+        Id = new ArrayList<String>(3);
         Address = new ArrayList<String>(3);
     }
 
@@ -56,7 +54,7 @@ public class DdaCompletedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
-        ddacompletedAdapter = new DdacompletedAdapter(getContext(),Date,Time,Address);
+        ddacompletedAdapter = new DdacompletedAdapter(getContext(),Id,Address);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddacompletedAdapter);
         review.setLayoutManager( new LinearLayoutManager(getActivity()));
@@ -77,17 +75,13 @@ public class DdaCompletedFragment extends Fragment {
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
                         dda = c.getString("dda");
+                        Id.add(c.getString("id"));
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        if(dda!=null && !dda.isEmpty()){
-                            Date.add(c.getString("acq_date"));
-                            Time.add(c.getString("acq_time"));
-                            Address.add(villagename+","+blockname+","+district+","+state);
-                        }else {
-                            Log.d(TAG, "onResponse: some error in if");
-                        }
+                        Address.add(villagename+","+blockname+","+district+","+state);
+                        Log.d(TAG, "onResponse: some error in if");
                         ddacompletedAdapter.notifyDataSetChanged();
                     }
                 }catch (JSONException e){

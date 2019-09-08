@@ -33,8 +33,7 @@ import java.util.Map;
 public class assignedfragment extends Fragment {
 
     private static final String TAG = "assignedfragment";
-    private ArrayList<String> Date;
-    private ArrayList<String> Time;
+    private ArrayList<String> Id;
     private ArrayList<String> Address;
     private DdapendingassignedAdapter ddaassignedAdapter;
     private String urlget = "http://13.235.100.235:8000/api/locations/dda/assigned";
@@ -45,15 +44,14 @@ public class assignedfragment extends Fragment {
     private String state;
 
     public assignedfragment() {
-        Date = new ArrayList<String>(3);
-        Time = new ArrayList<String>(3);
+        Id = new ArrayList<String>(3);
         Address = new ArrayList<String>(3);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
-        ddaassignedAdapter = new DdapendingassignedAdapter(getActivity(),Date,Time,Address);
+        ddaassignedAdapter = new DdapendingassignedAdapter(getActivity(),Id,Address);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddaassignedAdapter);
         review.setLayoutManager( new LinearLayoutManager(getActivity()));
@@ -73,12 +71,11 @@ public class assignedfragment extends Fragment {
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
+                        Id.add(c.getString("id"));
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        Date.add(c.getString("acq_date"));
-                        Time.add(c.getString("acq_time"));
                         Address.add(villagename+","+blockname+","+district+","+state);
                         ddaassignedAdapter.notifyDataSetChanged();
                     }

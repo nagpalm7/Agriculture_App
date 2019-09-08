@@ -36,8 +36,6 @@ public class notassignedfragment extends Fragment {
 
     private static final String TAG = "notassignedfragment";
     private ArrayList<String>Id;
-    private ArrayList<String>Date;
-    private ArrayList<String>Time;
     private ArrayList<String> Address;
     private DdapendingUnassignedAdapter ddapendingUnassignedAdapter;
     private String urlget = "http://13.235.100.235:8000/api/locations/dda/unassigned";
@@ -47,14 +45,9 @@ public class notassignedfragment extends Fragment {
     private String state;
     private String token;
     private View view;
-    private View v;
-
-    SwipeRefreshLayout swipeRefreshLayout;
 
     public notassignedfragment(){
         Id = new ArrayList<String>(3);
-        Date = new ArrayList<String>(3);
-        Time = new ArrayList<String>(3);
         Address = new ArrayList<String>(3);
     }
 
@@ -63,9 +56,9 @@ public class notassignedfragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_notassignedfragment, container, false);
-        v = inflater.inflate(R.layout.notassignedlist,container,false);
-        swipeRefreshLayout = v.findViewById(R.id.swiperefresh);
-        ddapendingUnassignedAdapter = new DdapendingUnassignedAdapter(getActivity(),Id,Date,Time, Address);
+
+
+        ddapendingUnassignedAdapter = new DdapendingUnassignedAdapter(getActivity(),Id, Address);
         RecyclerView notassignedreview = view.findViewById(R.id.recyclerViewnotassigned);
         notassignedreview.setAdapter(ddapendingUnassignedAdapter);
         notassignedreview.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -73,23 +66,14 @@ public class notassignedfragment extends Fragment {
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token","");
         Log.d(TAG, "onCreateView: "+token);
-        view = getdata();
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                view = getdata();
-            }
-        });
 
-        return view;
-    }
-    private View getdata(){
+
         final RequestQueue unassignedrequestqueue = Volley.newRequestQueue(getActivity());
 
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlget, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                try {
+                try { ;
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for(int i=0;i<jsonArray.length();i++){
@@ -99,15 +83,13 @@ public class notassignedfragment extends Fragment {
                         district = c.getString("district");
                         state = c.getString("state");
                         Id.add(c.getString("id"));
-                        Date.add(c.getString("acq_date"));
-                        Time.add(c.getString("acq_time"));
                         Address.add(villagename+","+blockname+","+district+","+state);
 
                         ddapendingUnassignedAdapter.notifyDataSetChanged();
+                        Log.d(TAG, "onResponse: error in this notassignedfragment"+response);
                     }
                 }catch (JSONException e){
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
-                    e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
@@ -126,22 +108,9 @@ public class notassignedfragment extends Fragment {
         };
 
         unassignedrequestqueue.add(jsonObjectRequest);
-        if(swipeRefreshLayout.isRefreshing()){
-            swipeRefreshLayout.setRefreshing(false);
-        }
         return view;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_refresh:
-                Log.i(TAG, "onOptionsItemSelected: Refresh menu item selected");
-                swipeRefreshLayout.setRefreshing(true);
-                getdata();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+
     }
 
 }
