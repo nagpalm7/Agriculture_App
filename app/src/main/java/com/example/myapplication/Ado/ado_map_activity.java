@@ -213,8 +213,9 @@ public class ado_map_activity extends AppCompatActivity {
 
 
     public void onClickNavigation(View view) {
-        String uri = String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude);
+        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", latitude, longitude, "Where the party is at");
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         startActivity(intent);
     }
 
