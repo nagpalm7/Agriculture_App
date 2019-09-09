@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -39,10 +41,9 @@ public class OnGoingFragment extends Fragment {
 
     private String ongoingUrl = "http://13.235.100.235:8000/api/locations/ongoing";
 
-    private ArrayList<String> mIdList;
-    private ArrayList<String> mDateList;
-    private ArrayList<String> mTimeList;
-    private ArrayList<String> mLocationList;
+    private ArrayList<String> mDDaNames;
+    private ArrayList<String> mAdoNames;
+    private ArrayList<String> mAddresses;
     private AdminLocationAdapter adapter;
     private LinearLayoutManager layoutManager;
     private String token;
@@ -62,11 +63,10 @@ public class OnGoingFragment extends Fragment {
         progressBar = view.findViewById(R.id.locations_loading_ongoing);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        mIdList = new ArrayList<>();
-        mDateList = new ArrayList<>();
-        mTimeList = new ArrayList<>();
-        mLocationList = new ArrayList<>();
-        adapter = new AdminLocationAdapter(getActivity(), mIdList, mDateList, mTimeList, mLocationList);
+        mDDaNames = new ArrayList<>();
+        mAdoNames = new ArrayList<>();
+        mAddresses = new ArrayList<>();
+        adapter = new AdminLocationAdapter(getActivity(), mDDaNames, mAdoNames, mAddresses);
         recyclerView.setAdapter(adapter);
         final SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
@@ -103,12 +103,15 @@ public class OnGoingFragment extends Fragment {
                             JSONArray resultsArray = rootObject.getJSONArray("results");
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
-                                mIdList.add(singleObject.getString("id"));
-                                mDateList.add(singleObject.getString("acq_date"));
-                                mTimeList.add(singleObject.getString("acq_time"));
+                                mDDaNames.add(singleObject.getString("dda"));
+                                String adoName = singleObject.getString("ado");
+                                if (adoName.isEmpty())
+                                    mAdoNames.add("Not Assigned");
+                                else
+                                    mAdoNames.add(adoName);
                                 String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
                                         + singleObject.getString("district") + ", " + singleObject.getString("state");
-                                mLocationList.add(location);
+                                mAddresses.add(location);
                             }
                             adapter.mShowShimmer = false;
                             adapter.notifyDataSetChanged();
@@ -121,7 +124,8 @@ public class OnGoingFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
                     }
                 }) {
             @Override
@@ -147,12 +151,15 @@ public class OnGoingFragment extends Fragment {
                                 JSONArray resultsArray = rootObject.getJSONArray("results");
                                 for (int i = 0; i < resultsArray.length(); i++) {
                                     JSONObject singleObject = resultsArray.getJSONObject(i);
-                                    mIdList.add(singleObject.getString("id"));
-                                    mDateList.add(singleObject.getString("acq_date"));
-                                    mTimeList.add(singleObject.getString("acq_time"));
+                                    mDDaNames.add(singleObject.getString("dda"));
+                                    String adoName = singleObject.getString("ado");
+                                    if (adoName.isEmpty())
+                                        mAdoNames.add("Not Assigned");
+                                    else
+                                        mAdoNames.add(adoName);
                                     String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
                                             + singleObject.getString("district") + ", " + singleObject.getString("state");
-                                    mLocationList.add(location);
+                                    mAddresses.add(location);
                                 }
 
                             } catch (JSONException e) {
@@ -164,7 +171,8 @@ public class OnGoingFragment extends Fragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-
+                            if (error instanceof NoConnectionError)
+                                Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
                         }
                     }) {
                 @Override

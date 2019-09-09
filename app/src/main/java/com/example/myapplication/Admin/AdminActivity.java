@@ -1,6 +1,7 @@
 package com.example.myapplication.Admin;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,7 +12,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -65,6 +67,12 @@ public class AdminActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
+        TextView user_name = headerView.findViewById(R.id.nameOfUserLoggedIn);
+        SharedPreferences pref = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
+        String username = pref.getString("Name", "");
+        user_name.setText(username);
+        getSupportActionBar().setTitle("Home");
     }
 
     private boolean getPermission() {
@@ -234,18 +242,19 @@ public class AdminActivity extends AppCompatActivity
 
         if (id == R.id.nav_upload) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new upload_fragment()).commit();
+            getSupportActionBar().setTitle("UPLOAD");
 
         } else if (id == R.id.nav_ddo) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new ddo_fragment()).commit();
-
+            getSupportActionBar().setTitle("DDO");
 
         } else if (id == R.id.nav_ado) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new ado_fragment()).commit();
-
+            getSupportActionBar().setTitle("ADO");
 
         } else if (id == R.id.nav_location) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new location_fragment()).commit();
-
+            getSupportActionBar().setTitle("LOCATIONS");
 
         } else if (id == R.id.nav_share) {
 
@@ -253,6 +262,7 @@ public class AdminActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_home) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt()).commit();
+            getSupportActionBar().setTitle("HOME");
         }
 
 
