@@ -96,12 +96,17 @@ public class pending_fragment extends Fragment {
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        mDdaName.add(c.getString("dda"));
-                        String adoName = c.getString("ado");
-                        if (adoName.isEmpty())
-                            mAdaName.add("Not Assigned");
-                        else
+                        JSONObject mDdaObject = c.getJSONObject("dda");
+                        String ddaName = mDdaObject.getString("name");
+                        mDdaName.add(ddaName);
+                        Log.d(TAG, "onResponse: DDA NAME " + ddaName);
+                        try {
+                            JSONObject mAdoObject = c.getJSONObject("ado");
+                            String adoName = mAdoObject.getString("name");
                             mAdaName.add(adoName);
+                        } catch (JSONException e) {
+                            mAdaName.add("Not Assigned");
+                        }
                         mAddress.add(villagename + "," + blockname + "," + district + "," + state);
                         recyclerViewAdater.mShowShimmer = false;
                         recyclerViewAdater.notifyDataSetChanged();
@@ -141,15 +146,19 @@ public class pending_fragment extends Fragment {
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        mDdaName.add(c.getString("dda"));
-                        String adoName = c.getString("ado");
-                        if (adoName.isEmpty())
-                            mAdaName.add("Not Assigned");
-                        else
+                        JSONObject mDdaObject = c.getJSONObject("dda");
+                        String ddaName = mDdaObject.getString("name");
+                        mDdaName.add(ddaName);
+                        Log.d(TAG, "onResponse: DDA NAME " + ddaName);
+                        try {
+                            JSONObject mAdoObject = c.getJSONObject("ado");
+                            String adoName = mAdoObject.getString("name");
                             mAdaName.add(adoName);
+                        } catch (JSONException e) {
+                            mAdaName.add("Not Assigned");
+                        }
                         mAddress.add(villagename + "," + blockname + "," + district + "," + state);
-                        recyclerViewAdater.mShowShimmer = false;
-                        recyclerViewAdater.notifyDataSetChanged();
+                        requestQueue.add(jsonObjectRequest1);
                     }
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
@@ -171,7 +180,7 @@ public class pending_fragment extends Fragment {
             }
         };
 
-        requestQueue.add(jsonObjectRequest1);
+
         requestQueue.add(jsonObjectRequest2);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
