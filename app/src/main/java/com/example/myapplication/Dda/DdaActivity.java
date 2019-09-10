@@ -113,7 +113,6 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main,menu);
-        getMenuInflater().inflate(R.menu.searchmenu,menu);
 
         // Associate searchable configuration with the SearchView
         SearchManager searchManager =
