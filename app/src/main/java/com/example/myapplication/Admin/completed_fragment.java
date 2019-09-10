@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,6 +43,8 @@ public class completed_fragment extends Fragment {
     private String completedUrl = "http://13.235.100.235:8000/api/locations/completed";
     private String nextUrl;
     private String token;
+    private ProgressBar progressBar;
+    private boolean isNextBusy;
     private View view;
 
     @Nullable
@@ -49,6 +52,7 @@ public class completed_fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view= inflater.inflate(R.layout.completed_fragment,container,false);
         recyclerView = view.findViewById(R.id.completed_recyclerview);
+        progressBar = view.findViewById(R.id.locations_loading_completed);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         mDdaNames = new ArrayList<>();
@@ -70,8 +74,8 @@ public class completed_fragment extends Fragment {
                     pastItemCount = layoutManager.findFirstVisibleItemPosition();
                     visibleItemCount = layoutManager.getChildCount();
                     if ((pastItemCount + visibleItemCount) >= totalCount) {
-                        //progressBar.setVisibility(View.VISIBLE);
-                        getNextLocations();
+                        if (!isNextBusy && nextUrl.equals("null"))
+                            getNextLocations();
                     }
                 }
                 super.onScrolled(recyclerView, dx, dy);
@@ -137,50 +141,52 @@ public class completed_fragment extends Fragment {
 
     private void getNextLocations() {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        if (nextUrl != null || !nextUrl.isEmpty()) {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(nextUrl, null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                JSONObject rootObject = new JSONObject(String.valueOf(response));
-                                nextUrl = rootObject.getString("next");
-                                JSONArray resultsArray = rootObject.getJSONArray("results");
-                                for (int i = 0; i < resultsArray.length(); i++) {
-                                    JSONObject singleObject = resultsArray.getJSONObject(i);
-                                    mDdaNames.add(singleObject.getString("dda"));
-                                    String adoName = singleObject.getString("ado");
-                                    if (adoName.isEmpty())
-                                        mAdoNames.add("Not Assigned");
-                                    else
-                                        mAdoNames.add(adoName);
-                                    String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
-                                            + singleObject.getString("district") + ", " + singleObject.getString("state");
-                                    mAddresses.add(location);
-                                }
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+        isNextBusy = true;
+        progressBar.setVisibility(View.VISIBLE);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(nextUrl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject rootObject = new JSONObject(String.valueOf(response));
+                            nextUrl = rootObject.getString("next");
+                            JSONArray resultsArray = rootObject.getJSONArray("results");
+                            for (int i = 0; i < resultsArray.length(); i++) {
+                                JSONObject singleObject = resultsArray.getJSONObject(i);
+                                mDdaNames.add(singleObject.getString("dda"));
+                                String adoName = singleObject.getString("ado");
+                                if (adoName.isEmpty())
+                                    mAdoNames.add("Not Assigned");
+                                else
+                                    mAdoNames.add(adoName);
+                                String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
+                                        + singleObject.getString("district") + ", " + singleObject.getString("state");
+                                mAddresses.add(location);
                             }
+                            adapter.notifyDataSetChanged();
+                            isNextBusy = false;
 
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            if (error instanceof NoConnectionError)
-                                Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
-                        }
-                    }) {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put("Authorization", "Token " + token);
-                    return map;
-                }
-            };
-            requestQueue.add(jsonObjectRequest);
-        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Authorization", "Token " + token);
+                return map;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
         requestFinished(requestQueue);
     }
 
@@ -190,7 +196,7 @@ public class completed_fragment extends Fragment {
 
             @Override
             public void onRequestFinished(Request<Object> request) {
-                // progressBar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
             }
         });
 

@@ -46,6 +46,7 @@ public class ddo_fragment extends Fragment {
     private String nextUrl;
     private ProgressBar progressBar;
     private LinearLayoutManager layoutManager;
+    private boolean isNextBusy = false;
     private View view;
 
     public ddo_fragment() {
@@ -133,8 +134,7 @@ public class ddo_fragment extends Fragment {
                     visibleItemCount = layoutManager.getChildCount();
                     if ((pastItemCount + visibleItemCount) >= totalCount) {
                         Log.d(TAG, "onScrolled: " + nextUrl);
-                        boolean isNextUrl = nextUrl.length() > 0;
-                        if (isNextUrl)
+                        if (!nextUrl.equals("null") && !isNextBusy)
                             getNextDdos();
                     }
                 }
@@ -147,6 +147,8 @@ public class ddo_fragment extends Fragment {
 
     private void getNextDdos() {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        Log.d(TAG, "getNextDdos: inside");
+        isNextBusy = true;
         progressBar.setVisibility(View.VISIBLE);
         final JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(Request.Method.GET, nextUrl, null, new Response.Listener<JSONObject>() {
             @Override
@@ -165,6 +167,7 @@ public class ddo_fragment extends Fragment {
                     }
                     Log.d(TAG, "onResponse: " + username);
                     recyclerViewAdater.notifyDataSetChanged();
+                    isNextBusy = false;
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                     e.printStackTrace();

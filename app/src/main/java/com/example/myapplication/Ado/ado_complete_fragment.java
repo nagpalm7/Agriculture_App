@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,6 +40,8 @@ public class ado_complete_fragment extends Fragment {
     private ArrayList<String> longitude;
     private ArrayList<String> latitude;
     private String url = "http://13.235.100.235:8000/api/locations/ado/completed";
+    private String nextUrl;
+    private boolean isNextBusy = false;
     private View view;
 
     //tag
@@ -56,23 +57,41 @@ public class ado_complete_fragment extends Fragment {
         latitude = new ArrayList<>();
 
         //add data in the array with load data
-        getData();
+        getData(url);
         Log.d(TAG, "onCreateView: inside onCreate");
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView = view.findViewById(R.id.ado_completed_rv);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
         adoListAdapter = new AdoListAdapter(getContext(), mtextview1, mtextview2);
         recyclerView.setAdapter(adoListAdapter);
         recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                int totalCount, pastItemCount, visibleItemCount;
+                if (dy > 0) {
+                    totalCount = linearLayoutManager.getItemCount();
+                    pastItemCount = linearLayoutManager.findFirstVisibleItemPosition();
+                    visibleItemCount = linearLayoutManager.getChildCount();
+                    if ((pastItemCount + visibleItemCount) >= totalCount) {
+                        Log.d(TAG, "onScrolled: " + nextUrl);
+                        if (!nextUrl.equals("null") && !isNextBusy)
+                            getData(nextUrl);
+                    }
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
         return view;
     }
 
 
-    private void getData() {
+    private void getData(String url) {
         Log.d(TAG, "getData: inside getdata");
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        isNextBusy = true;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -105,6 +124,7 @@ public class ado_complete_fragment extends Fragment {
                             }
                             adoListAdapter.mshowshimmer = false;
                             adoListAdapter.notifyDataSetChanged();
+                            isNextBusy = false;
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.d(TAG, "onResponse: inside the evception");

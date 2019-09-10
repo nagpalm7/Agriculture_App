@@ -14,6 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -43,6 +48,8 @@ public class assignedfragment extends Fragment {
     private String blockname;
     private String district;
     private String state;
+    private String nextUrl;
+    private boolean isNextBusy = false;
     private boolean isReferesh;
 
     public assignedfragment() {
@@ -55,9 +62,10 @@ public class assignedfragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
         isReferesh = false;
         ddaassignedAdapter = new DdapendingassignedAdapter(getActivity(),Id,Address);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddaassignedAdapter);
-        review.setLayoutManager( new LinearLayoutManager(getActivity()));
+        review.setLayoutManager(layoutManager);
 
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token","");
@@ -72,6 +80,7 @@ public class assignedfragment extends Fragment {
                 try {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
+                    nextUrl = jsonObject.getString("next");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
                         Id.add(c.getString("id"));
@@ -103,6 +112,23 @@ public class assignedfragment extends Fragment {
         };
 
         requestQueue.add(jsonObjectRequest);
+        review.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                int totalCount, pastItemCount, visibleItemCount;
+                if (dy > 0) {
+                    totalCount = layoutManager.getItemCount();
+                    pastItemCount = layoutManager.findFirstVisibleItemPosition();
+                    visibleItemCount = layoutManager.getChildCount();
+                    if ((pastItemCount + visibleItemCount) >= totalCount) {
+                        Log.d(TAG, "onScrolled: " + nextUrl);
+                        if (!nextUrl.equals("null") && !isNextBusy)
+                            getNextLocations();
+                    }
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
         return view;
     }
 
@@ -132,4 +158,48 @@ public class assignedfragment extends Fragment {
             isReferesh = false;
         }
 }
+
+    private void getNextLocations() {
+        final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        isNextBusy = true;
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, nextUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(String.valueOf(response));
+                    JSONArray jsonArray = jsonObject.getJSONArray("results");
+                    nextUrl = jsonObject.getString("next");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject c = jsonArray.getJSONObject(i);
+                        Id.add(c.getString("id"));
+                        villagename = c.getString("village_name");
+                        blockname = c.getString("block_name");
+                        district = c.getString("district");
+                        state = c.getString("state");
+                        Address.add(villagename + "," + blockname + "," + district + "," + state);
+                        ddaassignedAdapter.notifyDataSetChanged();
+                        isNextBusy = false;
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "onErrorResponse: " + error);
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Authorization", "Token " + token);
+                return map;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
+    }
 }
