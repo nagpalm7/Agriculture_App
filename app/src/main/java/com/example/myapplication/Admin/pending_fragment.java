@@ -250,12 +250,16 @@ public class pending_fragment extends Fragment {
                             blockname = c.getString("block_name");
                             district = c.getString("district");
                             state = c.getString("state");
-                            mDdaName.add(c.getString("dda"));
-                            String adoName = c.getString("ado");
-                            if (adoName.isEmpty())
-                                mAdaName.add("Not Assigned");
-                            else
+                            JSONObject mDdaObject = c.getJSONObject("dda");
+                            String ddaName = mDdaObject.getString("name");
+                            mDdaName.add(ddaName);
+                            try {
+                                JSONObject mAdoObject = c.getJSONObject("ado");
+                                String adoName = mAdoObject.getString("name");
                                 mAdaName.add(adoName);
+                            } catch (JSONException e) {
+                                mAdaName.add("Not Assigned");
+                            }
                             mAddress.add(villagename + "," + blockname + "," + district + "," + state);
                             recyclerViewAdater.notifyDataSetChanged();
                             isNextBusy = false;
@@ -287,7 +291,7 @@ public class pending_fragment extends Fragment {
 
     private void get_Assigned() {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        if (next_assigned_url != null || !next_assigned_url.isEmpty()) {
+        progressBar.setVisibility(View.VISIBLE);
             final JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.GET, next_assigned_url, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -301,12 +305,16 @@ public class pending_fragment extends Fragment {
                             blockname = c.getString("block_name");
                             district = c.getString("district");
                             state = c.getString("state");
-                            mDdaName.add(c.getString("dda"));
-                            String adoName = c.getString("ado");
-                            if (adoName.isEmpty())
-                                mAdaName.add("Not Assigned");
-                            else
+                            JSONObject mDdaObject = c.getJSONObject("dda");
+                            String ddaName = mDdaObject.getString("name");
+                            mDdaName.add(ddaName);
+                            try {
+                                JSONObject mAdoObject = c.getJSONObject("ado");
+                                String adoName = mAdoObject.getString("name");
                                 mAdaName.add(adoName);
+                            } catch (JSONException e) {
+                                mAdaName.add("Not Assigned");
+                            }
                             mAddress.add(villagename + "," + blockname + "," + district + "," + state);
                             recyclerViewAdater.notifyDataSetChanged();
                         }
@@ -332,7 +340,6 @@ public class pending_fragment extends Fragment {
                 }
             };
             requestQueue.add(jsonObjectRequest2);
-        }
         requestFinished(requestQueue);
     }
 
