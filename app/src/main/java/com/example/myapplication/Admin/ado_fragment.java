@@ -45,6 +45,7 @@ public class ado_fragment extends Fragment {
     private ProgressBar progressBar;
     private LinearLayoutManager layoutManager;
     private boolean isNextBusy = false;
+    private View view;
 
     private final String TAG = "ado_fragment";
 
@@ -57,7 +58,7 @@ public class ado_fragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.ado_fragment, container, false);
+        view = inflater.inflate(R.layout.ado_fragment, container, false);
         progressBar = view.findViewById(R.id.ado_list_progressbar);
         recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, mUserId, false);
         RecyclerView Rview = view.findViewById(R.id.recyclerViewado);
@@ -78,6 +79,13 @@ public class ado_fragment extends Fragment {
                     nextUrl = rootObject.getString("next");
                     Log.d(TAG, "onResponse: " + nextUrl);
                     JSONArray resultsArray = rootObject.getJSONArray("results");
+                    if(resultsArray.length()== 0){
+                        recyclerViewAdater.mShowShimmer = false;
+                        recyclerViewAdater.notifyDataSetChanged();
+
+                        view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                        //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                    }
                     for (int i = 0; i < resultsArray.length(); i++) {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));

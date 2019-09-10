@@ -45,11 +45,12 @@ public class completed_fragment extends Fragment {
     private String token;
     private ProgressBar progressBar;
     private boolean isNextBusy;
+    private View view;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.completed_fragment, container, false);
+        view= inflater.inflate(R.layout.completed_fragment,container,false);
         recyclerView = view.findViewById(R.id.completed_recyclerview);
         progressBar = view.findViewById(R.id.locations_loading_completed);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -93,6 +94,13 @@ public class completed_fragment extends Fragment {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             nextUrl = rootObject.getString("next");
                             JSONArray resultsArray = rootObject.getJSONArray("results");
+                            if(resultsArray.length()== 0){
+                                adapter.mShowShimmer = false;
+                                adapter.notifyDataSetChanged();
+
+                                view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                            }
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 mDdaNames.add(singleObject.getString("dda"));

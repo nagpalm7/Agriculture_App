@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,7 +48,8 @@ public class AdoDdoCompleted extends Fragment {
     private String nextUrl;
     private boolean isDdo;
     private String token;
-    private ArrayList<String> mAdoNames;
+    private View view;
+
 
     public AdoDdoCompleted() {
         // Required empty public constructor
@@ -63,7 +63,7 @@ public class AdoDdoCompleted extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ddo_completed, container, false);
+        view = inflater.inflate(R.layout.fragment_ddo_completed, container, false);
         String role;
         if (isDdo)
             role = "dda";
@@ -79,10 +79,7 @@ public class AdoDdoCompleted extends Fragment {
         token = prefs.getString("token", "");
         locationNames = new ArrayList<>();
         locationAddresses = new ArrayList<>();
-        mAdoNames = new ArrayList<>();
         adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses);
-        DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
-        recyclerView.addItemDecoration(divider);
         recyclerView.setAdapter(adapter);
         getData(mUrl);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -114,6 +111,13 @@ public class AdoDdoCompleted extends Fragment {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             nextUrl = rootObject.getString("next");
                             JSONArray resultsArray = rootObject.getJSONArray("results");
+                            if(resultsArray.length()== 0){
+                                adapter.mshowshimmer = false;
+                                adapter.notifyDataSetChanged();
+
+                                view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                            }
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 String locName = singleObject.getString("village_name");
@@ -121,9 +125,6 @@ public class AdoDdoCompleted extends Fragment {
                                         singleObject.getString("block_name") + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
-                                JSONObject adoObject = singleObject.getJSONObject("ado");
-                                String adoName = adoObject.getString("name");
-                                mAdoNames.add(adoName);
                             }
                             adapter.mshowshimmer = false;
                             adapter.notifyDataSetChanged();
@@ -161,6 +162,13 @@ public class AdoDdoCompleted extends Fragment {
                             try {
                                 JSONObject rootObject = new JSONObject(String.valueOf(response));
                                 JSONArray resultsArray = rootObject.getJSONArray("results");
+                                if(resultsArray.length()== 0){
+                                    adapter.mshowshimmer = false;
+                                    adapter.notifyDataSetChanged();
+
+                                    view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                    //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                }
                                 for (int i = 0; i < resultsArray.length(); i++) {
                                     JSONObject singleObject = resultsArray.getJSONObject(i);
                                     String locName = singleObject.getString("village_name");
@@ -168,9 +176,6 @@ public class AdoDdoCompleted extends Fragment {
                                             singleObject.getString("block_name") + singleObject.getString("state");
                                     locationNames.add(locName);
                                     locationAddresses.add(locAdd);
-                                    JSONObject adoObject = singleObject.getJSONObject("ado");
-                                    String adoName = adoObject.getString("name");
-                                    mAdoNames.add(adoName);
                                     adapter.notifyDataSetChanged();
                                 }
                             } catch (JSONException e) {

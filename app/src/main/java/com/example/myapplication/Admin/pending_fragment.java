@@ -58,6 +58,7 @@ public class pending_fragment extends Fragment {
     private ProgressBar progressBar;
     private int NEXT_LOCATION_COUNT = 1;
     private boolean isNextBusy;
+    private View view;
 
     public pending_fragment() {
         // Required empty public constructor
@@ -66,7 +67,7 @@ public class pending_fragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.pending_fragment, container, false);
+        view= inflater.inflate(R.layout.pending_fragment, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewpending);
         progressBar = view.findViewById(R.id.locations_loading);
         mDdaName = new ArrayList<>();
@@ -91,6 +92,13 @@ public class pending_fragment extends Fragment {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     next_assigned_url = jsonObject.getString("next");
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
+                    if(jsonArray.length()== 0){
+                        recyclerViewAdater.mShowShimmer = false;
+                        recyclerViewAdater.notifyDataSetChanged();
+
+                        view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                        //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                    }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
                         villagename = c.getString("village_name");

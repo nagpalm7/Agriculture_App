@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,8 +51,11 @@ public class AdoDdoPending extends Fragment {
     private String nextPendingUrl;  //for ADO
     private boolean isDdo;
     private String token;
-    private ArrayList<String> mAdoNames;
-
+    private View view;
+    private String TAG="adoddopending";
+    private String mUrlUnAssigned;
+    private RequestQueue queue;
+    private boolean flag= false;
     public AdoDdoPending() {
         // Required empty public constructor
     }
@@ -66,34 +68,32 @@ public class AdoDdoPending extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ddo_pending, container, false);
+        view = inflater.inflate(R.layout.fragment_ddo_pending, container, false);
         progressBar = view.findViewById(R.id.Ddo_pending_loading);
         recyclerView = view.findViewById(R.id.Ddo_pending_recyclerview);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
-        recyclerView.addItemDecoration(divider);
         locationNames = new ArrayList<>();
         locationAddresses = new ArrayList<>();
-        mAdoNames = new ArrayList<>();
-        adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses, mAdoNames, true);
+        adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses);
         recyclerView.setAdapter(adapter);
         SharedPreferences prefs = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = prefs.getString("token", "");
+        queue = Volley.newRequestQueue(getActivity());
         String role;
         if (isDdo) {
             role = "dda";
             String mUrlAssigned = "http://13.235.100.235:8000/api/admin/" + role + "/" + mDdoId + "/assigned";
-            String mUrlUnAssigned = "http://13.235.100.235:8000/api/admin/" + role + "/" + mDdoId + "/unassigned";
+            mUrlUnAssigned = "http://13.235.100.235:8000/api/admin/" + role + "/" + mDdoId + "/unassigned";
             Log.d("url", "onCreateView: pending" + mUrlAssigned);
             Log.d("url", "onCreateView: pending" + mUrlUnAssigned);
-            getData(mUrlAssigned, true);
-            getData(mUrlUnAssigned, false);
+            getData(mUrlAssigned);
+
         } else {
             role = "ado";
             String mUrlPending = "http://13.235.100.235:8000/api/admin/" + role + "/" + mDdoId + "/pending";
             Log.d("url", "onCreateView: pending" + mUrlPending);
-            getData(mUrlPending, true); //just passed true and Set it accordingly in the function called
+            getData(mUrlPending); //just passed true and Set it accordingly in the function called
         }
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -114,8 +114,8 @@ public class AdoDdoPending extends Fragment {
         return view;
     }
 
-    private void getData(String url, final boolean isAssigned) {
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
+    private void getData(String url) {
+
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -124,15 +124,17 @@ public class AdoDdoPending extends Fragment {
                         try {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             String nextUrl = rootObject.getString("next");
-                            if (isAssigned) {
+
                                 if (isDdo)
                                     nextAssignedUrl = nextUrl;
                                 else
                                     nextPendingUrl = nextUrl;
-                            }
-                            else
-                                nextUnAssignedUrl = nextUrl;
+
+
                             JSONArray resultsArray = rootObject.getJSONArray("results");
+                            if(resultsArray.length() == 0 )flag=true;
+                            Log.d(TAG, "onResponse: "+resultsArray.length());
+
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 String locName = singleObject.getString("village_name");
@@ -140,9 +142,64 @@ public class AdoDdoPending extends Fragment {
                                         singleObject.getString("block_name") + ", " + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
-                                JSONObject adoObject = singleObject.getJSONObject("ado");
-                                String adoName = adoObject.getString("name");
-                                mAdoNames.add(adoName);
+                            }
+                            adapter.mshowshimmer = false;
+                            adapter.notifyDataSetChanged();
+                            getdata1(mUrlUnAssigned);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("pending", "onErrorResponse: " + error);
+                    }
+                }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Authorization", "Token " + token);
+                return map;
+            }
+        };
+        queue.add(jsonObjectRequest);
+
+    }
+
+    public void getdata1(String url){
+        JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject rootObject = new JSONObject(String.valueOf(response));
+                            String nextUrl = rootObject.getString("next");
+
+
+
+                            nextUnAssignedUrl = nextUrl;
+
+                            JSONArray resultsArray = rootObject.getJSONArray("results");
+                            if(flag && resultsArray.length() == 0){
+                                adapter.mshowshimmer = false;
+                                adapter.notifyDataSetChanged();
+
+                                view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                            }
+                            Log.d(TAG, "onResponse: "+resultsArray.length());
+
+                            for (int i = 0; i < resultsArray.length(); i++) {
+                                JSONObject singleObject = resultsArray.getJSONObject(i);
+                                String locName = singleObject.getString("village_name");
+                                String locAdd = singleObject.getString("block_name") + ", " +
+                                        singleObject.getString("block_name") + ", " + singleObject.getString("state");
+                                locationNames.add(locName);
+                                locationAddresses.add(locAdd);
                             }
                             adapter.mshowshimmer = false;
                             adapter.notifyDataSetChanged();
@@ -166,7 +223,9 @@ public class AdoDdoPending extends Fragment {
                 return map;
             }
         };
-        queue.add(jsonObjectRequest);
+        queue.add(jsonObjectRequest1);
+
+
     }
 
     private void loadNextLocations() {
@@ -204,9 +263,6 @@ public class AdoDdoPending extends Fragment {
                                             singleObject.getString("block_name") + singleObject.getString("state");
                                     locationNames.add(locName);
                                     locationAddresses.add(locAdd);
-                                    JSONObject adoObject = singleObject.getJSONObject("ado");
-                                    String adoName = adoObject.getString("name");
-                                    mAdoNames.add(adoName);
                                     adapter.notifyDataSetChanged();
                                 }
                             } catch (JSONException e) {

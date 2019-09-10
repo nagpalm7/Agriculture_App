@@ -52,6 +52,7 @@
             android:layout_width="match_parent"
             android:id="@+id/ado_name"
             android:layout_height="wrap_content"/>
+
     </RelativeLayout>
 
 </com.facebook.shimmer.ShimmerFrameLayout>
