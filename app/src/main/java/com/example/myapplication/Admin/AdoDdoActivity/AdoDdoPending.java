@@ -51,8 +51,6 @@ public class AdoDdoPending extends Fragment {
     private String nextPendingUrl;  //for ADO
     private boolean isDdo;
     private String token;
-    private View view;
-    private String TAG="adoddopending";
 
     public AdoDdoPending() {
         // Required empty public constructor
@@ -66,7 +64,7 @@ public class AdoDdoPending extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_ddo_pending, container, false);
+        View view = inflater.inflate(R.layout.fragment_ddo_pending, container, false);
         progressBar = view.findViewById(R.id.Ddo_pending_loading);
         recyclerView = view.findViewById(R.id.Ddo_pending_recyclerview);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -85,7 +83,6 @@ public class AdoDdoPending extends Fragment {
             Log.d("url", "onCreateView: pending" + mUrlAssigned);
             Log.d("url", "onCreateView: pending" + mUrlUnAssigned);
             getData(mUrlAssigned, true);
-
             getData(mUrlUnAssigned, false);
         } else {
             role = "ado";
@@ -128,11 +125,9 @@ public class AdoDdoPending extends Fragment {
                                 else
                                     nextPendingUrl = nextUrl;
                             }
-                            else {nextUnAssignedUrl = nextUrl;}
-
+                            else
+                                nextUnAssignedUrl = nextUrl;
                             JSONArray resultsArray = rootObject.getJSONArray("results");
-                            Log.d(TAG, "onResponse: "+resultsArray.length());
-
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 String locName = singleObject.getString("village_name");
@@ -140,13 +135,6 @@ public class AdoDdoPending extends Fragment {
                                         singleObject.getString("block_name") + ", " + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
-                            }
-                            if(resultsArray.length()== 0 && !(isAssigned)){
-                                adapter.mshowshimmer = false;
-                                adapter.notifyDataSetChanged();
-
-                                view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
-                                //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
                             }
                             adapter.mshowshimmer = false;
                             adapter.notifyDataSetChanged();

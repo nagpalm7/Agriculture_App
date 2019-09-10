@@ -58,6 +58,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
                     intent.putExtra("isDdo", true);
                 else
                     intent.putExtra("isDdo", false);
+                intent.putExtra("name", mtextview1.get(viewHolder.getAdapterPosition()));
                 mcontext.startActivity(intent);
             }
             });

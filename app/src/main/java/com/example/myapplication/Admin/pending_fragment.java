@@ -84,12 +84,12 @@ public class pending_fragment extends Fragment {
 
         final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 
-        final JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, url_unassigned, null, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.GET, url_assigned, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
-                    next_unassigned_url = jsonObject.getString("next");
+                    next_assigned_url = jsonObject.getString("next");
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     if(jsonArray.length()== 0){
                         recyclerViewAdater.mShowShimmer = false;
@@ -110,15 +110,66 @@ public class pending_fragment extends Fragment {
                         Log.d(TAG, "onResponse: DDA NAME " + ddaName);
                         try {
                             JSONObject mAdoObject = c.getJSONObject("ado");
+                            Log.d(TAG, "onResponse: try block");
+                            String adoName = mAdoObject.getString("name");
+                            Log.d(TAG, "onResponse: adoname " + adoName);
+                            mAdaName.add(adoName);
+                        } catch (JSONException e) {
+                            mAdaName.add("Not Assigned");
+                            Log.d(TAG, "exception: ");
+                        }
+                        mAddress.add(villagename + "," + blockname + "," + district + "," + state);
+                        Log.d(TAG, "onResponse: next");
+                        recyclerViewAdater.mShowShimmer = false;
+                        recyclerViewAdater.notifyDataSetChanged();
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "onErrorResponse: " + error);
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Authorization", "Token " + token);
+                return map;
+            }
+        };
+
+        final JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, url_unassigned, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(String.valueOf(response));
+                    next_unassigned_url = jsonObject.getString("next");
+                    JSONArray jsonArray = jsonObject.getJSONArray("results");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject c = jsonArray.getJSONObject(i);
+                        villagename = c.getString("village_name");
+                        blockname = c.getString("block_name");
+                        district = c.getString("district");
+                        state = c.getString("state");
+                        JSONObject mDdaObject = c.getJSONObject("dda");
+                        String ddaName = mDdaObject.getString("name");
+                        mDdaName.add(ddaName);
+                        Log.d(TAG, "onResponse: DDA NAME " + ddaName);
+                        try {
+                            JSONObject mAdoObject = c.getJSONObject("ado");
                             String adoName = mAdoObject.getString("name");
                             mAdaName.add(adoName);
                         } catch (JSONException e) {
                             mAdaName.add("Not Assigned");
                         }
                         mAddress.add(villagename + "," + blockname + "," + district + "," + state);
-                        recyclerViewAdater.mShowShimmer = false;
-                        recyclerViewAdater.notifyDataSetChanged();
                     }
+                    requestQueue.add(jsonObjectRequest2);
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                     e.printStackTrace();
@@ -141,55 +192,8 @@ public class pending_fragment extends Fragment {
             }
         };
 
-        final JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.GET, url_assigned, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(String.valueOf(response));
-                    next_assigned_url = jsonObject.getString("next");
-                    JSONArray jsonArray = jsonObject.getJSONArray("results");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject c = jsonArray.getJSONObject(i);
-                        villagename = c.getString("village_name");
-                        blockname = c.getString("block_name");
-                        district = c.getString("district");
-                        state = c.getString("state");
-                        JSONObject mDdaObject = c.getJSONObject("dda");
-                        String ddaName = mDdaObject.getString("name");
-                        mDdaName.add(ddaName);
-                        Log.d(TAG, "onResponse: DDA NAME " + ddaName);
-                        try {
-                            JSONObject mAdoObject = c.getJSONObject("ado");
-                            String adoName = mAdoObject.getString("name");
-                            mAdaName.add(adoName);
-                        } catch (JSONException e) {
-                            mAdaName.add("Not Assigned");
-                        }
-                        mAddress.add(villagename + "," + blockname + "," + district + "," + state);
-                        requestQueue.add(jsonObjectRequest1);
-                    }
-                } catch (JSONException e) {
-                    Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "onErrorResponse: " + error);
-            }
-        }) {
 
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> map = new HashMap<>();
-                map.put("Authorization", "Token " + token);
-                return map;
-            }
-        };
-
-
-        requestQueue.add(jsonObjectRequest2);
+        requestQueue.add(jsonObjectRequest1);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             int totalCount, pastItemCount, visibleItemCount;
