@@ -67,6 +67,7 @@ public class DdaselectAdo extends AppCompatActivity {
         Toast.makeText(this, "List of Ado's", Toast.LENGTH_SHORT).show();
         loadData(urlget);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("List of Ado's");
         SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
         Log.d(TAG, "onCreateView: " + token);
@@ -88,9 +89,8 @@ public class DdaselectAdo extends AppCompatActivity {
                         ddaAdoListAdapter.getadoid(adoid);
                         nameofado.add(c.getString("name"));
                         villagename.add(c.getString("village_name"));
-
-                        ddaAdoListAdapter.notifyDataSetChanged();
                     }
+                    ddaAdoListAdapter.notifyDataSetChanged();
                 }catch (JSONException e){
                     Log.d(TAG, "onResponse: "+e);
                 }
@@ -116,6 +116,7 @@ public class DdaselectAdo extends AppCompatActivity {
 
     }
 
+    //for back button on action bar
     @Override
     public boolean onSupportNavigateUp() {
         finish();
