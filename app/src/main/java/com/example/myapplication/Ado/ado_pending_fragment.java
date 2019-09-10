@@ -41,11 +41,12 @@ public class ado_pending_fragment extends Fragment {
     private ArrayList<String> longitude;
     private ArrayList<String> latitude;
     private String url="http://13.235.100.235:8000/api/locations/ado/pending";
+    View view;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.ado_pending_fragment,container,false);
+        view = inflater.inflate(R.layout.ado_pending_fragment,container,false);
         mtextview1 = new ArrayList<>();
         mtextview2 = new ArrayList<>();
         longitude = new ArrayList<>();
@@ -53,13 +54,13 @@ public class ado_pending_fragment extends Fragment {
 
         //add data in the array with load data
         getData();
-
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView = view.findViewById(R.id.ado_pending_rv);
         adoListAdapter = new AdoListAdapter(getContext(),mtextview1,mtextview2);
-        DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL);
+        DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(divider);
         recyclerView.setAdapter(adoListAdapter);
-        recyclerView.setLayoutManager( new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(linearLayoutManager);
 
 
         return view;
@@ -75,6 +76,13 @@ public class ado_pending_fragment extends Fragment {
                         try {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             JSONArray resultsArray = rootObject.getJSONArray("results");
+                            if(resultsArray.length()== 0){
+                                adoListAdapter.mshowshimmer = false;
+                                adoListAdapter.notifyDataSetChanged();
+
+                                view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                            }
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
 

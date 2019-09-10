@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -58,14 +59,13 @@ public class ado_complete_fragment extends Fragment {
         getData();
         Log.d(TAG, "onCreateView: inside onCreate");
 
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView = view.findViewById(R.id.ado_completed_rv);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),DividerItemDecoration.HORIZONTAL);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
         adoListAdapter = new AdoListAdapter(getContext(), mtextview1, mtextview2);
         recyclerView.setAdapter(adoListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-
+        recyclerView.setLayoutManager(linearLayoutManager);
         return view;
     }
 

@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/lname"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="8dp"
             android:layout_toLeftOf="@id/img"
             android:background="@color/shimmer_bg"
             android:textSize="16sp" />
