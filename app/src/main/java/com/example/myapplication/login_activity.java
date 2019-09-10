@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +13,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +33,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import dmax.dialog.SpotsDialog;
+
 
 public class login_activity extends AppCompatActivity {
 
@@ -47,7 +49,7 @@ public class login_activity extends AppCompatActivity {
 //    private String urlpost = getString(R.string.rooturl);
     private String urlpost = "http://13.235.100.235:8000/api-token-auth/";
 
-    private ProgressBar progressBar;
+    private AlertDialog dialog;
     private CheckBox checkBox;
     private Button btnLogin;
 
@@ -73,8 +75,8 @@ public class login_activity extends AppCompatActivity {
             editEmail = findViewById(R.id.editEmail);
             editPassword = findViewById(R.id.editPassword);
         btnLogin = findViewById(R.id.login_button);
-            progressBar = findViewById(R.id.progressBar);
             checkBox = findViewById(R.id.eyeIcon);
+
 
          checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
              @Override
@@ -96,19 +98,31 @@ public class login_activity extends AppCompatActivity {
                     String mEmail = editEmail.getText().toString().trim();
                     String mPass = editPassword.getText().toString().trim();
 
-                    if (!mEmail.isEmpty() || !mPass.isEmpty()) {
+                    if (!mEmail.isEmpty() && !mPass.isEmpty()) {
                         btnLogin.setEnabled(false);
                         Login(mEmail, mPass);
-                    } else {
+                    } else if(!mEmail.isEmpty() && mPass.isEmpty()){
+                        editPassword.setError("Please insert password");
+                        Toast.makeText(login_activity.this,"Please insert password",Toast.LENGTH_SHORT);
+                    }
+                    else if (mEmail.isEmpty() && !mPass.isEmpty()){
+                        editEmail.setError("Please insert email.");
+                        Toast.makeText(login_activity.this,"Please insert email",Toast.LENGTH_SHORT);
+                    }
+                    else {
                         editEmail.setError("Please insert email.");
                         editPassword.setError("Please insert password");
+                        Toast.makeText(login_activity.this,"Please insert email and password",Toast.LENGTH_SHORT);
                     }
                 }
             });
         }
 
         private void Login(final String email, final String password) {
-            progressBar.setVisibility(View.VISIBLE);
+
+            dialog = new SpotsDialog.Builder().setContext(login_activity.this).setMessage("Logging in").setCancelable(false).build();
+            dialog.show();
+
             Log.d(TAG, "onResponse: login clicked");
             final RequestQueue MyRequestQueue = Volley.newRequestQueue(this);
             try {
@@ -137,33 +151,34 @@ public class login_activity extends AppCompatActivity {
                                     Intent intent = null;
 
                                     if(typeOfUser.equals("admin")){
-                                        progressBar.setVisibility(View.INVISIBLE);
+
                                         intent = new Intent(login_activity.this, AdminActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }
                                     else if(typeOfUser.equals("dda")){
-                                        progressBar.setVisibility(View.INVISIBLE);
+                                        btnLogin.setEnabled(false);
+                                        btnLogin.setClickable(false);
                                         intent = new Intent(login_activity.this, DdaActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }
                                     else if (typeOfUser.equals("ado")){
-                                        progressBar.setVisibility(View.INVISIBLE);
+
                                         intent = new Intent(login_activity.this, AdoActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }
                                     else {
-                                        progressBar.setVisibility(View.INVISIBLE);
+                                        dialog.dismiss();
                                         Toast.makeText(login_activity.this, "Invalid User", Toast.LENGTH_SHORT).show();
                                     }
 
 
                                 } catch (JSONException e) {
                                     Log.d(TAG, "onResponse: error in get catch block :" + e.getMessage());
-                                    Toast.makeText(login_activity.this,"Please try again",Toast.LENGTH_LONG).show();
-                                    progressBar.setVisibility(View.INVISIBLE);
+                                    Toast.makeText(login_activity.this,"Please try again",Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
                                     btnLogin.setEnabled(true);
 //
                                 }
@@ -172,14 +187,12 @@ public class login_activity extends AppCompatActivity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(login_activity.this,"Check your internet connection",Toast.LENGTH_LONG).show();
-
+                                Toast.makeText(login_activity.this,"Please try again",Toast.LENGTH_SHORT).show();
                                 btnLogin.setEnabled(true);
-                                progressBar.setVisibility(View.INVISIBLE);
+                                dialog.dismiss();
                                 editEmail.setText("");
                                 editPassword.setText("");
                                 Log.d(TAG, "onErrorResponse: some error in get: " + error.getLocalizedMessage());
-//                            error.printStackTrace();
                             }
                         }) {
 
@@ -207,8 +220,8 @@ public class login_activity extends AppCompatActivity {
                                     MyRequestQueue.add(jsonObjectRequest1);
                                     Log.d(TAG, "onResponse: Token:" + token);
                                 } catch (JSONException e) {
-                                    Toast.makeText(login_activity.this,"some error occurred",Toast.LENGTH_LONG).show();
-                                    progressBar.setVisibility(View.INVISIBLE);
+                                    Toast.makeText(login_activity.this,"Please try again",Toast.LENGTH_LONG).show();
+                                    dialog.dismiss();
                                     btnLogin.setEnabled(true);
                                     Log.d(TAG, "onResponse: error in post catch block: " + e);
                                 }
@@ -218,11 +231,9 @@ public class login_activity extends AppCompatActivity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(login_activity.this,"Network error",Toast.LENGTH_LONG).show();
-                                progressBar.setVisibility(View.INVISIBLE);
+                                Toast.makeText(login_activity.this,"Please try again",Toast.LENGTH_LONG).show();
+                                dialog.dismiss();
                                 btnLogin.setEnabled(true);
-                                Log.d(TAG, "onErrorResponse: some error in post: " + error);
-//                                error.printStackTrace();
                             }
                         });
 
@@ -232,10 +243,9 @@ public class login_activity extends AppCompatActivity {
 
             } catch (JSONException e) {
                 Log.d(TAG, "Login: Error:"+e);
-                Toast.makeText(login_activity.this,"some error occurred",Toast.LENGTH_LONG).show();
-                progressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(login_activity.this,"Please try again",Toast.LENGTH_LONG).show();
+                dialog.dismiss();
                 btnLogin.setEnabled(true);
-
             }
 
         }
