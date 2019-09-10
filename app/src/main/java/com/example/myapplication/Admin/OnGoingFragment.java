@@ -49,6 +49,7 @@ public class OnGoingFragment extends Fragment {
     private String token;
     private String next_ongoing_url;
     private ProgressBar progressBar;
+    private boolean isNextBusy = false;
 
     public OnGoingFragment() {
         // Required empty public constructor
@@ -81,8 +82,8 @@ public class OnGoingFragment extends Fragment {
                     pastItemCount = layoutManager.findFirstVisibleItemPosition();
                     visibleItemCount = layoutManager.getChildCount();
                     if ((pastItemCount + visibleItemCount) >= totalCount) {
-                        progressBar.setVisibility(View.VISIBLE);
-                        get_Ongoing();
+                        if (!next_ongoing_url.equals("null") && !isNextBusy)
+                            get_Ongoing();
                     }
                 }
                 super.onScrolled(recyclerView, dx, dy);
@@ -140,50 +141,50 @@ public class OnGoingFragment extends Fragment {
 
     private void get_Ongoing() {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        if (next_ongoing_url != null || !next_ongoing_url.isEmpty()) {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(next_ongoing_url, null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                JSONObject rootObject = new JSONObject(String.valueOf(response));
-                                next_ongoing_url = rootObject.getString("next");
-                                JSONArray resultsArray = rootObject.getJSONArray("results");
-                                for (int i = 0; i < resultsArray.length(); i++) {
-                                    JSONObject singleObject = resultsArray.getJSONObject(i);
-                                    mDDaNames.add(singleObject.getString("dda"));
-                                    String adoName = singleObject.getString("ado");
-                                    if (adoName.isEmpty())
-                                        mAdoNames.add("Not Assigned");
-                                    else
-                                        mAdoNames.add(adoName);
-                                    String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
-                                            + singleObject.getString("district") + ", " + singleObject.getString("state");
-                                    mAddresses.add(location);
-                                }
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+        isNextBusy = true;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(next_ongoing_url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject rootObject = new JSONObject(String.valueOf(response));
+                            next_ongoing_url = rootObject.getString("next");
+                            JSONArray resultsArray = rootObject.getJSONArray("results");
+                            for (int i = 0; i < resultsArray.length(); i++) {
+                                JSONObject singleObject = resultsArray.getJSONObject(i);
+                                mDDaNames.add(singleObject.getString("dda"));
+                                String adoName = singleObject.getString("ado");
+                                if (adoName.isEmpty())
+                                    mAdoNames.add("Not Assigned");
+                                else
+                                    mAdoNames.add(adoName);
+                                String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
+                                        + singleObject.getString("district") + ", " + singleObject.getString("state");
+                                mAddresses.add(location);
+                                isNextBusy = false;
                             }
 
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            if (error instanceof NoConnectionError)
-                                Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
-                        }
-                    }) {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put("Authorization", "Token " + token);
-                    return map;
-                }
-            };
-            requestQueue.add(jsonObjectRequest);
-        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Authorization", "Token " + token);
+                return map;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
         requestFinished(requestQueue);
     }
 

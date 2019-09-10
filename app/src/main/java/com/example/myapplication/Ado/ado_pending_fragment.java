@@ -2,12 +2,11 @@ package com.example.myapplication.Ado;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +31,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.android.volley.VolleyLog.TAG;
+
 public class ado_pending_fragment extends Fragment {
 
     private ArrayList<String> mtextview1;
@@ -41,6 +42,8 @@ public class ado_pending_fragment extends Fragment {
     private ArrayList<String> longitude;
     private ArrayList<String> latitude;
     private String url="http://13.235.100.235:8000/api/locations/ado/pending";
+    private String nextUrl;
+    private boolean isNextBusy = false;
     View view;
 
     @Nullable
@@ -51,10 +54,10 @@ public class ado_pending_fragment extends Fragment {
         mtextview2 = new ArrayList<>();
         longitude = new ArrayList<>();
         latitude = new ArrayList<>();
-
+        Log.d("pending", "onCreateView: ");
         //add data in the array with load data
-        getData();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        getData(url);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView = view.findViewById(R.id.ado_pending_rv);
         adoListAdapter = new AdoListAdapter(getContext(),mtextview1,mtextview2);
         DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
@@ -62,13 +65,30 @@ public class ado_pending_fragment extends Fragment {
         recyclerView.setAdapter(adoListAdapter);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                int totalCount, pastItemCount, visibleItemCount;
+                if (dy > 0) {
+                    totalCount = linearLayoutManager.getItemCount();
+                    pastItemCount = linearLayoutManager.findFirstVisibleItemPosition();
+                    visibleItemCount = linearLayoutManager.getChildCount();
+                    if ((pastItemCount + visibleItemCount) >= totalCount) {
+                        Log.d(TAG, "onScrolled: " + nextUrl);
+                        if (!nextUrl.equals("null") && !isNextBusy)
+                            getData(nextUrl);
+                    }
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
         return view;
     }
 
 
-    private void getData() {
+    private void getData(String url) {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        isNextBusy = true;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -76,6 +96,7 @@ public class ado_pending_fragment extends Fragment {
                         try {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             JSONArray resultsArray = rootObject.getJSONArray("results");
+                            nextUrl = rootObject.getString("next");
                             if(resultsArray.length()== 0){
                                 adoListAdapter.mshowshimmer = false;
                                 adoListAdapter.notifyDataSetChanged();
@@ -97,11 +118,11 @@ public class ado_pending_fragment extends Fragment {
                                 adoListAdapter.sendPostion(longitude,latitude);
 
 
-
                             }
 
                             adoListAdapter.mshowshimmer = false;
                             adoListAdapter.notifyDataSetChanged();
+                            isNextBusy = false;
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Fragment fragment = getFragmentManager().findFragmentById(R.id.rootView);

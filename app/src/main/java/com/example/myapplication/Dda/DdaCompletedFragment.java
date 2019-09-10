@@ -3,15 +3,15 @@ package com.example.myapplication.Dda;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -42,11 +42,13 @@ public class DdaCompletedFragment extends Fragment {
     private String blockname;
     private String district;
     private String state;
+    private String nextUrl;
+    private boolean isNextBusy = false;
 
     public DdaCompletedFragment() {
         // Required empty public constructor
-        Id = new ArrayList<String>(3);
-        Address = new ArrayList<String>(3);
+        Id = new ArrayList<String>();
+        Address = new ArrayList<String>();
     }
 
 
@@ -57,7 +59,8 @@ public class DdaCompletedFragment extends Fragment {
         ddacompletedAdapter = new DdacompletedAdapter(getContext(),Id,Address);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddacompletedAdapter);
-        review.setLayoutManager( new LinearLayoutManager(getActivity()));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        review.setLayoutManager(layoutManager);
 
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token","");
@@ -72,6 +75,7 @@ public class DdaCompletedFragment extends Fragment {
                 try {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
+                    nextUrl = jsonObject.getString("next");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
                         dda = c.getString("dda");
@@ -105,7 +109,69 @@ public class DdaCompletedFragment extends Fragment {
         };
 
         requestQueue.add(jsonObjectRequest);
+        review.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                int totalCount, pastItemCount, visibleItemCount;
+                if (dy > 0) {
+                    totalCount = layoutManager.getItemCount();
+                    pastItemCount = layoutManager.findFirstVisibleItemPosition();
+                    visibleItemCount = layoutManager.getChildCount();
+                    if ((pastItemCount + visibleItemCount) >= totalCount) {
+                        Log.d(TAG, "onScrolled: " + nextUrl);
+                        if (!nextUrl.equals("null") && !isNextBusy)
+                            getNextLocations();
+                    }
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
         return view;
     }
 
+    private void getNextLocations() {
+        final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        isNextBusy = true;
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, nextUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(String.valueOf(response));
+                    JSONArray jsonArray = jsonObject.getJSONArray("results");
+                    nextUrl = jsonObject.getString("next");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject c = jsonArray.getJSONObject(i);
+                        dda = c.getString("dda");
+                        Id.add(c.getString("id"));
+                        villagename = c.getString("village_name");
+                        blockname = c.getString("block_name");
+                        district = c.getString("district");
+                        state = c.getString("state");
+                        Address.add(villagename + "," + blockname + "," + district + "," + state);
+                        Log.d(TAG, "onResponse: some error in if");
+                        ddacompletedAdapter.notifyDataSetChanged();
+                        isNextBusy = false;
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "onErrorResponse: " + error);
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Authorization", "Token " + token);
+                return map;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
+    }
 }

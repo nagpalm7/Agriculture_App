@@ -3,7 +3,6 @@ package com.example.myapplication.Admin;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +44,7 @@ public class ado_fragment extends Fragment {
     private String nextUrl;
     private ProgressBar progressBar;
     private LinearLayoutManager layoutManager;
+    private boolean isNextBusy = false;
 
     private final String TAG = "ado_fragment";
 
@@ -123,7 +123,8 @@ public class ado_fragment extends Fragment {
                     pastItemCount = layoutManager.findFirstVisibleItemPosition();
                     visibleItemCount = layoutManager.getChildCount();
                     if ((pastItemCount + visibleItemCount) >= totalCount) {
-                        if (!(TextUtils.isEmpty(nextUrl)))
+                        Log.d(TAG, "onScrolled: " + totalCount + " " + pastItemCount + " " + visibleItemCount);
+                        if (!nextUrl.equals("null") && !isNextBusy)
                             getNextAdos();
                     }
                 }
@@ -135,6 +136,8 @@ public class ado_fragment extends Fragment {
 
     private void getNextAdos() {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        isNextBusy = true;
+        Log.d(TAG, "getNextAdos: count ");
         progressBar.setVisibility(View.VISIBLE);
         final JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(Request.Method.GET, nextUrl, null, new Response.Listener<JSONObject>() {
             @Override
@@ -150,7 +153,7 @@ public class ado_fragment extends Fragment {
                     }
                     Log.d(TAG, "onResponse: " + username);
                     recyclerViewAdater.notifyDataSetChanged();
-
+                    isNextBusy = false;
 
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());

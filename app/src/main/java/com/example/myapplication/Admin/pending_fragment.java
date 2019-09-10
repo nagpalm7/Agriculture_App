@@ -57,6 +57,7 @@ public class pending_fragment extends Fragment {
     private AdminLocationAdapter recyclerViewAdater;
     private ProgressBar progressBar;
     private int NEXT_LOCATION_COUNT = 1;
+    private boolean isNextBusy;
 
     public pending_fragment() {
         // Required empty public constructor
@@ -197,8 +198,8 @@ public class pending_fragment extends Fragment {
                     pastItemCount = layoutManager.findFirstVisibleItemPosition();
                     visibleItemCount = layoutManager.getChildCount();
                     if ((pastItemCount + visibleItemCount) >= totalCount) {
-                        progressBar.setVisibility(View.VISIBLE);
-                        loadNextLocations();
+                        if (!isNextBusy)
+                            loadNextLocations();
                     }
                 }
                 super.onScrolled(recyclerView, dx, dy);
@@ -211,11 +212,13 @@ public class pending_fragment extends Fragment {
     private void loadNextLocations() {
         switch (NEXT_LOCATION_COUNT) {
             case 1:
-                get_Unassigned();
+                if (!next_unassigned_url.equals("null"))
+                    get_Unassigned();
                 NEXT_LOCATION_COUNT = 2;
                 break;
             case 2:
-                get_Assigned();
+                if (!next_assigned_url.equals("null"))
+                    get_Assigned();
                 NEXT_LOCATION_COUNT = 1;
                 break;
         }
@@ -224,7 +227,8 @@ public class pending_fragment extends Fragment {
 
     private void get_Unassigned() {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        if (next_unassigned_url != null || !next_unassigned_url.isEmpty()) {
+        progressBar.setVisibility(View.VISIBLE);
+        isNextBusy = true;
             final JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, next_unassigned_url, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -246,6 +250,7 @@ public class pending_fragment extends Fragment {
                                 mAdaName.add(adoName);
                             mAddress.add(villagename + "," + blockname + "," + district + "," + state);
                             recyclerViewAdater.notifyDataSetChanged();
+                            isNextBusy = false;
                         }
                     } catch (JSONException e) {
                         Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
@@ -269,7 +274,6 @@ public class pending_fragment extends Fragment {
                 }
             };
             requestQueue.add(jsonObjectRequest1);
-        }
         requestFinished(requestQueue);
     }
 
