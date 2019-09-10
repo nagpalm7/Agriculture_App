@@ -52,14 +52,16 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mcontext, AdoDdoActivity.class);
-                intent.putExtra("Id", mUserId.get(viewHolder.getAdapterPosition()));
-                if (isDdoFragment)
-                    intent.putExtra("isDdo", true);
-                else
-                    intent.putExtra("isDdo", false);
-                intent.putExtra("name", mtextview1.get(viewHolder.getAdapterPosition()));
-                mcontext.startActivity(intent);
+                if (!mShowShimmer) {
+                    Intent intent = new Intent(mcontext, AdoDdoActivity.class);
+                    intent.putExtra("Id", mUserId.get(viewHolder.getAdapterPosition()));
+                    if (isDdoFragment)
+                        intent.putExtra("isDdo", true);
+                    else
+                        intent.putExtra("isDdo", false);
+                    intent.putExtra("name", mtextview1.get(viewHolder.getAdapterPosition()));
+                    mcontext.startActivity(intent);
+                }
             }
             });
         return viewHolder;
