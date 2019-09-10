@@ -54,6 +54,7 @@ public class location_fragment extends Fragment {
         });
 
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mtablayout));
+        pager.setOffscreenPageLimit(3);
         return view;
     }
 

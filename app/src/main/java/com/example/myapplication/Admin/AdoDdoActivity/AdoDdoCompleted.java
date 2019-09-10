@@ -49,7 +49,7 @@ public class AdoDdoCompleted extends Fragment {
     private String nextUrl;
     private boolean isDdo;
     private String token;
-
+    private ArrayList<String> mAdoNames;
 
     public AdoDdoCompleted() {
         // Required empty public constructor
@@ -79,6 +79,7 @@ public class AdoDdoCompleted extends Fragment {
         token = prefs.getString("token", "");
         locationNames = new ArrayList<>();
         locationAddresses = new ArrayList<>();
+        mAdoNames = new ArrayList<>();
         adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses);
         DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(divider);
@@ -120,6 +121,9 @@ public class AdoDdoCompleted extends Fragment {
                                         singleObject.getString("block_name") + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
+                                JSONObject adoObject = singleObject.getJSONObject("ado");
+                                String adoName = adoObject.getString("name");
+                                mAdoNames.add(adoName);
                             }
                             adapter.mshowshimmer = false;
                             adapter.notifyDataSetChanged();
@@ -164,6 +168,9 @@ public class AdoDdoCompleted extends Fragment {
                                             singleObject.getString("block_name") + singleObject.getString("state");
                                     locationNames.add(locName);
                                     locationAddresses.add(locAdd);
+                                    JSONObject adoObject = singleObject.getJSONObject("ado");
+                                    String adoName = adoObject.getString("name");
+                                    mAdoNames.add(adoName);
                                     adapter.notifyDataSetChanged();
                                 }
                             } catch (JSONException e) {

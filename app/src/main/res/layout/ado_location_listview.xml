@@ -50,6 +50,7 @@
             android:layout_below="@id/laddress"
             android:layout_marginHorizontal="16dp"
             android:layout_width="match_parent"
+            android:id="@+id/ado_name"
             android:layout_height="wrap_content"/>
     </RelativeLayout>
 

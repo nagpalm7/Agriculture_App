@@ -25,6 +25,8 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
     private ArrayList<String> longitude;
     private ArrayList<String> latitude;
     public Boolean mshowshimmer = true;
+    private ArrayList<String> mAdoName;
+    private boolean isDDoAdo;
     private int shimmer_count = 5;
     Context mcontext;
 
@@ -32,8 +34,16 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
+        isDDoAdo = false;
     }
 
+    public AdoListAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mAdoName, boolean isDDoAdo) {
+        this.mtextview1 = mtextview1;
+        this.mtextview2 = mtextview2;
+        this.mAdoName = mAdoName;
+        this.isDDoAdo = isDDoAdo;
+        this.mcontext = mcontext;
+    }
 
     @NonNull
     @Override
@@ -71,6 +81,11 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
             holder.tv2.setBackground(null);
             holder.tv1.setText(mtextview1.get(position));
             holder.tv2.setText(mtextview2.get(position));
+            if (isDDoAdo) {
+                holder.mAdoName.setText(mAdoName.get(position));
+                holder.mAdoName.setVisibility(View.VISIBLE);
+                holder.mAdoName.setBackground(null);
+            }
             Log.d(TAG, "onBindViewHolder: error in this");
 
         }
@@ -87,6 +102,7 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
         TextView tv2;
         RelativeLayout Adolistlayout;
         ShimmerFrameLayout shimmerFrameLayout;
+        TextView mAdoName;
 
         public AdoListHolder(@NonNull View itemView) {
             super(itemView);
@@ -94,6 +110,7 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
             tv1 = itemView.findViewById(R.id.lname);
             tv2 = itemView.findViewById(R.id.laddress);
             shimmerFrameLayout = itemView.findViewById(R.id.ado_location_shimmer);
+            mAdoName = itemView.findViewById(R.id.ado_name);
             Log.d(TAG, "AdoListHolder: error in this");
 
         }

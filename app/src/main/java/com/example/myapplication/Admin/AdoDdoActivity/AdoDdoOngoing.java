@@ -49,6 +49,7 @@ public class AdoDdoOngoing extends Fragment {
     private String nextUrl;
     private boolean isDdo;
     private String token;
+    private ArrayList<String> mAdoNames;
 
     public AdoDdoOngoing() {
         // Required empty public constructor
@@ -80,7 +81,8 @@ public class AdoDdoOngoing extends Fragment {
         recyclerView.addItemDecoration(divider);
         locationNames = new ArrayList<>();
         locationAddresses = new ArrayList<>();
-        adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses);
+        mAdoNames = new ArrayList<>();
+        adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses, mAdoNames, true);
         recyclerView.setAdapter(adapter);
         getData(mUrl);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -119,6 +121,9 @@ public class AdoDdoOngoing extends Fragment {
                                         singleObject.getString("block_name") + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
+                                JSONObject adoObject = singleObject.getJSONObject("ado");
+                                String adoName = adoObject.getString("name");
+                                mAdoNames.add(adoName);
                             }
                             adapter.mshowshimmer = false;
                             adapter.notifyDataSetChanged();
@@ -163,6 +168,9 @@ public class AdoDdoOngoing extends Fragment {
                                             singleObject.getString("block_name") + singleObject.getString("state");
                                     locationNames.add(locName);
                                     locationAddresses.add(locAdd);
+                                    JSONObject adoObject = singleObject.getJSONObject("ado");
+                                    String adoName = adoObject.getString("name");
+                                    mAdoNames.add(adoName);
                                     adapter.notifyDataSetChanged();
                                 }
                             } catch (JSONException e) {

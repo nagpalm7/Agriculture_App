@@ -52,6 +52,7 @@ public class AdoDdoPending extends Fragment {
     private String nextPendingUrl;  //for ADO
     private boolean isDdo;
     private String token;
+    private ArrayList<String> mAdoNames;
 
     public AdoDdoPending() {
         // Required empty public constructor
@@ -74,7 +75,8 @@ public class AdoDdoPending extends Fragment {
         recyclerView.addItemDecoration(divider);
         locationNames = new ArrayList<>();
         locationAddresses = new ArrayList<>();
-        adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses);
+        mAdoNames = new ArrayList<>();
+        adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses, mAdoNames, true);
         recyclerView.setAdapter(adapter);
         SharedPreferences prefs = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = prefs.getString("token", "");
@@ -138,6 +140,9 @@ public class AdoDdoPending extends Fragment {
                                         singleObject.getString("block_name") + ", " + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
+                                JSONObject adoObject = singleObject.getJSONObject("ado");
+                                String adoName = adoObject.getString("name");
+                                mAdoNames.add(adoName);
                             }
                             adapter.mshowshimmer = false;
                             adapter.notifyDataSetChanged();
@@ -199,6 +204,9 @@ public class AdoDdoPending extends Fragment {
                                             singleObject.getString("block_name") + singleObject.getString("state");
                                     locationNames.add(locName);
                                     locationAddresses.add(locAdd);
+                                    JSONObject adoObject = singleObject.getJSONObject("ado");
+                                    String adoName = adoObject.getString("name");
+                                    mAdoNames.add(adoName);
                                     adapter.notifyDataSetChanged();
                                 }
                             } catch (JSONException e) {
