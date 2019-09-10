@@ -40,21 +40,72 @@ public class ado_map_activity extends AppCompatActivity {
     private final String ACCESS_COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private double longitude;
     private double latitude;
+    private Boolean showmap;
 
     private final int RESULT_CODE = 786;
     private GoogleMap map=null;
+    private final String TAG= "ado_map_activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ado_map_activity);
-        getPermission();
         Intent intent = getIntent();
         longitude = Double.parseDouble(intent.getStringExtra("longitude"));
         latitude = Double.parseDouble(intent.getStringExtra("latitude"));
+        Log.d(TAG, "onCreate: "+latitude+" "+longitude);
 
-        //marking positions
-        map.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title("edar aaa").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+
+        if(getPermission()){
+            SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.ado_map));
+
+            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    Log.d("inside onMapReady", "onMapReady: ");
+                    map=googleMap;
+
+                    //get latlong for corners for specified city
+
+                    LatLng one = new LatLng(7.798000, 68.14712);
+                    LatLng two = new LatLng(37.090000, 97.34466);
+
+                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                    //add them to builder
+                    builder.include(one);
+                    builder.include(two);
+
+                    LatLngBounds bounds = builder.build();
+
+                    //get width and height to current display screen
+                    int width = getResources().getDisplayMetrics().widthPixels;
+                    int height = getResources().getDisplayMetrics().heightPixels;
+
+                    // 20% padding
+                    int padding = (int) (width * 0.20);
+
+                    //set latlong bounds
+                    map.setLatLngBoundsForCameraTarget(bounds);
+
+                    //move camera to fill the bound to screen
+                    map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+
+                    //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
+                    map.setMinZoomPreference(map.getCameraPosition().zoom);
+
+                    //marking the position
+                    map.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title("edar aaa").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+                }
+
+
+
+            });
+        }
+
+
 
 
     }
@@ -95,48 +146,6 @@ public class ado_map_activity extends AppCompatActivity {
             }
 
             if (deniedCount == 0) {
-                SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.ado_map));
-
-                mapFragment.getMapAsync(new OnMapReadyCallback() {
-                    @Override
-                    public void onMapReady(GoogleMap googleMap) {
-                        map=googleMap;
-
-                        //get latlong for corners for specified city
-
-                        LatLng one = new LatLng(7.798000, 68.14712);
-                        LatLng two = new LatLng(37.090000, 97.34466);
-
-                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-                        //add them to builder
-                        builder.include(one);
-                        builder.include(two);
-
-                        LatLngBounds bounds = builder.build();
-
-                        //get width and height to current display screen
-                        int width = getResources().getDisplayMetrics().widthPixels;
-                        int height = getResources().getDisplayMetrics().heightPixels;
-
-                        // 20% padding
-                        int padding = (int) (width * 0.20);
-
-                        //set latlong bounds
-                        map.setLatLngBoundsForCameraTarget(bounds);
-
-                        //move camera to fill the bound to screen
-                        map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
-
-                        //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
-                        map.setMinZoomPreference(map.getCameraPosition().zoom);
-                    }
-
-
-
-                });
-
-
             } else {
                 for (Map.Entry<String, Integer> entry : permissionResults.entrySet()) {
                     String permName = entry.getKey();
@@ -204,8 +213,9 @@ public class ado_map_activity extends AppCompatActivity {
 
 
     public void onClickNavigation(View view) {
-        String uri = String.format(Locale.ENGLISH, "geo:%lf,%lf", latitude, longitude);
+        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", latitude, longitude, "Where the party is at");
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         startActivity(intent);
     }
 

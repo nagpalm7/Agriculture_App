@@ -35,7 +35,7 @@ public class AdoActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container_ado, new ado_pending_fragment());
+        getSupportFragmentManager().beginTransaction().replace(R.id.container_ado, new ado_pending_fragment()).commit();
 
 
         final NavigationView navigationView = findViewById(R.id.nav_view);

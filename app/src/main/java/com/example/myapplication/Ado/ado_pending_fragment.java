@@ -2,6 +2,7 @@ package com.example.myapplication.Ado;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -54,8 +56,11 @@ public class ado_pending_fragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.ado_pending_rv);
         adoListAdapter = new AdoListAdapter(getContext(),mtextview1,mtextview2);
+        DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL);
+        recyclerView.addItemDecoration(divider);
         recyclerView.setAdapter(adoListAdapter);
         recyclerView.setLayoutManager( new LinearLayoutManager(getActivity()));
+
 
         return view;
     }
@@ -91,6 +96,10 @@ public class ado_pending_fragment extends Fragment {
                             adoListAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            Fragment fragment = getFragmentManager().findFragmentById(R.id.rootView);
+                            fragment.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+
+
                         }
 
                     }

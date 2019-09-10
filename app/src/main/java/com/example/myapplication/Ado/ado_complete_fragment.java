@@ -3,6 +3,7 @@ package com.example.myapplication.Ado;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,12 +40,15 @@ public class ado_complete_fragment extends Fragment {
     private ArrayList<String> longitude;
     private ArrayList<String> latitude;
     private String url = "http://13.235.100.235:8000/api/locations/ado/completed";
+    private View view;
+
+    //tag
+    private final String TAG = "ado_complete_fragmnt";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.ado_complete_fragment, container, false);
-
+        view = inflater.inflate(R.layout.ado_complete_fragment, container, false);
         mtextview1 = new ArrayList<>();
         mtextview2 = new ArrayList<>();
         longitude = new ArrayList<>();
@@ -52,6 +56,7 @@ public class ado_complete_fragment extends Fragment {
 
         //add data in the array with load data
         getData();
+        Log.d(TAG, "onCreateView: inside onCreate");
 
         recyclerView = view.findViewById(R.id.ado_completed_rv);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),DividerItemDecoration.HORIZONTAL);
@@ -59,22 +64,30 @@ public class ado_complete_fragment extends Fragment {
         adoListAdapter = new AdoListAdapter(getContext(), mtextview1, mtextview2);
         recyclerView.setAdapter(adoListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL);
-        recyclerView.addItemDecoration(divider);
+
 
         return view;
     }
 
 
     private void getData() {
+        Log.d(TAG, "getData: inside getdata");
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            Log.d(TAG, "onResponse: ");
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             JSONArray resultsArray = rootObject.getJSONArray("results");
+                            if(resultsArray.length()== 0){
+                                adoListAdapter.mshowshimmer = false;
+                                adoListAdapter.notifyDataSetChanged();
+
+                                view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                            }
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
 
@@ -94,6 +107,8 @@ public class ado_complete_fragment extends Fragment {
                             adoListAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            Log.d(TAG, "onResponse: inside the evception");
+
                         }
 
                     }
@@ -101,6 +116,7 @@ public class ado_complete_fragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "onErrorResponse: inside the the error exception");
 
                     }
                 }) {
