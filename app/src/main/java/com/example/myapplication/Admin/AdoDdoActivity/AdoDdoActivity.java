@@ -29,7 +29,8 @@ public class AdoDdoActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab());
         ViewPager viewPager = findViewById(R.id.ddo_activity_viewpager);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Ddo Name");
+        String title = intent.getStringExtra("name");
+        getSupportActionBar().setTitle(title);
         int tabCount;
         if (isDdo)
             tabCount = 3;

@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -75,6 +76,8 @@ public class AdoDdoOngoing extends Fragment {
         SharedPreferences prefs = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = prefs.getString("token", "");
         recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
+        recyclerView.addItemDecoration(divider);
         locationNames = new ArrayList<>();
         locationAddresses = new ArrayList<>();
         adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses);

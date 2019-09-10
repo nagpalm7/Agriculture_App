@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -69,6 +70,8 @@ public class AdoDdoPending extends Fragment {
         recyclerView = view.findViewById(R.id.Ddo_pending_recyclerview);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
+        recyclerView.addItemDecoration(divider);
         locationNames = new ArrayList<>();
         locationAddresses = new ArrayList<>();
         adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses);
