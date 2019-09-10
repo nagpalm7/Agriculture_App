@@ -1,7 +1,10 @@
 package com.example.myapplication.Admin.AdoDdoActivity;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -26,6 +30,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +47,7 @@ public class AdoDdoCompleted extends Fragment {
     private AdoListAdapter adapter;
     private String nextUrl;
     private boolean isDdo;
+    private String token;
 
 
     public AdoDdoCompleted() {
@@ -62,10 +69,13 @@ public class AdoDdoCompleted extends Fragment {
         else
             role = "ado";
         String mUrl = "http://13.235.100.235:8000/api/admin/" + role + "/" + mDdoId + "/completed";
+        Log.d("url", "onCreateView: completed" + mUrl);
         progressBar = view.findViewById(R.id.Ddo_completed_loading);
         recyclerView = view.findViewById(R.id.Ddo_completed_recyclerview);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        SharedPreferences prefs = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
+        token = prefs.getString("token", "");
         locationNames = new ArrayList<>();
         locationAddresses = new ArrayList<>();
         adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses);
@@ -107,9 +117,9 @@ public class AdoDdoCompleted extends Fragment {
                                         singleObject.getString("block_name") + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
-                                adapter.mshowshimmer = false;
-                                adapter.notifyDataSetChanged();
                             }
+                            adapter.mshowshimmer = false;
+                            adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -121,7 +131,15 @@ public class AdoDdoCompleted extends Fragment {
                     public void onErrorResponse(VolleyError error) {
 
                     }
-                });
+                }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Authorization", "Token " + token);
+                return map;
+            }
+        };
         queue.add(jsonObjectRequest);
     }
 

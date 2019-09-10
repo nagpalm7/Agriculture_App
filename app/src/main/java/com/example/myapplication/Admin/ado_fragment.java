@@ -38,6 +38,7 @@ import java.util.Map;
 public class ado_fragment extends Fragment {
     private ArrayList<String> username;
     private ArrayList<String> userinfo;
+    private ArrayList<String> mUserId;
     private String mUrl = "http://13.235.100.235:8000/api/users-list/ado/";
     private RecyclerViewAdater recyclerViewAdater;
     private String token;
@@ -50,6 +51,7 @@ public class ado_fragment extends Fragment {
     public ado_fragment() {
         username = new ArrayList<>();
         userinfo = new ArrayList<>();
+        mUserId = new ArrayList<>();
     }
 
     @Nullable
@@ -57,7 +59,7 @@ public class ado_fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.ado_fragment, container, false);
         progressBar = view.findViewById(R.id.ado_list_progressbar);
-        recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, false);
+        recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, mUserId, false);
         RecyclerView Rview = view.findViewById(R.id.recyclerViewado);
         Rview.setAdapter(recyclerViewAdater);
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
@@ -80,10 +82,13 @@ public class ado_fragment extends Fragment {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));
                         userinfo.add(singleObject.getString("village_name"));
+                        JSONObject authObject = singleObject.getJSONObject("auth_user");
+                        String pk = authObject.getString("pk");
+                        mUserId.add(pk);
                     }
                     Log.d(TAG, "onResponse: " + username);
+                    recyclerViewAdater.mShowShimmer = false;
                     recyclerViewAdater.notifyDataSetChanged();
-
 
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());

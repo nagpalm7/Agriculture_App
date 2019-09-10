@@ -1,7 +1,10 @@
 package com.example.myapplication.Admin.AdoDdoActivity;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -26,6 +30,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,6 +50,7 @@ public class AdoDdoPending extends Fragment {
     private String nextUnAssignedUrl;
     private String nextPendingUrl;  //for ADO
     private boolean isDdo;
+    private String token;
 
     public AdoDdoPending() {
         // Required empty public constructor
@@ -66,16 +73,21 @@ public class AdoDdoPending extends Fragment {
         locationAddresses = new ArrayList<>();
         adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses);
         recyclerView.setAdapter(adapter);
+        SharedPreferences prefs = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
+        token = prefs.getString("token", "");
         String role;
         if (isDdo) {
             role = "dda";
             String mUrlAssigned = "http://13.235.100.235:8000/api/admin/" + role + "/" + mDdoId + "/assigned";
             String mUrlUnAssigned = "http://13.235.100.235:8000/api/admin/" + role + "/" + mDdoId + "/unassigned";
+            Log.d("url", "onCreateView: pending" + mUrlAssigned);
+            Log.d("url", "onCreateView: pending" + mUrlUnAssigned);
             getData(mUrlAssigned, true);
             getData(mUrlUnAssigned, false);
         } else {
             role = "ado";
             String mUrlPending = "http://13.235.100.235:8000/api/admin/" + role + "/" + mDdoId + "/pending";
+            Log.d("url", "onCreateView: pending" + mUrlPending);
             getData(mUrlPending, true); //just passed true and Set it accordingly in the function called
         }
 
@@ -119,13 +131,13 @@ public class AdoDdoPending extends Fragment {
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 String locName = singleObject.getString("village_name");
-                                String locAdd = singleObject.getString("block_name") +
-                                        singleObject.getString("block_name") + singleObject.getString("state");
+                                String locAdd = singleObject.getString("block_name") + ", " +
+                                        singleObject.getString("block_name") + ", " + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
-                                adapter.mshowshimmer = false;
-                                adapter.notifyDataSetChanged();
                             }
+                            adapter.mshowshimmer = false;
+                            adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -135,9 +147,17 @@ public class AdoDdoPending extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Log.d("pending", "onErrorResponse: " + error);
                     }
-                });
+                }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Authorization", "Token " + token);
+                return map;
+            }
+        };
         queue.add(jsonObjectRequest);
     }
 
@@ -189,7 +209,15 @@ public class AdoDdoPending extends Fragment {
                         public void onErrorResponse(VolleyError error) {
 
                         }
-                    });
+                    }) {
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("Authorization", "Token " + token);
+                    return map;
+                }
+            };
             queue.add(jsonObjectRequest);
             requestFinished(queue);
         }

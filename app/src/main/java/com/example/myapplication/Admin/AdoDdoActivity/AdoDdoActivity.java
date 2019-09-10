@@ -24,9 +24,9 @@ public class AdoDdoActivity extends AppCompatActivity {
         Log.d("ddoId", "onCreate: " + id);
         TabLayout tabLayout = findViewById(R.id.ddo_activity_tablayout);
         tabLayout.addTab(tabLayout.newTab());
-        tabLayout.addTab(tabLayout.newTab());
         if (isDdo)
             tabLayout.addTab(tabLayout.newTab());
+        tabLayout.addTab(tabLayout.newTab());
         ViewPager viewPager = findViewById(R.id.ddo_activity_viewpager);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Ddo Name");
@@ -40,6 +40,7 @@ public class AdoDdoActivity extends AppCompatActivity {
         if (isDdo)
             adapter.addFragment(new AdoDdoOngoing(id, isDdo));
         adapter.addFragment(new AdoDdoCompleted(id, isDdo));
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
     }

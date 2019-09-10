@@ -34,6 +34,7 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
         this.mtextview2 = mtextview2;
     }
 
+
     @NonNull
     @Override
     public AdoListAdapter.AdoListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
