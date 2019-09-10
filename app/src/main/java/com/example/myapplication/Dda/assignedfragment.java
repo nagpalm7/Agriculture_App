@@ -53,13 +53,13 @@ public class assignedfragment extends Fragment {
     private boolean isReferesh;
 
     public assignedfragment() {
-        Id = new ArrayList<String>(3);
-        Address = new ArrayList<String>(3);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
+        Id = new ArrayList<String>();
+        Address = new ArrayList<String>();
         isReferesh = false;
         ddaassignedAdapter = new DdapendingassignedAdapter(getActivity(),Id,Address);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -89,8 +89,8 @@ public class assignedfragment extends Fragment {
                         district = c.getString("district");
                         state = c.getString("state");
                         Address.add(villagename+","+blockname+","+district+","+state);
-                        ddaassignedAdapter.notifyDataSetChanged();
                     }
+                    ddaassignedAdapter.notifyDataSetChanged();
                 }catch (JSONException e){
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                     e.printStackTrace();

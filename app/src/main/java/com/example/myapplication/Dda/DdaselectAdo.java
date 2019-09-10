@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -41,6 +42,7 @@ public class DdaselectAdo extends AppCompatActivity {
     private DdaAdoListAdapter ddaAdoListAdapter;
     private String idtopass;
     private String adoid;
+    public static boolean isAssigned = false;
 
 
     @Override
@@ -67,8 +69,7 @@ public class DdaselectAdo extends AppCompatActivity {
         Toast.makeText(this, "List of Ado's", Toast.LENGTH_SHORT).show();
         loadData(urlget);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("List of Ado's");
-        SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
+        getSupportActionBar().setTitle("List of Ado's");        SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
         Log.d(TAG, "onCreateView: " + token);
 
@@ -122,4 +123,17 @@ public class DdaselectAdo extends AppCompatActivity {
         finish();
         return true;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.searchmenu,menu);
+        return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+    }
+
 }

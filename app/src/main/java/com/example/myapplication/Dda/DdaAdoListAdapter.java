@@ -1,5 +1,6 @@
 package com.example.myapplication.Dda;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 
 import android.content.Context;
@@ -81,6 +82,7 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     Toast.makeText(mcontext,"Location assigned",Toast.LENGTH_SHORT).show();
+                                    ((Activity)mcontext).finish();
                                     try {
                                         JSONObject c = new JSONObject(String.valueOf(response));
                                         Log.d(TAG, "onResponse: " + c);
