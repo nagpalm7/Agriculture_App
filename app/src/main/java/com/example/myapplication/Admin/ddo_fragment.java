@@ -46,6 +46,7 @@ public class ddo_fragment extends Fragment {
     private String nextUrl;
     private ProgressBar progressBar;
     private LinearLayoutManager layoutManager;
+    private View view;
 
     public ddo_fragment() {
         username = new ArrayList<>();
@@ -58,7 +59,7 @@ public class ddo_fragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: check1check");
-        View view = inflater.inflate(R.layout.ddo_fragment, container, false);
+        view = inflater.inflate(R.layout.ddo_fragment, container, false);
         progressBar = view.findViewById(R.id.ddo_list_progressbar);
         recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, mUserId, true);
         RecyclerView Rview = view.findViewById(R.id.recyclerViewddo);
@@ -80,6 +81,13 @@ public class ddo_fragment extends Fragment {
                     nextUrl = rootObject.getString("next");
                     Log.d(TAG, "onResponse: nextUrl " + nextUrl);
                     JSONArray resultsArray = rootObject.getJSONArray("results");
+                    if(resultsArray.length()== 0){
+                        recyclerViewAdater.mShowShimmer = false;
+                        recyclerViewAdater.notifyDataSetChanged();
+
+                        view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                        //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                    }
                     for (int i = 0; i < resultsArray.length(); i++) {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));

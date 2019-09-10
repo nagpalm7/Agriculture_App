@@ -49,6 +49,7 @@ public class OnGoingFragment extends Fragment {
     private String token;
     private String next_ongoing_url;
     private ProgressBar progressBar;
+    private  View view;
 
     public OnGoingFragment() {
         // Required empty public constructor
@@ -58,7 +59,7 @@ public class OnGoingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_on_going, container, false);
+       view = inflater.inflate(R.layout.fragment_on_going, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.ongoing_recyclerview);
         progressBar = view.findViewById(R.id.locations_loading_ongoing);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -101,6 +102,13 @@ public class OnGoingFragment extends Fragment {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             next_ongoing_url = rootObject.getString("next");
                             JSONArray resultsArray = rootObject.getJSONArray("results");
+                            if(resultsArray.length()== 0){
+                                adapter.mShowShimmer = false;
+                                adapter.notifyDataSetChanged();
+
+                                view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                            }
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 mDDaNames.add(singleObject.getString("dda"));
