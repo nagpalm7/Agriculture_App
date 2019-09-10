@@ -39,6 +39,8 @@ public class DdaselectAdo extends AppCompatActivity {
     private String urlget = "http://13.235.100.235:8000/api/ado/";
     private String token;
     private DdaAdoListAdapter ddaAdoListAdapter;
+    private String idtopass;
+    private String adoid;
 
 
     @Override
@@ -46,13 +48,21 @@ public class DdaselectAdo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ddaselect_ado);
 
+
         nameofado = new ArrayList<String>();
         villagename = new ArrayList<String>();
 
-        ddaAdoListAdapter = new DdaAdoListAdapter(getApplicationContext(),nameofado,villagename);
+        ddaAdoListAdapter = new DdaAdoListAdapter(DdaselectAdo.this,nameofado,villagename);
         RecyclerView review = findViewById(R.id.RecyclerViewadolist);
         review.setAdapter(ddaAdoListAdapter);
         review.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        //getting location id coming from unassigned fragment to this activity
+        Bundle extras = getIntent().getExtras();
+        idtopass = extras.getString("Id_I_Need");
+        Log.d(TAG, "onCreate: Id_I_Need="+idtopass);
+        ddaAdoListAdapter.getlocationid(idtopass);
+
 
         Toast.makeText(this, "List of Ado's", Toast.LENGTH_SHORT).show();
         loadData(urlget);
@@ -74,6 +84,8 @@ public class DdaselectAdo extends AppCompatActivity {
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c =jsonArray.getJSONObject(i);
+                        adoid = c.getString("id");
+                        ddaAdoListAdapter.getadoid(adoid);
                         nameofado.add(c.getString("name"));
                         villagename.add(c.getString("village_name"));
 

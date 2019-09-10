@@ -114,7 +114,8 @@
                     android:layout_toRightOf="@id/lock"
                     android:background="@android:color/transparent"
                     android:fontFamily="monospace"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:imeOptions="actionDone"/>
 
 
                 <CheckBox

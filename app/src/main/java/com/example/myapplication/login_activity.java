@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -91,6 +94,24 @@ public class login_activity extends AppCompatActivity {
              }
          });
 
+        editPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                boolean handled = false;
+                if(i == EditorInfo.IME_ACTION_DONE){
+                    String mEmail = editEmail.getText().toString().trim();
+                    String mPass = editPassword.getText().toString().trim();
+
+                    if (!mEmail.isEmpty() && !mPass.isEmpty()) {
+                        Log.d(TAG, "onEditorAction: Done button pressed");
+                        Login(mEmail,mPass);
+                        }
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
 
             btnLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -99,7 +120,6 @@ public class login_activity extends AppCompatActivity {
                     String mPass = editPassword.getText().toString().trim();
 
                     if (!mEmail.isEmpty() && !mPass.isEmpty()) {
-                        btnLogin.setEnabled(false);
                         Login(mEmail, mPass);
                     } else if(!mEmail.isEmpty() && mPass.isEmpty()){
                         editPassword.setError("Please insert password");
@@ -250,4 +270,31 @@ public class login_activity extends AppCompatActivity {
 
         }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        dialog.dismiss();
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dialog.dismiss();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+}

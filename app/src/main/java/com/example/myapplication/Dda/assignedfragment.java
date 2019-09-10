@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +43,7 @@ public class assignedfragment extends Fragment {
     private String blockname;
     private String district;
     private String state;
+    private boolean isReferesh;
 
     public assignedfragment() {
         Id = new ArrayList<String>(3);
@@ -51,6 +53,7 @@ public class assignedfragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
+        isReferesh = false;
         ddaassignedAdapter = new DdapendingassignedAdapter(getActivity(),Id,Address);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddaassignedAdapter);
@@ -102,4 +105,31 @@ public class assignedfragment extends Fragment {
         requestQueue.add(jsonObjectRequest);
         return view;
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
+        isReferesh = false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+        isReferesh = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+        if(isReferesh)
+        {
+            getFragmentManager().beginTransaction().detach(assignedfragment.this)
+                    .attach(assignedfragment.this).commit();
+            Log.d(TAG, "onResume: REFRESH");
+            isReferesh = false;
+        }
+}
 }

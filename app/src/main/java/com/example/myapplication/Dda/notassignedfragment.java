@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,10 +46,11 @@ public class notassignedfragment extends Fragment {
     private String state;
     private String token;
     private View view;
+    private String locationid;
+    private boolean isReferesh;
+
 
     public notassignedfragment(){
-        Id = new ArrayList<String>(3);
-        Address = new ArrayList<String>(3);
     }
 
     @Override
@@ -56,8 +58,9 @@ public class notassignedfragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_notassignedfragment, container, false);
-
-
+        isReferesh = false;
+        Id = new ArrayList<String>();
+        Address = new ArrayList<String>();
         ddapendingUnassignedAdapter = new DdapendingUnassignedAdapter(getActivity(),Id, Address);
         RecyclerView notassignedreview = view.findViewById(R.id.recyclerViewnotassigned);
         notassignedreview.setAdapter(ddapendingUnassignedAdapter);
@@ -73,21 +76,22 @@ public class notassignedfragment extends Fragment {
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlget, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                try { ;
+                try { 
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
+                        locationid = c.getString("id");
+                        ddapendingUnassignedAdapter.sendlocationId(locationid);
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
                         Id.add(c.getString("id"));
                         Address.add(villagename+","+blockname+","+district+","+state);
-
-                        ddapendingUnassignedAdapter.notifyDataSetChanged();
-                        Log.d(TAG, "onResponse: error in this notassignedfragment"+response);
                     }
+                    ddapendingUnassignedAdapter.notifyDataSetChanged();
+                    Log.d(TAG, "onResponse: error in this notassignedfragment"+response);
                 }catch (JSONException e){
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                 }
@@ -113,4 +117,30 @@ public class notassignedfragment extends Fragment {
 
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
+        isReferesh = false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+        isReferesh = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+        if(isReferesh)
+        {
+            getFragmentManager().beginTransaction().detach(notassignedfragment.this)
+                    .attach(notassignedfragment.this).commit();
+            Log.d(TAG, "onResume: REFRESH");
+            isReferesh = false;
+        }
+    }
 }
