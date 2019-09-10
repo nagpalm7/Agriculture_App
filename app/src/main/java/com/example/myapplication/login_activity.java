@@ -4,12 +4,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -61,18 +65,25 @@ public class login_activity extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login_activity);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window w = getWindow();
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
 
         final SharedPreferences sp = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
          String Usertype = sp.getString("typeOfUser","");
           if(sp.contains("token"))
           {
+              Intent intent = null;
               if(Usertype.equals("dda"))
-              { startActivity(new Intent(this,DdaActivity.class));}
-              else if(Usertype.equals("ado"))
-              { startActivity(new Intent(this,AdoActivity.class));}
-              else if(Usertype.equals("admin"))
-              { startActivity(new Intent(this,AdminActivity.class));}
+                  intent = new Intent(this,DdaActivity.class);
+              if(Usertype.equals("ado"))
+                        intent = new Intent(this,AdoActivity.class);
+              if(Usertype.equals("admin"))
+                        intent = new Intent(this,AdminActivity.class);
+              startActivity(intent);
+              finish();
+
           }
 
             editEmail = findViewById(R.id.editEmail);
@@ -106,6 +117,17 @@ public class login_activity extends AppCompatActivity {
                         Log.d(TAG, "onEditorAction: Done button pressed");
                         Login(mEmail,mPass);
                         }
+                    else if(mEmail.isEmpty() && mPass.isEmpty())
+                    {
+                        editEmail.setError("Please insert email");
+                        editPassword.setError("Please insert password");
+                    }
+
+                    else if(mEmail.isEmpty())
+                        editEmail.setError("Please insert email");
+                    else if (mPass.isEmpty())
+                        editPassword.setError("Please insert password");
+
                     handled = true;
                 }
                 return handled;
@@ -240,7 +262,6 @@ public class login_activity extends AppCompatActivity {
                                     MyRequestQueue.add(jsonObjectRequest1);
                                     Log.d(TAG, "onResponse: Token:" + token);
                                 } catch (JSONException e) {
-                                    Toast.makeText(login_activity.this,"Please try again",Toast.LENGTH_LONG).show();
                                     dialog.dismiss();
                                     btnLogin.setEnabled(true);
                                     Log.d(TAG, "onResponse: error in post catch block: " + e);
@@ -251,7 +272,8 @@ public class login_activity extends AppCompatActivity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(login_activity.this,"Please try again",Toast.LENGTH_LONG).show();
+                                if(error instanceof NoConnectionError)
+                                    Toast.makeText(login_activity.this, "Check your internet connection", Toast.LENGTH_LONG).show();
                                 dialog.dismiss();
                                 btnLogin.setEnabled(true);
                             }
@@ -285,7 +307,6 @@ public class login_activity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        dialog.dismiss();
     }
 
     @Override

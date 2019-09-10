@@ -8,12 +8,14 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -45,7 +47,7 @@ public class AdminActivity extends AppCompatActivity
     private final String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private final int RESULT_CODE = 786;
     private NavigationView navigationView;
-
+    private boolean doubleBackToExitPressedOnce = false;
 
 
     @Override
@@ -201,8 +203,20 @@ public class AdminActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        } else
+            if(!doubleBackToExitPressedOnce) {
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, "Please click BACK again to exit.", Toast.LENGTH_LONG).show();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        doubleBackToExitPressedOnce = false;
+                    }
+                }, 3600);
+            }
+            else {
+                super.onBackPressed();
         }
     }
 

@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +34,7 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
     private TextView textView;
     private NavigationView navigationView;
     private ImageView imageView;
+    private boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,6 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout_dda);
         navigationView = findViewById(R.id.navofdda);
 
@@ -55,7 +56,7 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        //setting header dynamically\
+        //setting header dynamically
         View header = navigationView.getHeaderView(0);
         textView = (TextView) header.findViewById(R.id.nameOfUserLoggedIn);
         imageView = (ImageView) header.findViewById(R.id.imageView);
@@ -68,9 +69,9 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
         //close
 
         if(savedInstanceState==null){
-            getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaOngoingFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaPendingFragment()).commit();
             navigationView.getMenu().getItem(0).setChecked(true);
-            getSupportActionBar().setTitle("Ongoing Locations");
+            getSupportActionBar().setTitle("Pending Locations");
         }
     }
 
@@ -80,21 +81,27 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         int id = menuItem.getItemId();
 
-        if(id==R.id.ongoing_item){
-            getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaOngoingFragment()).commit();
-            navigationView.getMenu().getItem(0).setChecked(true);
-            getSupportActionBar().setTitle("Ongoing Locations");
-            Toast.makeText(this,"Ongoing",Toast.LENGTH_LONG).show();
-        }else if(id==R.id.completed_item){
-            getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaCompletedFragment()).commit();
-            navigationView.getMenu().getItem(1).setChecked(true);
-            getSupportActionBar().setTitle("Completed Locations");
-            Toast.makeText(this,"Completed",Toast.LENGTH_LONG).show();
-        }else if(id==R.id.pending_item){
+        if(id==R.id.pending_item){
+
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaPendingFragment()).commit();
             navigationView.getMenu().getItem(2).setChecked(true);
             getSupportActionBar().setTitle("Pending Locations");
             Toast.makeText(this,"Pending",Toast.LENGTH_LONG).show();
+
+        }else if(id==R.id.ongoing_item){
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaOngoingFragment()).commit();
+            navigationView.getMenu().getItem(0).setChecked(true);
+            getSupportActionBar().setTitle("Ongoing Locations");
+            Toast.makeText(this,"Ongoing",Toast.LENGTH_LONG).show();
+
+        }else if(id==R.id.completed_item){
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaCompletedFragment()).commit();
+            navigationView.getMenu().getItem(1).setChecked(true);
+            getSupportActionBar().setTitle("Completed Locations");
+            Toast.makeText(this,"Completed",Toast.LENGTH_LONG).show();
+
         }
 
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_dda);
@@ -145,8 +152,18 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
         DrawerLayout drawer = findViewById(R.id.drawer_layout_dda);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (!doubleBackToExitPressedOnce) {
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click BACK again to exit.", Toast.LENGTH_LONG).show();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 3600);
         } else {
             super.onBackPressed();
+            }
         }
-    }
 }
