@@ -66,7 +66,7 @@ public class DdaselectAdo extends AppCompatActivity {
 
         Toast.makeText(this, "List of Ado's", Toast.LENGTH_SHORT).show();
         loadData(urlget);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
         Log.d(TAG, "onCreateView: " + token);
@@ -114,5 +114,11 @@ public class DdaselectAdo extends AppCompatActivity {
 
         requestQueue.add(jsonObjectRequest);
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }
