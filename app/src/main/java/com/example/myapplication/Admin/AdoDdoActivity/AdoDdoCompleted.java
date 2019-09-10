@@ -48,6 +48,7 @@ public class AdoDdoCompleted extends Fragment {
     private String nextUrl;
     private boolean isDdo;
     private String token;
+    private View view;
 
 
     public AdoDdoCompleted() {
@@ -62,7 +63,7 @@ public class AdoDdoCompleted extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ddo_completed, container, false);
+        view = inflater.inflate(R.layout.fragment_ddo_completed, container, false);
         String role;
         if (isDdo)
             role = "dda";
@@ -110,6 +111,13 @@ public class AdoDdoCompleted extends Fragment {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             nextUrl = rootObject.getString("next");
                             JSONArray resultsArray = rootObject.getJSONArray("results");
+                            if(resultsArray.length()== 0){
+                                adapter.mshowshimmer = false;
+                                adapter.notifyDataSetChanged();
+
+                                view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                            }
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 String locName = singleObject.getString("village_name");
@@ -154,6 +162,13 @@ public class AdoDdoCompleted extends Fragment {
                             try {
                                 JSONObject rootObject = new JSONObject(String.valueOf(response));
                                 JSONArray resultsArray = rootObject.getJSONArray("results");
+                                if(resultsArray.length()== 0){
+                                    adapter.mshowshimmer = false;
+                                    adapter.notifyDataSetChanged();
+
+                                    view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                    //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                }
                                 for (int i = 0; i < resultsArray.length(); i++) {
                                     JSONObject singleObject = resultsArray.getJSONObject(i);
                                     String locName = singleObject.getString("village_name");
