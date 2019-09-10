@@ -42,6 +42,15 @@
             android:layout_toLeftOf="@id/img"
             android:background="@color/shimmer_bg"
             android:textSize="16sp" />
+
+        <TextView
+            android:visibility="gone"
+            android:background="@color/shimmer_bg"
+            android:layout_toLeftOf="@id/img"
+            android:layout_below="@id/laddress"
+            android:layout_marginHorizontal="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
 
 </com.facebook.shimmer.ShimmerFrameLayout>
