@@ -126,7 +126,7 @@ public class DdaselectAdo extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.searchmenu,menu);
+//        getMenuInflater().inflate(R.menu.searchmenu,menu);
         return true;
     }
 
