@@ -35,8 +35,6 @@ import java.util.Map;
 public class DdaOngoingFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     private static final String TAG = "DdaOngoingFragment";
-    private ArrayList<String> Date;
-    private ArrayList<String> Time;
     private ArrayList<String> Address;
     private ArrayList<String> Id;
     private DdaongoingAdapter ddaongoingAdapter;
@@ -55,20 +53,19 @@ public class DdaOngoingFragment extends Fragment {
 //    private Toolbar toolbar;
 
     public DdaOngoingFragment() {
-        Date = new ArrayList<String>(3);
-        Time = new ArrayList<String>(3);
-        Address = new ArrayList<String>(3);
-        Id = new ArrayList<String>(3);
+
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Address = new ArrayList<String>();
+        Id = new ArrayList<String>();
         view = inflater.inflate(R.layout.fragment_ongoing,container,false);
         review = view.findViewById(R.id.recyclerViewongoing);
 
-        ddaongoingAdapter = new DdaongoingAdapter(getActivity(),Date,Time,Address,Id);
+        ddaongoingAdapter = new DdaongoingAdapter(getActivity(),Id,Address);
         review.setAdapter(ddaongoingAdapter);
         layoutManager = new LinearLayoutManager(getActivity());
         review.setLayoutManager(layoutManager);
@@ -110,6 +107,7 @@ public class DdaOngoingFragment extends Fragment {
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     length_of_results_array = jsonArray.length();
                     if(length_of_results_array==0){
+                        ddaongoingAdapter.showongoingshimmer = false;
                         ddaongoingAdapter.notifyDataSetChanged();
                         view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
                     }
@@ -120,11 +118,10 @@ public class DdaOngoingFragment extends Fragment {
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        Date.add(c.getString("acq_date"));
-                        Time.add(c.getString("acq_time"));
                         Address.add(villagename+", "+blockname+", "+district+", "+state);
                     }
                     Log.d(TAG, "onResponse:ongoing ");
+                    ddaongoingAdapter.showongoingshimmer = false;
                     ddaongoingAdapter.notifyDataSetChanged();
 
                 }catch (JSONException e){
@@ -161,18 +158,23 @@ public class DdaOngoingFragment extends Fragment {
                                 JSONObject rootObject = new JSONObject(String.valueOf(response));
                                 next_url_get_ongoing = rootObject.getString("next");
                                 JSONArray resultsArray = rootObject.getJSONArray("results");
+                                length_of_results_array = resultsArray.length();
+                                if(length_of_results_array==0){
+                                    ddaongoingAdapter.showongoingshimmer = false;
+                                    ddaongoingAdapter.notifyDataSetChanged();
+                                    view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                }
                                 for (int i = 0; i < resultsArray.length(); i++) {
                                     JSONObject singleObject = resultsArray.getJSONObject(i);
                                     Id.add(singleObject.getString("id"));
-                                    Date.add(singleObject.getString("acq_date"));
-                                    Time.add(singleObject.getString("acq_time"));
                                     String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
                                             + singleObject.getString("district") + ", " + singleObject.getString("state");
                                     Address.add(location);
-                                    ddaongoingAdapter.notifyDataSetChanged();
                                     isNextBusy = false;
                                     Log.d(TAG, "onResponse: in next url");
                                 }
+                                ddaongoingAdapter.showongoingshimmer = false;
+                                ddaongoingAdapter.notifyDataSetChanged();
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
