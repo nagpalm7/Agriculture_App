@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -39,6 +40,9 @@ public class DdaselectAdo extends AppCompatActivity {
     private String urlget = "http://13.235.100.235:8000/api/ado/";
     private String token;
     private DdaAdoListAdapter ddaAdoListAdapter;
+    private String idtopass;
+    private String adoid;
+    public static boolean isAssigned = false;
 
 
     @Override
@@ -46,18 +50,26 @@ public class DdaselectAdo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ddaselect_ado);
 
+
         nameofado = new ArrayList<String>();
         villagename = new ArrayList<String>();
 
-        ddaAdoListAdapter = new DdaAdoListAdapter(getApplicationContext(),nameofado,villagename);
+        ddaAdoListAdapter = new DdaAdoListAdapter(DdaselectAdo.this,nameofado,villagename);
         RecyclerView review = findViewById(R.id.RecyclerViewadolist);
         review.setAdapter(ddaAdoListAdapter);
         review.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
+        //getting location id coming from unassigned fragment to this activity
+        Bundle extras = getIntent().getExtras();
+        idtopass = extras.getString("Id_I_Need");
+        Log.d(TAG, "onCreate: Id_I_Need="+idtopass);
+        ddaAdoListAdapter.getlocationid(idtopass);
+
+
         Toast.makeText(this, "List of Ado's", Toast.LENGTH_SHORT).show();
         loadData(urlget);
-
-        SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("List of Ado's");        SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
         Log.d(TAG, "onCreateView: " + token);
 
@@ -74,11 +86,12 @@ public class DdaselectAdo extends AppCompatActivity {
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c =jsonArray.getJSONObject(i);
+                        adoid = c.getString("id");
+                        ddaAdoListAdapter.getadoid(adoid);
                         nameofado.add(c.getString("name"));
                         villagename.add(c.getString("village_name"));
-
-                        ddaAdoListAdapter.notifyDataSetChanged();
                     }
+                    ddaAdoListAdapter.notifyDataSetChanged();
                 }catch (JSONException e){
                     Log.d(TAG, "onResponse: "+e);
                 }
@@ -103,4 +116,24 @@ public class DdaselectAdo extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
 
     }
+
+    //for back button on action bar
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.searchmenu,menu);
+        return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+    }
+
 }

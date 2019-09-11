@@ -27,6 +27,7 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
     public Boolean mshowshimmer = true;
     private ArrayList<String> mAdoName;
     private boolean isDDoAdo;
+    private boolean isDDo;
     private int shimmer_count = 5;
     Context mcontext;
 
@@ -35,13 +36,15 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         isDDoAdo = false;
+        isDDo = false;
     }
 
-    public AdoListAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mAdoName, boolean isDDoAdo) {
+    public AdoListAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mAdoName, boolean isDDo) {
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         this.mAdoName = mAdoName;
-        this.isDDoAdo = isDDoAdo;
+        this.isDDo = isDDo;
+        isDDoAdo = true;
         this.mcontext = mcontext;
     }
 
@@ -54,7 +57,7 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
         adoListHolder.Adolistlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!mshowshimmer) {
+                if (!mshowshimmer && !isDDoAdo) {
                     Intent intent = new Intent(mcontext, ado_map_activity.class);
                     int position = adoListHolder.getAdapterPosition();
                     Log.d(TAG, "onClick: ");
@@ -81,7 +84,7 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
             holder.tv2.setBackground(null);
             holder.tv1.setText(mtextview1.get(position));
             holder.tv2.setText(mtextview2.get(position));
-            if (isDDoAdo) {
+            if (isDDo) {
                 holder.mAdoName.setText(mAdoName.get(position));
                 holder.mAdoName.setVisibility(View.VISIBLE);
                 holder.mAdoName.setBackground(null);

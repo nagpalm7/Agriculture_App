@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,8 @@ public class DdaPendingFragment extends Fragment {
     TabItem notassigned;
     TabPageDdaAdapter mpageAdapter;
     ViewPager page;
-
+    private static final String TAG = "DdaPendingFragment";
+    private boolean isRefresh;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,12 +59,6 @@ public class DdaPendingFragment extends Fragment {
 
         page.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mtablayout));
         return view;
-
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
     }
 }

@@ -24,19 +24,29 @@ public class DdapendingUnassignedAdapter extends RecyclerView.Adapter<Ddapending
     private ArrayList<String> mtextview1;
     private ArrayList<String> mtextview2;
     private Context mcontext;
+    private ArrayList<String> id;
 
     public DdapendingUnassignedAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
+        this.id = new ArrayList<>();
     }
 
     @NonNull
     @Override
     public ViewHolderPendingDda onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mcontext).inflate(R.layout.notassignedlist,parent,false);
-        ViewHolderPendingDda viewHolderPendingDda = new ViewHolderPendingDda(view);
-        Log.d(TAG, "onCreateViewHolder: error in this"+viewHolderPendingDda);
+        final ViewHolderPendingDda viewHolderPendingDda = new ViewHolderPendingDda(view);
+        viewHolderPendingDda.parentnotassigned.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: item clicked");
+                Intent intent = new Intent(mcontext, DdaselectAdo.class);
+                intent.putExtra("Id_I_Need",id.get(viewHolderPendingDda.getAdapterPosition()));
+                mcontext.startActivity(intent);
+            }
+        });
         return viewHolderPendingDda;
     }
 
@@ -44,17 +54,6 @@ public class DdapendingUnassignedAdapter extends RecyclerView.Adapter<Ddapending
     public void onBindViewHolder(@NonNull ViewHolderPendingDda holder, int position) {
             holder.tv1.setText(mtextview1.get(position));
             holder.tv2.setText(mtextview2.get(position));
-        Log.d(TAG, "onBindViewHolder: error in this"+holder);
-
-
-        holder.parentnotassigned.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: item clicked");
-                Intent intent = new Intent(mcontext, DdaselectAdo.class);
-                mcontext.startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -76,6 +75,10 @@ public class DdapendingUnassignedAdapter extends RecyclerView.Adapter<Ddapending
             tv2 = itemView.findViewById(R.id.address);
         }
 
+    }
+
+    public void sendlocationId(String id){
+        this.id.add(id);
     }
 
 }

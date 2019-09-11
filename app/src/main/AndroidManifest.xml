@@ -13,21 +13,40 @@
         android:usesCleartextTraffic="true">
         <activity
             android:screenOrientation="portrait"
-            android:name=".Ado.ado_map_activity"></activity>
+            android:name=".Ado.ado_map_activity">
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
         <activity
             android:screenOrientation="portrait"
-            android:name=".Admin.AdoDdoActivity.AdoDdoActivity" />
+            android:name=".Admin.AdoDdoActivity.AdoDdoActivity" >
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
         <activity
             android:screenOrientation="portrait"
-            android:name=".Dda.DdaselectAdo" />
+            android:name=".Dda.DdaselectAdo" >
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
         <activity
             android:screenOrientation="portrait"
             android:name=".Ado.AdoActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
         <activity
             android:screenOrientation="portrait"
             android:name=".Dda.DdaActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+
+            >
+
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
         <activity
             android:screenOrientation="portrait"
             android:name=".Admin.AdminActivity"
@@ -35,6 +54,9 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
+
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
         <activity
             android:screenOrientation="portrait"
@@ -61,6 +83,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAUKi9N7ZNLUj3QjYK9Zn-7PxVMw85koOY" />
+
+
+
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

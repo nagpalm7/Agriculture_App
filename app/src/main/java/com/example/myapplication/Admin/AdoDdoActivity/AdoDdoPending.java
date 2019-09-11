@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -56,6 +57,8 @@ public class AdoDdoPending extends Fragment {
     private String mUrlUnAssigned;
     private RequestQueue queue;
     private boolean flag= false;
+    private ArrayList<String> mAdoNames;
+    private boolean isNextBusy = false;
     public AdoDdoPending() {
         // Required empty public constructor
     }
@@ -73,9 +76,15 @@ public class AdoDdoPending extends Fragment {
         recyclerView = view.findViewById(R.id.Ddo_pending_recyclerview);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
+        recyclerView.addItemDecoration(divider);
         locationNames = new ArrayList<>();
         locationAddresses = new ArrayList<>();
-        adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses);
+        mAdoNames = new ArrayList<>();
+        if (isDdo)
+            adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses, mAdoNames, true);
+        else
+            adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses, mAdoNames, false);
         recyclerView.setAdapter(adapter);
         SharedPreferences prefs = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = prefs.getString("token", "");
@@ -105,7 +114,8 @@ public class AdoDdoPending extends Fragment {
                     pastItemCount = layoutManager.findFirstVisibleItemPosition();
                     visibleItemCount = layoutManager.getChildCount();
                     if ((pastItemCount + visibleItemCount) >= totalCount) {
-                        loadNextLocations();
+                        if (!isNextBusy)
+                            loadNextLocations();
                     }
                 }
                 super.onScrolled(recyclerView, dx, dy);
@@ -124,28 +134,38 @@ public class AdoDdoPending extends Fragment {
                         try {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             String nextUrl = rootObject.getString("next");
-
                                 if (isDdo)
                                     nextAssignedUrl = nextUrl;
                                 else
                                     nextPendingUrl = nextUrl;
-
-
                             JSONArray resultsArray = rootObject.getJSONArray("results");
-                            if(resultsArray.length() == 0 )flag=true;
+                            if (resultsArray.length() == 0)
+                                flag = true;
                             Log.d(TAG, "onResponse: "+resultsArray.length());
 
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
+                                if (isDdo) {
+                                    try {
+                                        JSONObject adoObject = singleObject.getJSONObject("ado");
+                                        String adoName = adoObject.getString("name");
+                                        mAdoNames.add(adoName);
+                                    } catch (JSONException e) {
+                                        mAdoNames.add("Not Assigned");
+                                    }
+                                }
                                 String locName = singleObject.getString("village_name");
                                 String locAdd = singleObject.getString("block_name") + ", " +
                                         singleObject.getString("block_name") + ", " + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
                             }
-                            adapter.mshowshimmer = false;
-                            adapter.notifyDataSetChanged();
-                            getdata1(mUrlUnAssigned);
+                            if (isDdo)
+                                getdata1(mUrlUnAssigned);
+                            else {
+                                adapter.mshowshimmer = false;
+                                adapter.notifyDataSetChanged();
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -178,11 +198,7 @@ public class AdoDdoPending extends Fragment {
                         try {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             String nextUrl = rootObject.getString("next");
-
-
-
                             nextUnAssignedUrl = nextUrl;
-
                             JSONArray resultsArray = rootObject.getJSONArray("results");
                             if(flag && resultsArray.length() == 0){
                                 adapter.mshowshimmer = false;
@@ -195,12 +211,22 @@ public class AdoDdoPending extends Fragment {
 
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
+                                if (isDdo) {
+                                    try {
+                                        JSONObject adoObject = singleObject.getJSONObject("ado");
+                                        String adoName = adoObject.getString("name");
+                                        mAdoNames.add(adoName);
+                                    } catch (JSONException e) {
+                                        mAdoNames.add("Not Assigned");
+                                    }
+                                }
                                 String locName = singleObject.getString("village_name");
                                 String locAdd = singleObject.getString("block_name") + ", " +
                                         singleObject.getString("block_name") + ", " + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
                             }
+                            Log.d(TAG, "onResponse: ADO NAMES: " + mAdoNames);
                             adapter.mshowshimmer = false;
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
@@ -225,29 +251,30 @@ public class AdoDdoPending extends Fragment {
         };
         queue.add(jsonObjectRequest1);
 
-
     }
 
     private void loadNextLocations() {
         if (isDdo) {
             switch (NEXT_LOCATION_COUNT) {
                 case 1:
-                    makeRequest(nextAssignedUrl);
+                    if (!nextAssignedUrl.equals("null"))
+                        makeRequest(nextAssignedUrl, true);
                     NEXT_LOCATION_COUNT = 2;
                     break;
                 case 2:
-                    makeRequest(nextUnAssignedUrl);
+                    if (!nextUnAssignedUrl.equals("null"))
+                        makeRequest(nextUnAssignedUrl, false);
                     NEXT_LOCATION_COUNT = 1;
                     break;
             }
         } else {
-            makeRequest(nextPendingUrl);
+            makeRequest(nextPendingUrl, true);
         }
     }
 
-    private void makeRequest(String url) {
+    private void makeRequest(String url, final boolean isAssigned) {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        if (!url.isEmpty()) {
+        isNextBusy = true;
             progressBar.setVisibility(View.VISIBLE);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                     new Response.Listener<JSONObject>() {
@@ -256,15 +283,33 @@ public class AdoDdoPending extends Fragment {
                             try {
                                 JSONObject rootObject = new JSONObject(String.valueOf(response));
                                 JSONArray resultsArray = rootObject.getJSONArray("results");
+                                String nextUrl = rootObject.getString("next");
+                                if (isDdo) {
+                                    if (isAssigned)
+                                        nextAssignedUrl = nextUrl;
+                                    else
+                                        nextUnAssignedUrl = nextUrl;
+                                } else
+                                    nextPendingUrl = nextUrl;
                                 for (int i = 0; i < resultsArray.length(); i++) {
                                     JSONObject singleObject = resultsArray.getJSONObject(i);
+                                    if (isDdo) {
+                                        try {
+                                            JSONObject adoObject = singleObject.getJSONObject("ado");
+                                            String adoName = adoObject.getString("name");
+                                            mAdoNames.add(adoName);
+                                        } catch (JSONException e) {
+                                            mAdoNames.add("Not Assigned");
+                                        }
+                                    }
                                     String locName = singleObject.getString("village_name");
                                     String locAdd = singleObject.getString("block_name") +
                                             singleObject.getString("block_name") + singleObject.getString("state");
                                     locationNames.add(locName);
                                     locationAddresses.add(locAdd);
-                                    adapter.notifyDataSetChanged();
                                 }
+                                adapter.notifyDataSetChanged();
+                                isNextBusy = false;
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -287,7 +332,6 @@ public class AdoDdoPending extends Fragment {
             };
             queue.add(jsonObjectRequest);
             requestFinished(queue);
-        }
 
     }
 

@@ -1,21 +1,18 @@
 package com.example.myapplication.Dda;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toolbar;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -25,7 +22,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
-import com.facebook.shimmer.ShimmerFrameLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +48,7 @@ public class DdaOngoingFragment extends Fragment {
     private String state;
     private ProgressBar progressBar;
     private LinearLayoutManager layoutManager;
+    private boolean isNextBusy = false;
 //    private Toolbar toolbar;
 
     public DdaOngoingFragment() {
@@ -91,8 +88,8 @@ public class DdaOngoingFragment extends Fragment {
                     pastCount = layoutManager.findFirstVisibleItemPosition();
                     visibleCount = layoutManager.getChildCount();
                     if ((pastCount + visibleCount) >= totalCount) {
-                        progressBar.setVisibility(View.VISIBLE);
-                        get_ddaongoing();
+                        if (!next_url_get_ongoing.equals("null") && !isNextBusy)
+                            get_ddaongoing();
                         Log.d(TAG, "onScrolled:");
                     }
                 }
@@ -104,7 +101,6 @@ public class DdaOngoingFragment extends Fragment {
 
     private void getRequestData(){
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url_get_ongoing, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -151,7 +147,8 @@ public class DdaOngoingFragment extends Fragment {
 
     private void get_ddaongoing(){
         RequestQueue requestQueue1 = Volley.newRequestQueue(getActivity());
-        if (next_url_get_ongoing != null || !next_url_get_ongoing.isEmpty()) {
+        isNextBusy = true;
+        progressBar.setVisibility(View.VISIBLE);
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(next_url_get_ongoing, null,
                     new Response.Listener<JSONObject>() {
                         @Override
@@ -169,6 +166,7 @@ public class DdaOngoingFragment extends Fragment {
                                             + singleObject.getString("district") + ", " + singleObject.getString("state");
                                     Address.add(location);
                                     ddaongoingAdapter.notifyDataSetChanged();
+                                    isNextBusy = false;
                                     Log.d(TAG, "onResponse: in next url");
                                 }
 
@@ -192,7 +190,6 @@ public class DdaOngoingFragment extends Fragment {
                 }
             };
             requestQueue1.add(jsonObjectRequest1);
-        }
         requestDdaOngoingFinished(requestQueue1);
     }
 
@@ -207,6 +204,5 @@ public class DdaOngoingFragment extends Fragment {
         });
 
     }
-
 
 }

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:id="@+id/adolistlayout">
 
     <androidx.cardview.widget.CardView
@@ -45,13 +45,6 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="24dp" />
 
-            <!--    <Spinner-->
-            <!--        android:id="@+id/listofado"-->
-            <!--        android:layout_width="match_parent"-->
-            <!--        android:layout_height="64dp"-->
-            <!--        android:layout_margin="16dp"-->
-            <!--        android:background="@drawable/spinner"-->
-            <!--        android:spinnerMode="dropdown" />-->
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
