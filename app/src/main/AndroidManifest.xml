@@ -11,56 +11,59 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".Ado.CheckInActivity"></activity>
         <activity
-            android:screenOrientation="portrait"
-            android:name=".Ado.ado_map_activity">
-            <meta-data android:name="android.app.searchable"
+            android:name=".Ado.ado_map_activity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:screenOrientation="portrait"
-            android:name=".Admin.AdoDdoActivity.AdoDdoActivity" >
-            <meta-data android:name="android.app.searchable"
+            android:name=".Admin.AdoDdoActivity.AdoDdoActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:screenOrientation="portrait"
-            android:name=".Dda.DdaselectAdo" >
-            <meta-data android:name="android.app.searchable"
+            android:name=".Dda.DdaselectAdo"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:screenOrientation="portrait"
             android:name=".Ado.AdoActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-
-            <meta-data android:name="android.app.searchable"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:screenOrientation="portrait"
             android:name=".Dda.DdaActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-
-            >
-
-            <meta-data android:name="android.app.searchable"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:screenOrientation="portrait"
             android:name=".Admin.AdminActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
 
-            <meta-data android:name="android.app.searchable"
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:screenOrientation="portrait"
             android:name=".splash_page"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -69,8 +72,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:screenOrientation="portrait"
             android:name=".login_activity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -83,18 +86,14 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAUKi9N7ZNLUj3QjYK9Zn-7PxVMw85koOY" />
-
-
-
     </application>
-
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 </manifest>

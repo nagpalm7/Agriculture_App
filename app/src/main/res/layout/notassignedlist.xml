@@ -32,7 +32,6 @@
                     android:layout_height="wrap_content"
                     android:textSize="24dp"
                     android:textColor="@color/colorPrimaryDark"
-                    android:text="Id"
                     android:background="@color/shimmer_bg" />
 
 
@@ -42,7 +41,6 @@
                     android:layout_below="@+id/lid"
                     android:layout_marginTop="8dp"
                     android:textSize="18dp"
-                    android:text="Address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/shimmer_bg"
