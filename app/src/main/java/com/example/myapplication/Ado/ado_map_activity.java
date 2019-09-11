@@ -1,13 +1,6 @@
 package com.example.myapplication.Ado;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,7 +10,12 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
-import com.example.myapplication.Admin.map_fragemnt;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.example.myapplication.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -220,7 +218,8 @@ public class ado_map_activity extends AppCompatActivity {
     }
 
     public void onClickCheckIn(View view) {
-        //check in code
+        Intent intent = new Intent(this, CheckInActivity.class);
+        startActivity(intent);
     }
 }
 

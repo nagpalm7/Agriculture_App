@@ -52,7 +52,7 @@ public class login_activity extends AppCompatActivity {
     private EditText editEmail, editPassword;
 
     private String urlget = "http://13.235.100.235:8000/api/get-user/";
-//    private String urlpost = getString(R.string.rooturl)+ "api-token-auth/";
+    //    private String urlpost = getString(R.string.rooturl)+ "api-token-auth/";
 //    private String urlpost = getString(R.string.rooturl);
     private String urlpost = "http://13.235.100.235:8000/api-token-auth/";
 
@@ -62,68 +62,63 @@ public class login_activity extends AppCompatActivity {
 
 
     @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_login_activity);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login_activity);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window w = getWindow();
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
 
         final SharedPreferences sp = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
-         String Usertype = sp.getString("typeOfUser","");
-          if(sp.contains("token"))
-          {
-              Intent intent = null;
-              if(Usertype.equals("dda"))
-                  intent = new Intent(this,DdaActivity.class);
-              if(Usertype.equals("ado"))
-                        intent = new Intent(this,AdoActivity.class);
-              if(Usertype.equals("admin"))
-                        intent = new Intent(this,AdminActivity.class);
-              startActivity(intent);
-              finish();
+        String Usertype = sp.getString("typeOfUser", "");
+        if (sp.contains("token")) {
+            Intent intent = null;
+            if (Usertype.equals("dda"))
+                intent = new Intent(this, DdaActivity.class);
+            if (Usertype.equals("ado"))
+                intent = new Intent(this, AdoActivity.class);
+            if (Usertype.equals("admin"))
+                intent = new Intent(this, AdminActivity.class);
+            startActivity(intent);
+            finish();
 
-          }
+        }
 
-            editEmail = findViewById(R.id.editEmail);
-            editPassword = findViewById(R.id.editPassword);
+        editEmail = findViewById(R.id.editEmail);
+        editPassword = findViewById(R.id.editPassword);
         btnLogin = findViewById(R.id.login_button);
-            checkBox = findViewById(R.id.eyeIcon);
+        checkBox = findViewById(R.id.eyeIcon);
 
 
-         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-             @Override
-             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                 checkBox.setAlpha((float) 0.2);
-                 if(b){
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                checkBox.setAlpha((float) 0.2);
+                if (b) {
                     editPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                     checkBox.setAlpha((float) 1.0);
-                 }else{
-                     editPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                 }
-             }
-         });
+                    checkBox.setAlpha((float) 1.0);
+                } else {
+                    editPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+            }
+        });
 
         editPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 boolean handled = false;
-                if(i == EditorInfo.IME_ACTION_DONE){
+                if (i == EditorInfo.IME_ACTION_DONE) {
                     String mEmail = editEmail.getText().toString().trim();
                     String mPass = editPassword.getText().toString().trim();
 
                     if (!mEmail.isEmpty() && !mPass.isEmpty()) {
                         Log.d(TAG, "onEditorAction: Done button pressed");
-                        Login(mEmail,mPass);
-                        }
-                    else if(mEmail.isEmpty() && mPass.isEmpty())
-                    {
+                        Login(mEmail, mPass);
+                    } else if (mEmail.isEmpty() && mPass.isEmpty()) {
                         editEmail.setError("Please insert email");
                         editPassword.setError("Please insert password");
-                    }
-
-                    else if(mEmail.isEmpty())
+                    } else if (mEmail.isEmpty())
                         editEmail.setError("Please insert email");
                     else if (mPass.isEmpty())
                         editPassword.setError("Please insert password");
@@ -135,162 +130,156 @@ public class login_activity extends AppCompatActivity {
         });
 
 
-            btnLogin.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String mEmail = editEmail.getText().toString().trim();
-                    String mPass = editPassword.getText().toString().trim();
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String mEmail = editEmail.getText().toString().trim();
+                String mPass = editPassword.getText().toString().trim();
 
-                    if (!mEmail.isEmpty() && !mPass.isEmpty()) {
-                        Login(mEmail, mPass);
-                    } else if(!mEmail.isEmpty() && mPass.isEmpty()){
-                        editPassword.setError("Please insert password");
-                        Toast.makeText(login_activity.this,"Please insert password",Toast.LENGTH_SHORT);
-                    }
-                    else if (mEmail.isEmpty() && !mPass.isEmpty()){
-                        editEmail.setError("Please insert email.");
-                        Toast.makeText(login_activity.this,"Please insert email",Toast.LENGTH_SHORT);
-                    }
-                    else {
-                        editEmail.setError("Please insert email.");
-                        editPassword.setError("Please insert password");
-                        Toast.makeText(login_activity.this,"Please insert email and password",Toast.LENGTH_SHORT);
-                    }
+                if (!mEmail.isEmpty() && !mPass.isEmpty()) {
+                    Login(mEmail, mPass);
+                } else if (!mEmail.isEmpty() && mPass.isEmpty()) {
+                    editPassword.setError("Please insert password");
+                    Toast.makeText(login_activity.this, "Please insert password", Toast.LENGTH_SHORT);
+                } else if (mEmail.isEmpty() && !mPass.isEmpty()) {
+                    editEmail.setError("Please insert email.");
+                    Toast.makeText(login_activity.this, "Please insert email", Toast.LENGTH_SHORT);
+                } else {
+                    editEmail.setError("Please insert email.");
+                    editPassword.setError("Please insert password");
+                    Toast.makeText(login_activity.this, "Please insert email and password", Toast.LENGTH_SHORT);
                 }
-            });
-        }
-
-        private void Login(final String email, final String password) {
-
-            dialog = new SpotsDialog.Builder().setContext(login_activity.this).setMessage("Logging in").setCancelable(false).build();
-            dialog.show();
-
-            Log.d(TAG, "onResponse: login clicked");
-            final RequestQueue MyRequestQueue = Volley.newRequestQueue(this);
-            try {
-                final JSONObject postparams = new JSONObject();
-                postparams.put("username", email);
-                postparams.put("password", password);
-
-                final JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, urlget, null,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-
-                                    JSONObject c = new JSONObject(String.valueOf(response));
-                                    JSONObject a = c.getJSONObject("auth_user");
-                                    typeOfUser = a.getString("type_of_user");
-                                    Name = c.getString("name");
-                                    SharedPreferences.Editor editor = getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
-                                    editor.putString("typeOfUser",typeOfUser);
-                                    editor.putString("Name", Name);
-                                    editor.apply();
-
-                                    Log.d(TAG, "onResponse: typeOfUser:" + typeOfUser);
-
-
-                                    Intent intent = null;
-
-                                    if(typeOfUser.equals("admin")){
-
-                                        intent = new Intent(login_activity.this, AdminActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                    else if(typeOfUser.equals("dda")){
-                                        btnLogin.setEnabled(false);
-                                        btnLogin.setClickable(false);
-                                        intent = new Intent(login_activity.this, DdaActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                    else if (typeOfUser.equals("ado")){
-
-                                        intent = new Intent(login_activity.this, AdoActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                    else {
-                                        dialog.dismiss();
-                                        Toast.makeText(login_activity.this, "Invalid User", Toast.LENGTH_SHORT).show();
-                                    }
-
-
-                                } catch (JSONException e) {
-                                    Log.d(TAG, "onResponse: error in get catch block :" + e.getMessage());
-                                    Toast.makeText(login_activity.this,"Please try again",Toast.LENGTH_SHORT).show();
-                                    dialog.dismiss();
-                                    btnLogin.setEnabled(true);
-//
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(login_activity.this,"Please try again",Toast.LENGTH_SHORT).show();
-                                btnLogin.setEnabled(true);
-                                dialog.dismiss();
-                                editEmail.setText("");
-                                editPassword.setText("");
-                                Log.d(TAG, "onErrorResponse: some error in get: " + error.getLocalizedMessage());
-                            }
-                        }) {
-
-
-                    //pass the token in the authorisation header
-                    @Override
-                    public Map<String, String> getHeaders() {
-                        HashMap<String, String> headers = new HashMap<>();
-                        headers.put("Authorization", "Token " + token);
-                        return headers;
-                    }
-                };
-
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, urlpost, postparams,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                //retrieve the token from server
-                                try {
-                                    JSONObject jsonObject = new JSONObject(String.valueOf(response));
-                                    token = jsonObject.getString("token");
-                                    SharedPreferences.Editor editor = getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
-                                    editor.putString("token",token);
-                                    editor.apply();
-                                    MyRequestQueue.add(jsonObjectRequest1);
-                                    Log.d(TAG, "onResponse: Token:" + token);
-                                } catch (JSONException e) {
-                                    dialog.dismiss();
-                                    btnLogin.setEnabled(true);
-                                    Log.d(TAG, "onResponse: error in post catch block: " + e);
-                                }
-
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                if(error instanceof NoConnectionError)
-                                    Toast.makeText(login_activity.this, "Check your internet connection", Toast.LENGTH_LONG).show();
-                                dialog.dismiss();
-                                btnLogin.setEnabled(true);
-                            }
-                        });
-
-
-
-                MyRequestQueue.add(jsonObjectRequest);
-
-            } catch (JSONException e) {
-                Log.d(TAG, "Login: Error:"+e);
-                Toast.makeText(login_activity.this,"Please try again",Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-                btnLogin.setEnabled(true);
             }
+        });
+    }
 
+    private void Login(final String email, final String password) {
+
+        dialog = new SpotsDialog.Builder().setContext(login_activity.this).setMessage("Logging in").setCancelable(false).build();
+        dialog.show();
+
+        Log.d(TAG, "onResponse: login clicked");
+        final RequestQueue MyRequestQueue = Volley.newRequestQueue(this);
+        JSONObject postparams = null;
+        try {
+            postparams = new JSONObject();
+            postparams.put("username", email);
+            postparams.put("password", password);
+        } catch (JSONException e) {
+            Log.d(TAG, "Login: Error:" + e);
+            Toast.makeText(login_activity.this, "Please try again", Toast.LENGTH_LONG).show();
+            dialog.dismiss();
+            btnLogin.setEnabled(true);
         }
+
+        final JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, urlget, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject c = new JSONObject(String.valueOf(response));
+                            JSONObject a = c.getJSONObject("auth_user");
+                            typeOfUser = a.getString("type_of_user");
+                            Name = c.getString("name");
+                            SharedPreferences.Editor editor = getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
+                            editor.putString("typeOfUser", typeOfUser);
+                            editor.putString("Name", Name);
+                            editor.apply();
+
+                            Log.d(TAG, "onResponse: typeOfUser:" + typeOfUser);
+
+
+                            Intent intent = null;
+
+                            if (typeOfUser.equals("admin")) {
+
+                                intent = new Intent(login_activity.this, AdminActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else if (typeOfUser.equals("dda")) {
+                                btnLogin.setEnabled(false);
+                                btnLogin.setClickable(false);
+                                intent = new Intent(login_activity.this, DdaActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else if (typeOfUser.equals("ado")) {
+
+                                intent = new Intent(login_activity.this, AdoActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                dialog.dismiss();
+                                Toast.makeText(login_activity.this, "Invalid User", Toast.LENGTH_SHORT).show();
+                            }
+
+
+                        } catch (JSONException e) {
+                            Log.d(TAG, "onResponse: error in get catch block :" + e.getMessage());
+                            Toast.makeText(login_activity.this, "Please try again", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            btnLogin.setEnabled(true);
+//
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(login_activity.this, "Please try again", Toast.LENGTH_SHORT).show();
+                        btnLogin.setEnabled(true);
+                        dialog.dismiss();
+                        editEmail.setText("");
+                        editPassword.setText("");
+                        Log.d(TAG, "onErrorResponse: some error in get: " + error.getLocalizedMessage());
+                    }
+                }) {
+
+
+            //pass the token in the authorisation header
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Token " + token);
+                return headers;
+            }
+        };
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, urlpost, postparams,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //retrieve the token from server
+                        try {
+                            JSONObject jsonObject = new JSONObject(String.valueOf(response));
+                            token = jsonObject.getString("token");
+                            SharedPreferences.Editor editor = getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
+                            editor.putString("token", token);
+                            editor.apply();
+                            MyRequestQueue.add(jsonObjectRequest1);
+                            Log.d(TAG, "onResponse: Token:" + token);
+                        } catch (JSONException e) {
+                            dialog.dismiss();
+                            btnLogin.setEnabled(true);
+                            Log.d(TAG, "onResponse: error in post catch block: " + e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(login_activity.this, "Check your internet connection", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(login_activity.this, "Invalid User!", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        btnLogin.setEnabled(true);
+                    }
+                });
+
+
+        MyRequestQueue.add(jsonObjectRequest);
+
+    }
 
 
     @Override
