@@ -74,7 +74,7 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            parentnotassigned = itemView.findViewById(R.id.parentnotassigned);
+            parentnotassigned = itemView.findViewById(R.id.adminlocation);
             tv1 = itemView.findViewById(R.id.dda_name);
             tv2 = itemView.findViewById(R.id.ada_name);
             tv3 = itemView.findViewById(R.id.address);

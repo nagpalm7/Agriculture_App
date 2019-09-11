@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -46,9 +47,11 @@ public class DdaOngoingFragment extends Fragment {
     private String blockname;
     private String district;
     private String state;
-    private ProgressBar progressBar;
     private LinearLayoutManager layoutManager;
     private boolean isNextBusy = false;
+    private int length_of_results_array;
+    private RecyclerView review;
+    private View view;
 //    private Toolbar toolbar;
 
     public DdaOngoingFragment() {
@@ -62,17 +65,14 @@ public class DdaOngoingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
-        RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
+        view = inflater.inflate(R.layout.fragment_ongoing,container,false);
+        review = view.findViewById(R.id.recyclerViewongoing);
+
         ddaongoingAdapter = new DdaongoingAdapter(getActivity(),Date,Time,Address,Id);
         review.setAdapter(ddaongoingAdapter);
         layoutManager = new LinearLayoutManager(getActivity());
         review.setLayoutManager(layoutManager);
-        progressBar = view.findViewById(R.id.ongoinglocationsloading);
 
-        //showing title in action bar
-//        toolbar = view.findViewById(R.id.toolbar);
-//        getActivity().setTitle("Ongoing Locations");
 
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token","");
@@ -108,6 +108,11 @@ public class DdaOngoingFragment extends Fragment {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     next_url_get_ongoing = jsonObject.getString("next");
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
+                    length_of_results_array = jsonArray.length();
+                    if(length_of_results_array==0){
+                        ddaongoingAdapter.notifyDataSetChanged();
+                        view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                    }
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
                         Id.add(c.getString("id"));
@@ -118,9 +123,9 @@ public class DdaOngoingFragment extends Fragment {
                         Date.add(c.getString("acq_date"));
                         Time.add(c.getString("acq_time"));
                         Address.add(villagename+", "+blockname+", "+district+", "+state);
-                        Log.d(TAG, "onResponse: hello in for loop of urlgetongoing");
-                        ddaongoingAdapter.notifyDataSetChanged();
                     }
+                    Log.d(TAG, "onResponse:ongoing ");
+                    ddaongoingAdapter.notifyDataSetChanged();
 
                 }catch (JSONException e){
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
@@ -148,7 +153,6 @@ public class DdaOngoingFragment extends Fragment {
     private void get_ddaongoing(){
         RequestQueue requestQueue1 = Volley.newRequestQueue(getActivity());
         isNextBusy = true;
-        progressBar.setVisibility(View.VISIBLE);
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(next_url_get_ongoing, null,
                     new Response.Listener<JSONObject>() {
                         @Override
@@ -190,19 +194,7 @@ public class DdaOngoingFragment extends Fragment {
                 }
             };
             requestQueue1.add(jsonObjectRequest1);
-        requestDdaOngoingFinished(requestQueue1);
     }
 
-    private void requestDdaOngoingFinished(RequestQueue queue) {
-
-        queue.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<Object>() {
-
-            @Override
-            public void onRequestFinished(Request<Object> request) {
-                progressBar.setVisibility(View.GONE);
-            }
-        });
-
-    }
 
 }

@@ -52,6 +52,7 @@ public class notassignedfragment extends Fragment {
     private View view;
     private String locationid;
     private boolean isReferesh;
+    private int length_of_array;
 
     private String nextUrl;
     private boolean isNextBusy = false;
@@ -87,6 +88,12 @@ public class notassignedfragment extends Fragment {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     nextUrl = jsonObject.getString("next");
+                    length_of_array = jsonArray.length();
+                    if(length_of_array==0){
+                        ddapendingUnassignedAdapter.showunassignedshimmer = false;
+                        ddapendingUnassignedAdapter.notifyDataSetChanged();
+                        view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                    }
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
                         locationid = c.getString("id");
@@ -98,6 +105,7 @@ public class notassignedfragment extends Fragment {
                         Id.add(c.getString("id"));
                         Address.add(villagename+","+blockname+","+district+","+state);
                     }
+                    ddapendingUnassignedAdapter.showunassignedshimmer = false;
                     ddapendingUnassignedAdapter.notifyDataSetChanged();
                     Log.d(TAG, "onResponse: error in this notassignedfragment"+response);
                 }catch (JSONException e){
@@ -175,10 +183,16 @@ public class notassignedfragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    ;
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     nextUrl = jsonObject.getString("next");
+                    length_of_array = jsonArray.length();
+                    if(length_of_array==0){
+                        ddapendingUnassignedAdapter.showunassignedshimmer = false;
+                        Log.d(TAG, "onResponse: ");
+                        ddapendingUnassignedAdapter.notifyDataSetChanged();
+                        view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                    }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
                         villagename = c.getString("village_name");
@@ -187,11 +201,11 @@ public class notassignedfragment extends Fragment {
                         state = c.getString("state");
                         Id.add(c.getString("id"));
                         Address.add(villagename + "," + blockname + "," + district + "," + state);
-
-                        ddapendingUnassignedAdapter.notifyDataSetChanged();
                         isNextBusy = false;
                         Log.d(TAG, "onResponse: error in this notassignedfragment" + response);
                     }
+                    ddapendingUnassignedAdapter.showunassignedshimmer = false;
+                    ddapendingUnassignedAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                 }

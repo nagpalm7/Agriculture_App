@@ -15,9 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -51,13 +48,15 @@ public class assignedfragment extends Fragment {
     private String nextUrl;
     private boolean isNextBusy = false;
     private boolean isReferesh;
+    private View view;
+    private int length_of_arrray;
 
     public assignedfragment() {
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
+        view = inflater.inflate(R.layout.fragment_ongoing,container,false);
         Id = new ArrayList<String>();
         Address = new ArrayList<String>();
         isReferesh = false;
@@ -81,6 +80,12 @@ public class assignedfragment extends Fragment {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     nextUrl = jsonObject.getString("next");
+                    length_of_arrray = jsonArray.length();
+                    if(length_of_arrray==0){
+                        ddaassignedAdapter.showassignedshimmer = false;
+                        ddaassignedAdapter.notifyDataSetChanged();
+                        view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                    }
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
                         Id.add(c.getString("id"));
@@ -90,6 +95,7 @@ public class assignedfragment extends Fragment {
                         state = c.getString("state");
                         Address.add(villagename+","+blockname+","+district+","+state);
                     }
+                    ddaassignedAdapter.showassignedshimmer = false;
                     ddaassignedAdapter.notifyDataSetChanged();
                 }catch (JSONException e){
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
@@ -169,6 +175,12 @@ public class assignedfragment extends Fragment {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     nextUrl = jsonObject.getString("next");
+                    length_of_arrray=jsonArray.length();
+                    if(length_of_arrray==0){
+                        ddaassignedAdapter.showassignedshimmer = false;
+                        ddaassignedAdapter.notifyDataSetChanged();
+                        view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                    }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
                         Id.add(c.getString("id"));
@@ -177,9 +189,10 @@ public class assignedfragment extends Fragment {
                         district = c.getString("district");
                         state = c.getString("state");
                         Address.add(villagename + "," + blockname + "," + district + "," + state);
-                        ddaassignedAdapter.notifyDataSetChanged();
                         isNextBusy = false;
                     }
+                    ddaassignedAdapter.showassignedshimmer = false;
+                    ddaassignedAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                     e.printStackTrace();

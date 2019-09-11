@@ -44,6 +44,8 @@ public class DdaCompletedFragment extends Fragment {
     private String state;
     private String nextUrl;
     private boolean isNextBusy = false;
+    private View view;
+    private int length_of_array;
 
     public DdaCompletedFragment() {
         // Required empty public constructor
@@ -55,7 +57,7 @@ public class DdaCompletedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ongoing,container,false);
+        view = inflater.inflate(R.layout.fragment_ongoing,container,false);
         ddacompletedAdapter = new DdacompletedAdapter(getContext(),Id,Address);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddacompletedAdapter);
@@ -76,6 +78,12 @@ public class DdaCompletedFragment extends Fragment {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     nextUrl = jsonObject.getString("next");
+                    length_of_array = jsonArray.length();
+                    if(length_of_array==0){
+                        ddacompletedAdapter.showcomletedshimmer = false;
+                        ddacompletedAdapter.notifyDataSetChanged();
+                        view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                    }
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
                         dda = c.getString("dda");
@@ -86,8 +94,9 @@ public class DdaCompletedFragment extends Fragment {
                         state = c.getString("state");
                         Address.add(villagename+","+blockname+","+district+","+state);
                         Log.d(TAG, "onResponse: some error in if");
-                        ddacompletedAdapter.notifyDataSetChanged();
                     }
+                    ddacompletedAdapter.showcomletedshimmer = false;
+                    ddacompletedAdapter.notifyDataSetChanged();
                 }catch (JSONException e){
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                     e.printStackTrace();
@@ -139,6 +148,12 @@ public class DdaCompletedFragment extends Fragment {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     nextUrl = jsonObject.getString("next");
+                    length_of_array=jsonArray.length();
+                    if(length_of_array==0){
+                        ddacompletedAdapter.showcomletedshimmer = false;
+                        ddacompletedAdapter.notifyDataSetChanged();
+                        view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                    }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
                         dda = c.getString("dda");
@@ -149,9 +164,10 @@ public class DdaCompletedFragment extends Fragment {
                         state = c.getString("state");
                         Address.add(villagename + "," + blockname + "," + district + "," + state);
                         Log.d(TAG, "onResponse: some error in if");
-                        ddacompletedAdapter.notifyDataSetChanged();
                         isNextBusy = false;
                     }
+                    ddacompletedAdapter.notifyDataSetChanged();
+                    ddacompletedAdapter.showcomletedshimmer = false;
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                     e.printStackTrace();
