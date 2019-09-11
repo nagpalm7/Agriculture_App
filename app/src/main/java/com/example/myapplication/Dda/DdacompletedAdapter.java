@@ -8,9 +8,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 
@@ -19,6 +21,8 @@ public class DdacompletedAdapter extends RecyclerView.Adapter<DdacompletedAdapte
     ArrayList<String> mtextview1;
     ArrayList<String> mtextview2;
     Context mcontext;
+    public boolean showcomletedshimmer = true;
+    private int shimmer_item_count = 6;
 
     public DdacompletedAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2) {
         this.mcontext = mcontext;
@@ -36,13 +40,24 @@ public class DdacompletedAdapter extends RecyclerView.Adapter<DdacompletedAdapte
 
     @Override
     public void onBindViewHolder(@NonNull DdacompletedAdapter.ViewHolderCompletedDda holder, int position) {
-        holder.tv1.setText(mtextview1.get(position));
-        holder.tv2.setText(mtextview2.get(position));
+
+
+        if(showcomletedshimmer){
+            holder.shimmercomleted.startShimmer();
+        }
+        else {
+            holder.shimmercomleted.stopShimmer();
+            holder.shimmercomleted.setShimmer(null);
+            holder.tv1.setBackground(null);
+            holder.tv2.setBackground(null);
+            holder.tv1.setText(mtextview1.get(position));
+            holder.tv2.setText(mtextview2.get(position));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return showcomletedshimmer ? shimmer_item_count : mtextview1.size();
     }
 
     public class ViewHolderCompletedDda extends RecyclerView.ViewHolder{
@@ -50,14 +65,16 @@ public class DdacompletedAdapter extends RecyclerView.Adapter<DdacompletedAdapte
         TextView tv1;
         TextView tv2;
 
-        RelativeLayout parentnotassigned;
+        CardView cardcompleted;
+        ShimmerFrameLayout shimmercomleted;
 
         public ViewHolderCompletedDda(@NonNull View itemView) {
             super(itemView);
             mcontext = itemView.getContext();
-            parentnotassigned = itemView.findViewById(R.id.parentnotassigned);
+            cardcompleted = itemView.findViewById(R.id.card_unassigned);
             tv1 = itemView.findViewById(R.id.lid);
             tv2 = itemView.findViewById(R.id.address);
+            shimmercomleted = itemView.findViewById(R.id.shimmer_unassigned);
 
         }
 

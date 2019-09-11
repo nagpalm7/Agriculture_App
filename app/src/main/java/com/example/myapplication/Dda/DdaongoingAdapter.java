@@ -17,14 +17,11 @@ import com.example.myapplication.R;
 import java.util.ArrayList;
 
 public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.ViewHolderOngoingDda> {
-    private static final String TAG = "DdaongoingAdapter";
     private ArrayList<String> mtextview1;
     private ArrayList<String> mtextview2;
     private ArrayList<String> mtextview3;
     private ArrayList<String> mtextviewid;
     private Context mcontext;
-//    public Boolean showshimmer = true;
-//    private int shimmercount = 5;
 
     public DdaongoingAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3, ArrayList<String> mtextviewid) {
         this.mcontext = mcontext;
@@ -44,29 +41,11 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderOngoingDda holder, int position) {
-//        if(showshimmer){
-//            holder.shimmerFrameLayout.startShimmer();
-//        }else {
-//            holder.shimmerFrameLayout.stopShimmer();
-//            holder.shimmerFrameLayout.setShimmer(null);
-//            holder.tv1.setBackground(null);
-//            holder.tv2.setBackground(null);
-//            holder.tv3.setBackground(null);
-//            holder.tv4.setBackground(null);
             holder.tv4.setText(mtextviewid.get(position));
             holder.tv1.setText(mtextview1.get(position));
             holder.tv2.setText(mtextview2.get(position));
             holder.tv3.setText(mtextview3.get(position));
-//        }
 
-//        holder.parentongoing.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Log.d(TAG, "onClick: item clicked");
-//                Intent intent = new Intent(mcontext, DdaselectAdo.class);
-//                mcontext.startActivity(intent);
-//            }
-//        });
     }
 
     @Override
@@ -81,7 +60,6 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
         TextView tv3;
         TextView tv4;
         RelativeLayout parentongoing;
-//        ShimmerFrameLayout shimmerFrameLayout;
 
         public ViewHolderOngoingDda(@NonNull View itemView) {
             super(itemView);
@@ -91,7 +69,6 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
             tv1 = itemView.findViewById(R.id.Ondate);
             tv2 = itemView.findViewById(R.id.OnTime);
             tv3 = itemView.findViewById(R.id.Onaddress);
-//            shimmerFrameLayout = itemView.findViewById(R.id.shimmer_ongoing);
         }
 
     }
