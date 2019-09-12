@@ -41,6 +41,7 @@ public class ado_pending_fragment extends Fragment {
     private AdoListAdapter adoListAdapter;
     private ArrayList<String> longitude;
     private ArrayList<String> latitude;
+    private ArrayList<String> idList;
     private String url="http://13.235.100.235:8000/api/locations/ado/pending";
     private String nextUrl;
     private boolean isNextBusy = false;
@@ -54,12 +55,13 @@ public class ado_pending_fragment extends Fragment {
         mtextview2 = new ArrayList<>();
         longitude = new ArrayList<>();
         latitude = new ArrayList<>();
+        idList = new ArrayList<>();
         Log.d("pending", "onCreateView: ");
         //add data in the array with load data
         getData(url);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView = view.findViewById(R.id.ado_pending_rv);
-        adoListAdapter = new AdoListAdapter(getContext(),mtextview1,mtextview2);
+        adoListAdapter = new AdoListAdapter(getContext(), mtextview1, mtextview2, idList);
         DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(divider);
         recyclerView.setAdapter(adoListAdapter);
@@ -106,7 +108,8 @@ public class ado_pending_fragment extends Fragment {
                             }
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
-
+                                String id = singleObject.getString("id");
+                                idList.add(id);
                                 String location_name = singleObject.getString("village_name");
                                 String location_address = singleObject.getString("block_name")+singleObject.getString("district")+singleObject.getString("state");
                                 String slongitude = singleObject.getString("longitude");

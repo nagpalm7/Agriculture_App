@@ -36,8 +36,10 @@ public class ado_map_activity extends AppCompatActivity {
 
     private final String ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private final String ACCESS_COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private final String CAMERA_PERMISSION = Manifest.permission.CAMERA;
     private double longitude;
     private double latitude;
+    private String id;
     private Boolean showmap;
 
     private final int RESULT_CODE = 786;
@@ -51,6 +53,10 @@ public class ado_map_activity extends AppCompatActivity {
         Intent intent = getIntent();
         longitude = Double.parseDouble(intent.getStringExtra("longitude"));
         latitude = Double.parseDouble(intent.getStringExtra("latitude"));
+        id = intent.getStringExtra("id");
+        String title = intent.getStringExtra("title");
+        getSupportActionBar().setTitle(title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Log.d(TAG, "onCreate: "+latitude+" "+longitude);
 
 
@@ -108,6 +114,12 @@ public class ado_map_activity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
     private boolean getPermission() {
         List<String> Permission = new ArrayList();
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_FINE_LOCATION)
@@ -118,6 +130,11 @@ public class ado_map_activity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             Permission.add(ACCESS_COARSE_LOCATION);
+        }
+
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), CAMERA_PERMISSION)
+                != PackageManager.PERMISSION_GRANTED) {
+            Permission.add(CAMERA_PERMISSION);
         }
 
         if (!Permission.isEmpty()) {
@@ -144,6 +161,50 @@ public class ado_map_activity extends AppCompatActivity {
             }
 
             if (deniedCount == 0) {
+                SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.ado_map));
+
+                mapFragment.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        Log.d("inside onMapReady", "onMapReady: ");
+                        map = googleMap;
+
+                        //get latlong for corners for specified city
+
+                        LatLng one = new LatLng(7.798000, 68.14712);
+                        LatLng two = new LatLng(37.090000, 97.34466);
+
+                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                        //add them to builder
+                        builder.include(one);
+                        builder.include(two);
+
+                        LatLngBounds bounds = builder.build();
+
+                        //get width and height to current display screen
+                        int width = getResources().getDisplayMetrics().widthPixels;
+                        int height = getResources().getDisplayMetrics().heightPixels;
+
+                        // 20% padding
+                        int padding = (int) (width * 0.20);
+
+                        //set latlong bounds
+                        map.setLatLngBoundsForCameraTarget(bounds);
+
+                        //move camera to fill the bound to screen
+                        map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+
+                        //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
+                        map.setMinZoomPreference(map.getCameraPosition().zoom);
+
+                        //marking the position
+                        map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("edar aaa").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+                    }
+
+
+                });
             } else {
                 for (Map.Entry<String, Integer> entry : permissionResults.entrySet()) {
                     String permName = entry.getKey();
@@ -219,6 +280,8 @@ public class ado_map_activity extends AppCompatActivity {
 
     public void onClickCheckIn(View view) {
         Intent intent = new Intent(this, CheckInActivity.class);
+        intent.putExtra("id", id);
+        Log.d(TAG, "onClickCheckIn: " + id);
         startActivity(intent);
     }
 }

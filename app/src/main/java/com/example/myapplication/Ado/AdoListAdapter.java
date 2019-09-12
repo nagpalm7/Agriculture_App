@@ -26,17 +26,25 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
     private ArrayList<String> latitude;
     public Boolean mshowshimmer = true;
     private ArrayList<String> mAdoName;
+    private ArrayList<String> idList;
     private boolean isDDoAdo;
     private boolean isDDo;
     private int shimmer_count = 5;
     Context mcontext;
 
-    public AdoListAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2) {
+    public AdoListAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> idList) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         isDDoAdo = false;
         isDDo = false;
+        this.idList = idList;
+    }
+
+    public AdoListAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2) {
+        this.mtextview1 = mtextview1;
+        this.mtextview2 = mtextview2;
+        this.mcontext = mcontext;
     }
 
     public AdoListAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mAdoName, boolean isDDo) {
@@ -63,6 +71,8 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
                     Log.d(TAG, "onClick: ");
                     intent.putExtra("longitude", longitude.get(position));
                     intent.putExtra("latitude", latitude.get(position));
+                    intent.putExtra("id", idList.get(position));
+                    intent.putExtra("title", mtextview1.get(position));
                     mcontext.startActivity(intent);
                 }
             }

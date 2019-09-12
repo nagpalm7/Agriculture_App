@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.ClientError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -269,8 +270,10 @@ public class login_activity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof NoConnectionError)
                             Toast.makeText(login_activity.this, "Check your internet connection", Toast.LENGTH_LONG).show();
-                        else
+                        else if (error instanceof ClientError)
                             Toast.makeText(login_activity.this, "Invalid User!", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(login_activity.this, "Something went wrong, please try again!", Toast.LENGTH_LONG).show();
                         dialog.dismiss();
                         btnLogin.setEnabled(true);
                     }

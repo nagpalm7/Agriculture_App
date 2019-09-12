@@ -28,32 +28,32 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:background="@color/shimmer_bg"
                 android:id="@+id/Onlocationtext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
-                android:textSize="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:textSize="18sp"
                 android:textColor="@color/colorPrimaryDark"
                 android:text="Id:"/>
             <TextView
                 android:id="@+id/Onlid"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
                 android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/shimmer_bg"
                 android:layout_marginLeft="16dp"
                 android:layout_toRightOf="@+id/Ondatetext"
-                android:textSize="24dp"
-                android:text="Id"/>
+                android:textSize="18sp" />
 
             <TextView
-                android:background="@color/shimmer_bg"
                 android:id="@+id/Ondatetext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/Onlocationtext"
-                android:paddingBottom="16dp"
-                android:textSize="18dp"
+                android:layout_marginBottom="16dp"
+                android:textSize="18sp"
                 android:textColor="@color/colorPrimaryDark"
                 android:text="Date:"/>
 
@@ -61,21 +61,19 @@
                 android:background="@color/shimmer_bg"
                 android:id="@+id/Ondate"
                 android:layout_below="@+id/Onlocationtext"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_toRightOf="@+id/Ondatetext"
-                android:paddingBottom="16dp"
-                android:text="Date"
+                android:layout_marginBottom="16dp"
                 android:textSize="18sp" />
 
             <TextView
-                android:background="@color/shimmer_bg"
                 android:id="@+id/Ontimetext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/Ondatetext"
-                android:paddingBottom="16dp"
+                android:layout_marginBottom="16dp"
                 android:textSize="18sp"
                 android:textColor="@color/colorPrimaryDark"
                 android:text="Time:"/>
@@ -83,18 +81,16 @@
             <TextView
                 android:background="@color/shimmer_bg"
                 android:id="@+id/OnTime"
-                android:paddingBottom="16dp"
+                android:layout_width="match_parent"
                 android:layout_below="@+id/Ondate"
                 android:layout_toRightOf="@+id/Ontimetext"
                 android:layout_marginLeft="16dp"
                 android:textSize="18sp"
-                android:text="Time"
-                android:layout_width="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:layout_height="wrap_content"
                 />
 
             <TextView
-                android:background="@color/shimmer_bg"
                 android:id="@+id/Onaddresstext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -107,13 +103,12 @@
             <TextView
                 android:background="@color/shimmer_bg"
                 android:id="@+id/Onaddress"
-                android:paddingBottom="16dp"
+                android:layout_width="match_parent"
                 android:layout_below="@+id/OnTime"
-                android:layout_toRightOf="@+id/OnTime"
+                android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:textSize="18sp"
-                android:text="Address"
-                android:layout_width="wrap_content"
+                android:layout_toRightOf="@+id/Onaddresstext"
                 android:layout_height="wrap_content"
                 />
 
