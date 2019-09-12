@@ -95,7 +95,7 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
                                     Log.d(TAG, "onErrorResponse: "+error);
-                                    Toast.makeText(mcontext,"Ado not assigned",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mcontext,"Ado not assigned.Please try again",Toast.LENGTH_LONG).show();
                                 }
                             }) {
                                 @Override

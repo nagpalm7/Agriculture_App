@@ -44,7 +44,6 @@ public class DdaselectAdo extends AppCompatActivity {
     private String adoid;
     public static boolean isAssigned = false;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,5 +134,6 @@ public class DdaselectAdo extends AppCompatActivity {
         super.onResume();
         Log.d(TAG, "onResume: ");
     }
+
 
 }

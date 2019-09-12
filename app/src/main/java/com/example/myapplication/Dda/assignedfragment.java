@@ -37,6 +37,7 @@ public class assignedfragment extends Fragment {
 
     private static final String TAG = "assignedfragment";
     private ArrayList<String> Id;
+    private ArrayList<String> Name;
     private ArrayList<String> Address;
     private DdapendingassignedAdapter ddaassignedAdapter;
     private String urlget = "http://13.235.100.235:8000/api/locations/dda/assigned";
@@ -58,9 +59,10 @@ public class assignedfragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_ongoing,container,false);
         Id = new ArrayList<String>();
+        Name = new ArrayList<String>();
         Address = new ArrayList<String>();
         isReferesh = false;
-        ddaassignedAdapter = new DdapendingassignedAdapter(getActivity(),Id,Address);
+        ddaassignedAdapter = new DdapendingassignedAdapter(getActivity(),Id,Name,Address);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddaassignedAdapter);
@@ -88,6 +90,9 @@ public class assignedfragment extends Fragment {
                     }
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
+                        JSONObject a = c.getJSONObject("ado");
+                        Name.add(a.getString("name"));
+
                         Id.add(c.getString("id"));
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
@@ -183,7 +188,12 @@ public class assignedfragment extends Fragment {
                     }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
+                        JSONObject a = c.getJSONObject("ado");
+                        Name.add(a.getString("name"));
+
+
                         Id.add(c.getString("id"));
+                        Name.add(c.getString("name"));
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
