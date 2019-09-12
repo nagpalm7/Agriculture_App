@@ -35,8 +35,9 @@ import java.util.Map;
 public class DdaOngoingFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     private static final String TAG = "DdaOngoingFragment";
-    private ArrayList<String> Address;
     private ArrayList<String> Id;
+    private ArrayList<String> Name;
+    private ArrayList<String> Address;
     private DdaongoingAdapter ddaongoingAdapter;
     private String url_get_ongoing = "http://13.235.100.235:8000/api/locations/dda/ongoing";
     private String next_url_get_ongoing;
@@ -60,12 +61,15 @@ public class DdaOngoingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Address = new ArrayList<String>();
         Id = new ArrayList<String>();
+        Name = new ArrayList<String>();
+        Address = new ArrayList<String>();
+
+
         view = inflater.inflate(R.layout.fragment_ongoing,container,false);
         review = view.findViewById(R.id.recyclerViewongoing);
 
-        ddaongoingAdapter = new DdaongoingAdapter(getActivity(),Id,Address);
+        ddaongoingAdapter = new DdaongoingAdapter(getActivity(),Id,Name,Address);
         review.setAdapter(ddaongoingAdapter);
         layoutManager = new LinearLayoutManager(getActivity());
         review.setLayoutManager(layoutManager);
@@ -113,6 +117,8 @@ public class DdaOngoingFragment extends Fragment {
                     }
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
+                        JSONObject a = c.getJSONObject("ado");
+                        Name.add(a.getString("name"));
                         Id.add(c.getString("id"));
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
@@ -166,6 +172,8 @@ public class DdaOngoingFragment extends Fragment {
                                 }
                                 for (int i = 0; i < resultsArray.length(); i++) {
                                     JSONObject singleObject = resultsArray.getJSONObject(i);
+                                    JSONObject a = singleObject.getJSONObject("ado");
+                                    Name.add(a.getString("name"));
                                     Id.add(singleObject.getString("id"));
                                     String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
                                             + singleObject.getString("district") + ", " + singleObject.getString("state");

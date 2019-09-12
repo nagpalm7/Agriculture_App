@@ -21,20 +21,22 @@ import java.util.ArrayList;
 public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.ViewHolderOngoingDda> {
     private ArrayList<String> mtextview1;
     private ArrayList<String> mtextview2;
+    private ArrayList<String> mtextview3;
     private Context mcontext;
     public boolean showongoingshimmer = true;
     private int shimmer_item_count = 6;
 
-    public DdaongoingAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2) {
+    public DdaongoingAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2,ArrayList<String> mtextview3) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
+        this.mtextview3 = mtextview3;
     }
 
     @NonNull
     @Override
     public ViewHolderOngoingDda onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mcontext).inflate(R.layout.notassignedlist, parent, false);
+        View view = LayoutInflater.from(mcontext).inflate(R.layout.ddaongoinglist, parent, false);
         ViewHolderOngoingDda viewHolderOngoingDda = new ViewHolderOngoingDda(view);
         return viewHolderOngoingDda;
     }
@@ -50,8 +52,10 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
             holder.shimmerongoing.setShimmer(null);
             holder.tv1.setBackground(null);
             holder.tv2.setBackground(null);
+            holder.tv3.setBackground(null);
             holder.tv1.setText(mtextview1.get(position));
             holder.tv2.setText(mtextview2.get(position));
+            holder.tv3.setText(mtextview3.get(position));
         }
     }
 
@@ -64,16 +68,18 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
 
         TextView tv1;
         TextView tv2;
+        TextView tv3;
         CardView cardongoing;
         ShimmerFrameLayout shimmerongoing;
 
         public ViewHolderOngoingDda(@NonNull View itemView) {
             super(itemView);
             mcontext = itemView.getContext();
-            tv1 = itemView.findViewById(R.id.lid);
-            tv2 = itemView.findViewById(R.id.address);
-            cardongoing = itemView.findViewById(R.id.card_unassigned);
-            shimmerongoing = itemView.findViewById(R.id.shimmer_unassigned);
+            tv1 = itemView.findViewById(R.id.adoongoingid);
+            tv2 = itemView.findViewById(R.id.adoongoingname);
+            tv3 = itemView.findViewById(R.id.adoongoingaddress);
+            cardongoing = itemView.findViewById(R.id.card_ongoing);
+            shimmerongoing = itemView.findViewById(R.id.shimmer_ongoing);
         }
 
     }
