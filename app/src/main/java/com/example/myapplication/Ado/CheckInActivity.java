@@ -139,7 +139,7 @@ public class CheckInActivity extends AppCompatActivity {
                                 reportId = singleObject.getString("id");
                                 Log.d(TAG, "onResponse: " + singleObject);
                                 isReportSubmitted = true;
-                                uploadPhotos();
+                                //uploadPhotos();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 reportSubmitLoading.dismiss();
@@ -167,8 +167,8 @@ public class CheckInActivity extends AppCompatActivity {
                 }
             };
             requestQueue.add(jsonObjectRequest);
-        } else
-            uploadPhotos();
+        } /*else
+            uploadPhotos();*/
     }
 
     private void uploadPhotos() {
