@@ -93,9 +93,8 @@ public class ddo_fragment extends Fragment {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));
                         userinfo.add(singleObject.getString("district"));
-                        JSONObject authObject = singleObject.getJSONObject("auth_user");
-                        String pk = authObject.getString("pk");
-                        mUserId.add(pk);
+                        String id = singleObject.getString("id");
+                        mUserId.add(id);
                     }
                     Log.d(TAG, "onResponse: " + username);
                     recyclerViewAdater.mShowShimmer = false;
@@ -161,9 +160,8 @@ public class ddo_fragment extends Fragment {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));
                         userinfo.add(singleObject.getString("district"));
-                        JSONObject authObject = singleObject.getJSONObject("auth_user");
-                        String pk = authObject.getString("pk");
-                        mUserId.add(pk);
+                        String id = singleObject.getString("id");
+                        mUserId.add(id);
                     }
                     Log.d(TAG, "onResponse: " + username);
                     recyclerViewAdater.notifyDataSetChanged();

@@ -90,9 +90,8 @@ public class ado_fragment extends Fragment {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));
                         userinfo.add(singleObject.getString("village_name"));
-                        JSONObject authObject = singleObject.getJSONObject("auth_user");
-                        String pk = authObject.getString("pk");
-                        mUserId.add(pk);
+                        String id = singleObject.getString("id");
+                        mUserId.add(id);
                     }
                     Log.d(TAG, "onResponse: " + username);
                     recyclerViewAdater.mShowShimmer = false;
@@ -158,6 +157,8 @@ public class ado_fragment extends Fragment {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));
                         userinfo.add(singleObject.getString("village_name"));
+                        String id = singleObject.getString("id");
+                        mUserId.add(id);
                     }
                     Log.d(TAG, "onResponse: " + username);
                     recyclerViewAdater.notifyDataSetChanged();

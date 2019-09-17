@@ -270,10 +270,6 @@ public class AdminActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new location_fragment()).commit();
             getSupportActionBar().setTitle("LOCATIONS");
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         } else if (id == R.id.nav_home) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt()).commit();
             getSupportActionBar().setTitle("HOME");

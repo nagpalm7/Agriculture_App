@@ -112,12 +112,16 @@ public class OnGoingFragment extends Fragment {
                             }
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
-                                mDDaNames.add(singleObject.getString("dda"));
-                                String adoName = singleObject.getString("ado");
-                                if (adoName.isEmpty())
-                                    mAdoNames.add("Not Assigned");
-                                else
+                                JSONObject mDdaObject = singleObject.getJSONObject("dda");
+                                String ddaName = mDdaObject.getString("name");
+                                mDDaNames.add(ddaName);
+                                try {
+                                    JSONObject mAdoObject = singleObject.getJSONObject("ado");
+                                    String adoName = mAdoObject.getString("name");
                                     mAdoNames.add(adoName);
+                                } catch (JSONException e) {
+                                    mAdoNames.add("Not Assigned");
+                                }
                                 String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
                                         + singleObject.getString("district") + ", " + singleObject.getString("state");
                                 mAddresses.add(location);
@@ -160,12 +164,16 @@ public class OnGoingFragment extends Fragment {
                             JSONArray resultsArray = rootObject.getJSONArray("results");
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
-                                mDDaNames.add(singleObject.getString("dda"));
-                                String adoName = singleObject.getString("ado");
-                                if (adoName.isEmpty())
-                                    mAdoNames.add("Not Assigned");
-                                else
+                                JSONObject mDdaObject = singleObject.getJSONObject("dda");
+                                String ddaName = mDdaObject.getString("name");
+                                mDDaNames.add(ddaName);
+                                try {
+                                    JSONObject mAdoObject = singleObject.getJSONObject("ado");
+                                    String adoName = mAdoObject.getString("name");
                                     mAdoNames.add(adoName);
+                                } catch (JSONException e) {
+                                    mAdoNames.add("Not Assigned");
+                                }
                                 String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
                                         + singleObject.getString("district") + ", " + singleObject.getString("state");
                                 mAddresses.add(location);

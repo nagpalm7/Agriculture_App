@@ -65,15 +65,17 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
         adoListHolder.Adolistlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!mshowshimmer && !isDDoAdo) {
-                    Intent intent = new Intent(mcontext, ado_map_activity.class);
-                    int position = adoListHolder.getAdapterPosition();
-                    Log.d(TAG, "onClick: ");
-                    intent.putExtra("longitude", longitude.get(position));
-                    intent.putExtra("latitude", latitude.get(position));
-                    intent.putExtra("id", idList.get(position));
-                    intent.putExtra("title", mtextview1.get(position));
-                    mcontext.startActivity(intent);
+                if (!mshowshimmer) {
+                    if (!isDDoAdo) {
+                        Intent intent = new Intent(mcontext, ado_map_activity.class);
+                        int position = adoListHolder.getAdapterPosition();
+                        Log.d(TAG, "onClick: ");
+                        intent.putExtra("longitude", longitude.get(position));
+                        intent.putExtra("latitude", latitude.get(position));
+                        intent.putExtra("id", idList.get(position));
+                        intent.putExtra("title", mtextview1.get(position));
+                        mcontext.startActivity(intent);
+                    }
                 }
             }
         });

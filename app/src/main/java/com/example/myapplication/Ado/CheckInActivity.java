@@ -69,6 +69,8 @@ public class CheckInActivity extends AppCompatActivity {
         locationId = Integer.parseInt(id);
         SharedPreferences prefs = getSharedPreferences("tokenFile", MODE_PRIVATE);
         token = prefs.getString("token", "");
+        getSupportActionBar().setTitle("Report Filing");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Log.d(TAG, "onCreate: TOKEN " + token);
         recyclerView = findViewById(R.id.pics_recyclerview);
         khasraNo = findViewById(R.id.khasra_no);
@@ -96,6 +98,12 @@ public class CheckInActivity extends AppCompatActivity {
                     submitReport();
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     @Override
