@@ -44,7 +44,6 @@ public class DdaselectAdo extends AppCompatActivity {
     private String adoid;
     public static boolean isAssigned = false;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,7 +125,7 @@ public class DdaselectAdo extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.searchmenu,menu);
+//        getMenuInflater().inflate(R.menu.searchmenu,menu);
         return true;
     }
 
@@ -135,5 +134,6 @@ public class DdaselectAdo extends AppCompatActivity {
         super.onResume();
         Log.d(TAG, "onResume: ");
     }
+
 
 }
