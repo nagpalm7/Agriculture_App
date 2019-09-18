@@ -45,6 +45,7 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         this.mcontext = mcontext;
+        isDDoAdo = true;
     }
 
     public AdoListAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mAdoName, boolean isDDo) {
