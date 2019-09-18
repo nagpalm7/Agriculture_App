@@ -7,8 +7,7 @@
     <ImageView
         android:id="@+id/ado_report_image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:contentDescription="Image of Ado Report"
         android:scaleType="fitXY" />
-
 </RelativeLayout>

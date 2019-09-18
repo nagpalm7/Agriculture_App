@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,8 +36,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
@@ -46,9 +54,9 @@ public class CheckInActivity extends AppCompatActivity {
     private EditText incidentText;
     private Button pickImageButton;
     private Button submitButton;
-    private int IMAGE_CAPTURE_RC;
+    private static int IMAGE_CAPTURE_RC = 191;
     private Bitmap imageBitmap = null;
-    private ArrayList<Bitmap> imagesBitmap;
+    private ArrayList<String> imagesPath;
     private ReportImageRecyAdapter adapter;
     private String reportSubmitUrl = "http://13.235.100.235:8000/api/report-ado/add/";
     private String imageUploadUrl = "http://13.235.100.235:8000/api/upload/images/";
@@ -59,6 +67,7 @@ public class CheckInActivity extends AppCompatActivity {
     private AlertDialog reportSubmitLoading;
     private boolean isReportSubmitted = false;
     private String TAG = "CheckInActivity";
+    private String imageFilePath = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,14 +88,13 @@ public class CheckInActivity extends AppCompatActivity {
         pickImageButton = findViewById(R.id.pick_photo);
         submitButton = findViewById(R.id.submit_report_ado);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        imagesBitmap = new ArrayList<>();
-        adapter = new ReportImageRecyAdapter(this, imagesBitmap);
+        imagesPath = new ArrayList<>();
+        adapter = new ReportImageRecyAdapter(this, imagesPath);
         recyclerView.setAdapter(adapter);
         pickImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, IMAGE_CAPTURE_RC);
+                openCameraIntent();
             }
         });
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -106,17 +114,45 @@ public class CheckInActivity extends AppCompatActivity {
         return true;
     }
 
+    private void openCameraIntent() {
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (pictureIntent.resolveActivity(getPackageManager()) != null) {
+
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            Uri photoUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", photoFile);
+            pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            startActivityForResult(pictureIntent, IMAGE_CAPTURE_RC);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == IMAGE_CAPTURE_RC) {
             if (resultCode == RESULT_OK) {
-                imageBitmap = (Bitmap) data.getExtras().get("data");
-                imagesBitmap.add(imageBitmap);
+                imagesPath.add(imageFilePath);
                 adapter.notifyDataSetChanged();
+                Log.d(TAG, "onActivityResult: " + imageFilePath);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    private File createImageFile() throws IOException {
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        imageFilePath = image.getAbsolutePath();
+        return image;
+    }
+
 
     private void submitReport() {
         reportSubmitLoading = new SpotsDialog.Builder().setContext(this).setMessage("Submitting Report").setCancelable(false)

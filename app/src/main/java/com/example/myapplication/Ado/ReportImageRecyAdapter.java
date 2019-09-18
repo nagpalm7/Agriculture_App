@@ -1,7 +1,6 @@
 package com.example.myapplication.Ado;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +9,18 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 
 import java.util.ArrayList;
 
 public class ReportImageRecyAdapter extends RecyclerView.Adapter<ReportImageRecyAdapter.CustomViewHolder> {
     private Context mContext;
-    private ArrayList<Bitmap> mImagesBitmap;
+    private ArrayList<String> mImagesPath;
 
-    public ReportImageRecyAdapter(Context mContext, ArrayList<Bitmap> mImagesBitmap) {
+    public ReportImageRecyAdapter(Context mContext, ArrayList<String> mImagesPath) {
         this.mContext = mContext;
-        this.mImagesBitmap = mImagesBitmap;
+        this.mImagesPath = mImagesPath;
     }
 
     @NonNull
@@ -33,12 +33,12 @@ public class ReportImageRecyAdapter extends RecyclerView.Adapter<ReportImageRecy
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
-        holder.imageView.setImageBitmap(mImagesBitmap.get(position));
+        Glide.with(mContext).load(mImagesPath.get(position)).into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return mImagesBitmap.size();
+        return mImagesPath.size();
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
