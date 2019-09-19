@@ -1,23 +1,19 @@
 package com.example.myapplication.Ado;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,21 +24,21 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.androidnetworking.interfaces.UploadProgressListener;
 import com.example.myapplication.R;
+import com.obsez.android.lib.filechooser.ChooserDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
@@ -56,7 +52,7 @@ public class CheckInActivity extends AppCompatActivity {
     private Button submitButton;
     private static int IMAGE_CAPTURE_RC = 191;
     private Bitmap imageBitmap = null;
-    private ArrayList<String> imagesPath;
+    private ArrayList<File> mImages;
     private ReportImageRecyAdapter adapter;
     private String reportSubmitUrl = "http://13.235.100.235:8000/api/report-ado/add/";
     private String imageUploadUrl = "http://13.235.100.235:8000/api/upload/images/";
@@ -88,19 +84,19 @@ public class CheckInActivity extends AppCompatActivity {
         pickImageButton = findViewById(R.id.pick_photo);
         submitButton = findViewById(R.id.submit_report_ado);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        imagesPath = new ArrayList<>();
-        adapter = new ReportImageRecyAdapter(this, imagesPath);
+        mImages = new ArrayList<>();
+        adapter = new ReportImageRecyAdapter(this, mImages);
         recyclerView.setAdapter(adapter);
         pickImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openCameraIntent();
+                openImagePicker();
             }
         });
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (imageBitmap == null)
+                if (mImages.isEmpty())
                     Toast.makeText(CheckInActivity.this, "Please add atleast one picture!", Toast.LENGTH_SHORT).show();
                 else
                     submitReport();
@@ -114,44 +110,27 @@ public class CheckInActivity extends AppCompatActivity {
         return true;
     }
 
-    private void openCameraIntent() {
-        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (pictureIntent.resolveActivity(getPackageManager()) != null) {
-
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            Uri photoUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", photoFile);
-            pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            startActivityForResult(pictureIntent, IMAGE_CAPTURE_RC);
-        }
+    private void openImagePicker() {
+        File file = Environment.getExternalStorageDirectory();
+        String start = file.getAbsolutePath();
+        new ChooserDialog(this)
+                .withStartFile(start)
+                .withChosenListener(new ChooserDialog.Result() {
+                    @Override
+                    public void onChoosePath(String s, File file) {
+                        mImages.add(file);
+                    }
+                })
+                .withOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        dialogInterface.cancel();
+                    }
+                })
+                .build()
+                .show();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == IMAGE_CAPTURE_RC) {
-            if (resultCode == RESULT_OK) {
-                imagesPath.add(imageFilePath);
-                adapter.notifyDataSetChanged();
-                Log.d(TAG, "onActivityResult: " + imageFilePath);
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private File createImageFile() throws IOException {
-
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "IMG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        imageFilePath = image.getAbsolutePath();
-        return image;
-    }
 
 
     private void submitReport() {
@@ -183,7 +162,7 @@ public class CheckInActivity extends AppCompatActivity {
                                 reportId = singleObject.getString("id");
                                 Log.d(TAG, "onResponse: " + singleObject);
                                 isReportSubmitted = true;
-                                //uploadPhotos();
+                                uploadPhotos();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 reportSubmitLoading.dismiss();
@@ -211,62 +190,39 @@ public class CheckInActivity extends AppCompatActivity {
                 }
             };
             requestQueue.add(jsonObjectRequest);
-        } /*else
-            uploadPhotos();*/
+        } else
+            uploadPhotos();
     }
 
     private void uploadPhotos() {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, imageUploadUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(CheckInActivity.this, "Image Successfully upload!", Toast.LENGTH_SHORT).show();
-                        try {
-                            JSONObject singleObejct = new JSONObject(String.valueOf(response));
-                            Log.d(TAG, "onResponse: " + singleObejct);
-                            reportSubmitLoading.dismiss();
-                        } catch (JSONException e) {
-                            Log.d(TAG, "jsonexception: uploadImage" + e);
-                            reportSubmitLoading.dismiss();
+        for (int pos = 0; pos < mImages.size(); pos++) {
+            final int finalPos = pos;
+            AndroidNetworking.upload(imageUploadUrl)
+                    .addHeaders("Authorization", "Token " + token)
+                    .addMultipartFile("", mImages.get(pos))
+                    .setTag("Upload Images")
+                    .setPriority(Priority.HIGH)
+                    .build()
+                    .setUploadProgressListener(new UploadProgressListener() {
+                        @Override
+                        public void onProgress(long bytesUploaded, long totalBytes) {
+                            Log.d(TAG, "onProgress: " + bytesUploaded + "files uploaded: " + finalPos);
                         }
-                        reportSubmitLoading.dismiss();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "onErrorResponse: imageUpload" + error);
-                        Toast.makeText(CheckInActivity.this, "onErrorResponse: imageUpload" + error, Toast.LENGTH_LONG).show();
-                        Log.d(TAG, "networkResponse: imageUpload" + error.networkResponse);
-                        reportSubmitLoading.dismiss();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> imageMap = new HashMap<>();
-                imageMap.put("report", reportId);
-                String image = getStringImage(imageBitmap);
-                imageMap.put("image", image);
-                return imageMap;
-            }
+                    })
+                    .getAsJSONObject(new JSONObjectRequestListener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d(TAG, "onResponse: " + response);
+                        }
 
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> tokenMap = new HashMap<>();
-                tokenMap.put("Authorization", "Token " + token);
-                return tokenMap;
-            }
-        };
-        queue.add(stringRequest);
+                        @Override
+                        public void onError(ANError anError) {
+                            Log.d(TAG, "onError: " + anError.getErrorBody());
+                        }
+                    });
+
+        }
     }
 
-    private String getStringImage(Bitmap bitmap) {
-        ByteArrayOutputStream ba = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, ba);
-        byte[] imageByte = ba.toByteArray();
-        String encode = Base64.encodeToString(imageByte, Base64.DEFAULT);
-        return encode;
-    }
 }
 

@@ -12,15 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class ReportImageRecyAdapter extends RecyclerView.Adapter<ReportImageRecyAdapter.CustomViewHolder> {
     private Context mContext;
-    private ArrayList<String> mImagesPath;
+    private ArrayList<File> mImages;
 
-    public ReportImageRecyAdapter(Context mContext, ArrayList<String> mImagesPath) {
+    public ReportImageRecyAdapter(Context mContext, ArrayList<File> mImages) {
         this.mContext = mContext;
-        this.mImagesPath = mImagesPath;
+        this.mImages = mImages;
     }
 
     @NonNull
@@ -33,12 +34,12 @@ public class ReportImageRecyAdapter extends RecyclerView.Adapter<ReportImageRecy
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
-        Glide.with(mContext).load(mImagesPath.get(position)).into(holder.imageView);
+        Glide.with(mContext).load(mImages.get(position)).into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return mImagesPath.size();
+        return mImages.size();
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {

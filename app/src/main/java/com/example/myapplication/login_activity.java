@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.ClientError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
@@ -179,6 +180,7 @@ public class login_activity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             JSONObject c = new JSONObject(String.valueOf(response));
+                            Log.d(TAG, "onResponse: " + c);
                             JSONObject a = c.getJSONObject("auth_user");
                             typeOfUser = a.getString("type_of_user");
                             Name = c.getString("name");
@@ -234,12 +236,10 @@ public class login_activity extends AppCompatActivity {
                         Log.d(TAG, "onErrorResponse: some error in get: " + error.getLocalizedMessage());
                     }
                 }) {
-
-
-            //pass the token in the authorisation header
             @Override
-            public Map<String, String> getHeaders() {
+            public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
+                Log.d(TAG, "getHeaders: ");
                 headers.put("Authorization", "Token " + token);
                 return headers;
             }
@@ -274,6 +274,7 @@ public class login_activity extends AppCompatActivity {
                             Toast.makeText(login_activity.this, "Invalid User!", Toast.LENGTH_SHORT).show();
                         else
                             Toast.makeText(login_activity.this, "Something went wrong, please try again!", Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "onErrorResponse: invalid user : " + error);
                         dialog.dismiss();
                         btnLogin.setEnabled(true);
                     }
@@ -282,32 +283,5 @@ public class login_activity extends AppCompatActivity {
 
         MyRequestQueue.add(jsonObjectRequest);
 
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        dialog.dismiss();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 }
