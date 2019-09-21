@@ -27,8 +27,10 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
     public Boolean mshowshimmer = true;
     private ArrayList<String> mAdoName;
     private ArrayList<String> idList;
+    private ArrayList<String> mAdoCompleteIds;
     private boolean isDDoAdo;
     private boolean isDDo;
+    private boolean isAdoComplete = false;
     private int shimmer_count = 5;
     Context mcontext;
 
@@ -48,6 +50,15 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
         isDDoAdo = true;
     }
 
+    public AdoListAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, boolean isAdoComplete, ArrayList<String> mAdoCompleteIds) {
+        this.mtextview1 = mtextview1;
+        this.mtextview2 = mtextview2;
+        this.mAdoCompleteIds = mAdoCompleteIds;
+        this.isAdoComplete = isAdoComplete;
+        isDDoAdo = true;
+        this.mcontext = mcontext;
+    }
+
     public AdoListAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mAdoName, boolean isDDo) {
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
@@ -60,7 +71,6 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
     @NonNull
     @Override
     public AdoListAdapter.AdoListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        Context context = parent.getContext();
         View view = LayoutInflater.from(mcontext).inflate(R.layout.ado_location_listview, parent, false);
         final AdoListHolder adoListHolder = new AdoListHolder(view);
         adoListHolder.Adolistlayout.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +85,15 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
                         intent.putExtra("latitude", latitude.get(position));
                         intent.putExtra("id", idList.get(position));
                         intent.putExtra("title", mtextview1.get(position));
+                        mcontext.startActivity(intent);
+                    }
+
+                    if (isAdoComplete) {
+                        Intent intent = new Intent(mcontext, ReviewReport.class);
+                        int position = adoListHolder.getAdapterPosition();
+                        String id = mAdoCompleteIds.get(position);
+                        intent.putExtra("id", id);
+                        intent.putExtra("isDdo", false);
                         mcontext.startActivity(intent);
                     }
                 }

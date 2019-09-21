@@ -97,7 +97,7 @@ public class notassignedfragment extends Fragment {
                         district = c.getString("district");
                         state = c.getString("state");
                         Id.add(c.getString("id"));
-                        Address.add(villagename+","+blockname+","+district+","+state);
+                        Address.add(villagename + ", " + blockname + ", " + district + ", " + state);
                     }
                     ddapendingUnassignedAdapter.showunassignedshimmer = false;
                     ddapendingUnassignedAdapter.notifyDataSetChanged();

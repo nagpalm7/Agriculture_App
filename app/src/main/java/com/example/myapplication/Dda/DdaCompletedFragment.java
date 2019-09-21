@@ -92,7 +92,7 @@ public class DdaCompletedFragment extends Fragment {
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        Address.add(villagename+","+blockname+","+district+","+state);
+                        Address.add(villagename + ", " + blockname + ", " + district + ", " + state);
                         Log.d(TAG, "onResponse: some error in if");
                     }
                     ddacompletedAdapter.showcomletedshimmer = false;

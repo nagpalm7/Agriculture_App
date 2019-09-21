@@ -11,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Admin.EditActivity"></activity>
+        <activity android:name=".Ado.ReviewReport"></activity>
+        <activity android:name=".Admin.EditActivity" />
         <activity android:name=".Ado.CheckInActivity" />
         <activity
             android:name=".Ado.ado_map_activity"
@@ -114,6 +115,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>
