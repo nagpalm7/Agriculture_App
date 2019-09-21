@@ -121,12 +121,14 @@ public class pending_fragment extends Fragment {
                         }
                         mAddress.add(villagename + "," + blockname + "," + district + "," + state);
                         Log.d(TAG, "onResponse: next");
-                        recyclerViewAdater.mShowShimmer = false;
-                        recyclerViewAdater.notifyDataSetChanged();
                     }
+                    recyclerViewAdater.mShowShimmer = false;
+                    recyclerViewAdater.notifyDataSetChanged();
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                     e.printStackTrace();
+                    recyclerViewAdater.mShowShimmer = false;
+                    recyclerViewAdater.notifyDataSetChanged();
                 }
             }
         }, new Response.ErrorListener() {
@@ -174,6 +176,7 @@ public class pending_fragment extends Fragment {
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                     e.printStackTrace();
+                    requestQueue.add(jsonObjectRequest2);
                 }
             }
         }, new Response.ErrorListener() {

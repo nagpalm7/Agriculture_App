@@ -103,9 +103,11 @@ public class completed_fragment extends Fragment {
                             }
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
-                                mDdaNames.add(singleObject.getString("dda"));
-                                String adoName = singleObject.getString("ado");
-                                if (adoName.isEmpty())
+                                JSONObject ddaObject = singleObject.getJSONObject("dda");
+                                mDdaNames.add(ddaObject.getString("name"));
+                                JSONObject adoObject = singleObject.getJSONObject("ado");
+                                String adoName = adoObject.getString("name");
+                                if (adoName.equals("null"))
                                     mAdoNames.add("Not Assigned");
                                 else
                                     mAdoNames.add(adoName);

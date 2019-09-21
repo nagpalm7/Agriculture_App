@@ -10,16 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.R;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class ReportImageRecyAdapter extends RecyclerView.Adapter<ReportImageRecyAdapter.CustomViewHolder> {
     private Context mContext;
-    private ArrayList<File> mImages;
+    private ArrayList<String> mImages;
 
-    public ReportImageRecyAdapter(Context mContext, ArrayList<File> mImages) {
+    public ReportImageRecyAdapter(Context mContext, ArrayList<String> mImages) {
         this.mContext = mContext;
         this.mImages = mImages;
     }
@@ -34,7 +34,9 @@ public class ReportImageRecyAdapter extends RecyclerView.Adapter<ReportImageRecy
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
-        Glide.with(mContext).load(mImages.get(position)).into(holder.imageView);
+        Glide.with(mContext).load(mImages.get(position))
+                .apply(new RequestOptions().error(R.drawable.no_entry_background))
+                .into(holder.imageView);
     }
 
     @Override

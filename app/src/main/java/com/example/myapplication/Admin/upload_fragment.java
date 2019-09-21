@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.androidnetworking.interfaces.UploadProgressListener;
 import com.example.myapplication.R;
 import com.obsez.android.lib.filechooser.ChooserDialog;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -96,12 +98,21 @@ public class upload_fragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, "onResponse: " + response);
+                        String count;
+                        try {
+                            JSONObject rootObject = new JSONObject(String.valueOf(response));
+                            count = rootObject.getString("count");
+                            Toast.makeText(getActivity(), "Successfully Uploaded " + count + " locations", Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
                     public void onError(ANError anError) {
                         Log.d(TAG, "onError: " + anError.getErrorDetail() + " " + anError.getErrorBody() +
                                 " " + anError.getMessage() + " " + anError.getErrorCode());
+                        Toast.makeText(getActivity(), "Sorry something went wrong, please try again!", Toast.LENGTH_LONG).show();
                     }
                 });
     }

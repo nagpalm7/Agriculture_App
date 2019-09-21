@@ -62,7 +62,9 @@
                 android:hint="Village Code*"
                 android:minLines="2"
                 android:paddingLeft="8dp"
-                android:paddingTop="8dp" />
+                android:inputType="number"
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp" />
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView

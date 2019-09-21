@@ -10,6 +10,8 @@ import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,6 +25,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.ClientError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -62,6 +65,7 @@ public class CheckInActivity extends AppCompatActivity {
     private static int IMAGE_CAPTURE_RC = 191;
     private Bitmap imageBitmap = null;
     private ArrayList<File> mImages;
+    private ArrayList<String> mImagesPath;
     private ReportImageRecyAdapter adapter;
     private String reportSubmitUrl = "http://13.235.100.235:8000/api/report-ado/add/";
     private String imageUploadUrl = "http://13.235.100.235:8000/api/upload/images/";
@@ -81,9 +85,11 @@ public class CheckInActivity extends AppCompatActivity {
     //spinner
     private Spinner name;
     private Spinner fname;
-    private ToggleButton ownerlease ;
+    private ToggleButton ownerlease;
     private ToggleButton action;
-
+    private boolean isRequestFinished = false;
+    private boolean isTextChanged = false;
+    private boolean isBusy = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,9 +122,8 @@ public class CheckInActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mImages = new ArrayList<>();
-        farmerNames = new ArrayList<>();
-        farmerFatherNames = new ArrayList<>();
-        adapter = new ReportImageRecyAdapter(this, mImages);
+        mImagesPath = new ArrayList<>();
+        adapter = new ReportImageRecyAdapter(this, mImagesPath);
         recyclerView.setAdapter(adapter);
         pickImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,19 +154,29 @@ public class CheckInActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                getFarmerDetails();
+                isTextChanged = true;
+                isRequestFinished = false;
+            }
+        });
+        name.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.d(TAG, "onTouch: outside " + isRequestFinished + " " + isTextChanged);
+                if (!isTextChanged)
+                    Toast.makeText(CheckInActivity.this, "Please fill the Village Code first", Toast.LENGTH_SHORT).show();
+                else if (!isRequestFinished && motionEvent.getAction() == MotionEvent.ACTION_DOWN && !isBusy) {
+                    Log.d(TAG, "onTouch: ");
+                    getFarmerDetails();
 
-                ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_dropdown_item_1line,farmerNames);
-                adaptername.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
-                ArrayAdapter<String> adapterfname = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line,farmerFatherNames);
-                adapterfname.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
+                    ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, farmerNames);
+                    adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    ArrayAdapter<String> adapterfname = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
+                    adapterfname.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                name.setAdapter(adaptername);
-                fname.setAdapter(adapterfname);
-
-
-
-
+                    name.setAdapter(adaptername);
+                    fname.setAdapter(adapterfname);
+                }
+                return false;
             }
         });
     }
@@ -181,6 +196,7 @@ public class CheckInActivity extends AppCompatActivity {
                     @Override
                     public void onChoosePath(String s, File file) {
                         mImages.add(file);
+                        mImagesPath.add(s);
                         adapter.notifyDataSetChanged();
                     }
                 })
@@ -195,8 +211,7 @@ public class CheckInActivity extends AppCompatActivity {
     }
 
 
-
-    private void submitReport(){
+    private void submitReport() {
         reportSubmitLoading = new SpotsDialog.Builder().setContext(this).setMessage("Submitting Report").setCancelable(false)
                 .build();
         reportSubmitLoading.show();
@@ -212,10 +227,10 @@ public class CheckInActivity extends AppCompatActivity {
                 String rtype = (String) ownerlease.getText();
                 String actiontype = (String) action.getText();
 
-                postParams.put("farmer_name",farmername);
-                postParams.put("father_name",fathername);
-                postParams.put("ownership",rtype);
-                postParams.put("action",actiontype);
+                postParams.put("farmer_name", farmername);
+                postParams.put("father_name", fathername);
+                postParams.put("ownership", rtype);
+                postParams.put("action", actiontype);
                 postParams.put("location", locationId);
                 postParams.put("remarks", remarks);
                 postParams.put("incident_reason", incidentReason);
@@ -267,7 +282,7 @@ public class CheckInActivity extends AppCompatActivity {
             uploadPhotos();
     }
 
-    private void uploadPhotos(){
+    private void uploadPhotos() {
         for (int pos = 0; pos < mImages.size(); pos++) {
             final int finalPos = pos;
             AndroidNetworking.upload(imageUploadUrl)
@@ -287,6 +302,7 @@ public class CheckInActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(JSONObject response) {
                             Log.d(TAG, "onResponse: " + response);
+                            Toast.makeText(CheckInActivity.this, "Photos Uploaded", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -299,30 +315,34 @@ public class CheckInActivity extends AppCompatActivity {
     }
 
     private void getFarmerDetails() {
+        isBusy = true;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String villageCode = villageEditText.getText().toString().trim();
-        JSONObject params = new JSONObject();
-        try {
-            params.put("key", "agriHr@CRM");
-            params.put("vCode", villageCode);
-        } catch (JSONException e) {
-            Log.d(TAG, "getFarmerDetails: Params " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, farmerDetailsUrl, params,
+        farmerNames = new ArrayList<>();
+        farmerFatherNames = new ArrayList<>();
+        final String villageCode = villageEditText.getText().toString().trim();
+        String finalUrl = farmerDetailsUrl + "?key=agriHr@CRM&vCode=" + villageCode;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, finalUrl, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             JSONArray dataArray = rootObject.getJSONArray("data");
+                            if (dataArray.length() == 0) {
+                                Toast toast = Toast.makeText(CheckInActivity.this, "No Data Found for Village Code "
+                                        + villageCode, Toast.LENGTH_SHORT);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
+                                isBusy = false;
+                            }
                             for (int i = 0; i < dataArray.length(); i++) {
                                 JSONObject singleObject = dataArray.getJSONObject(i);
                                 String farmerName = singleObject.getString("FarmerName");
                                 farmerNames.add(farmerName);
                                 String farmerFatherName = singleObject.getString("father_name");
                                 farmerFatherNames.add(farmerFatherName);
+                                isRequestFinished = true;
+                                isBusy = false;
                             }
                             Log.d(TAG, "onResponse: FARMER" + farmerNames.size());
                         } catch (JSONException e) {
@@ -333,13 +353,15 @@ public class CheckInActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "onErrorResponse: FARMER " + error.getMessage());
+                        Log.d(TAG, "onErrorResponse: FARMER " + error.networkResponse + "  " + error);
+                        isBusy = false;
+                        if (error instanceof ClientError) {
+                            Toast toast = Toast.makeText(CheckInActivity.this, "Invalid Village Code", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                        }
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return super.getParams();
-            }
         };
         requestQueue.add(jsonObjectRequest);
     }

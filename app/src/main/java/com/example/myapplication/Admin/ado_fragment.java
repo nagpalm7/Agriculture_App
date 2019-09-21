@@ -89,7 +89,9 @@ public class ado_fragment extends Fragment {
                     for (int i = 0; i < resultsArray.length(); i++) {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));
-                        userinfo.add(singleObject.getString("village_name"));
+                        JSONObject villageObject = singleObject.getJSONObject("village");
+                        userinfo.add(villageObject.getString("village") + ", "
+                                + villageObject.getString("village_code"));
                         String id = singleObject.getString("id");
                         mUserId.add(id);
                     }
@@ -156,7 +158,9 @@ public class ado_fragment extends Fragment {
                     for (int i = 0; i < resultsArray.length(); i++) {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));
-                        userinfo.add(singleObject.getString("village_name"));
+                        JSONObject villageObject = singleObject.getJSONObject("village");
+                        userinfo.add(villageObject.getString("village") + ", "
+                                + villageObject.getString("village_code"));
                         String id = singleObject.getString("id");
                         mUserId.add(id);
                     }
