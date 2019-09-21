@@ -11,9 +11,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -69,10 +72,18 @@ public class CheckInActivity extends AppCompatActivity {
     private AlertDialog reportSubmitLoading;
     private boolean isReportSubmitted = false;
     private String TAG = "CheckInActivity";
-    private String imageFilePath = "";
+    private String farmerDetailsUrl = "http://117.240.196.238:8080/api/CRM/getFarmerDetail";
+
+    //arraylist
     private ArrayList<String> farmerNames;
     private ArrayList<String> farmerFatherNames;
-    private String farmerDetailsUrl = "http://117.240.196.238:8080/api/CRM/getFarmerDetail";
+
+    //spinner
+    private Spinner name;
+    private Spinner fname;
+    private ToggleButton ownerlease ;
+    private ToggleButton action;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +104,16 @@ public class CheckInActivity extends AppCompatActivity {
         pickImageButton = findViewById(R.id.pick_photo);
         submitButton = findViewById(R.id.submit_report_ado);
         villageEditText = findViewById(R.id.village_code);
-        farmerEditText = findViewById(R.id.farmer_code);
         mobileEditText = findViewById(R.id.mobile_no);
+
+
+        // reference to spinners
+        name = findViewById(R.id.sname);
+        fname = findViewById(R.id.sfname);
+        //reference to toggle button
+        ownerlease = findViewById(R.id.toggleol);
+        action = findViewById(R.id.toggleaction);
+
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mImages = new ArrayList<>();
         farmerNames = new ArrayList<>();
@@ -131,6 +150,18 @@ public class CheckInActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 getFarmerDetails();
+
+                ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_dropdown_item_1line,farmerNames);
+                adaptername.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
+                ArrayAdapter<String> adapterfname = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line,farmerFatherNames);
+                adapterfname.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
+
+                name.setAdapter(adaptername);
+                fname.setAdapter(adapterfname);
+
+
+
+
             }
         });
     }
@@ -165,7 +196,7 @@ public class CheckInActivity extends AppCompatActivity {
 
 
 
-    private void submitReport() {
+    private void submitReport(){
         reportSubmitLoading = new SpotsDialog.Builder().setContext(this).setMessage("Submitting Report").setCancelable(false)
                 .build();
         reportSubmitLoading.show();
@@ -176,9 +207,19 @@ public class CheckInActivity extends AppCompatActivity {
             try {
                 String remarks = remarkText.getText().toString();
                 String incidentReason = incidentText.getText().toString();
+                String farmername = (String) name.getSelectedItem();
+                String fathername = (String) name.getSelectedItem();
+                String rtype = (String) ownerlease.getText();
+                String actiontype = (String) action.getText();
+
+                postParams.put("farmer_name",farmername);
+                postParams.put("father_name",fathername);
+                postParams.put("ownership",rtype);
+                postParams.put("action",actiontype);
                 postParams.put("location", locationId);
                 postParams.put("remarks", remarks);
                 postParams.put("incident_reason", incidentReason);
+
             } catch (JSONException e) {
                 Toast.makeText(this, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
                 reportSubmitLoading.dismiss();
@@ -226,11 +267,12 @@ public class CheckInActivity extends AppCompatActivity {
             uploadPhotos();
     }
 
-    private void uploadPhotos() {
+    private void uploadPhotos(){
         for (int pos = 0; pos < mImages.size(); pos++) {
             final int finalPos = pos;
             AndroidNetworking.upload(imageUploadUrl)
                     .addHeaders("Authorization", "Token " + token)
+                    .addHeaders("report", reportId)
                     .addMultipartFile("", mImages.get(pos))
                     .setTag("Upload Images")
                     .setPriority(Priority.HIGH)
