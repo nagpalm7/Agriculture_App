@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +35,7 @@ import com.androidnetworking.interfaces.UploadProgressListener;
 import com.example.myapplication.R;
 import com.obsez.android.lib.filechooser.ChooserDialog;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,6 +53,9 @@ public class CheckInActivity extends AppCompatActivity {
     private EditText incidentText;
     private Button pickImageButton;
     private Button submitButton;
+    private EditText villageEditText;
+    private EditText farmerEditText;
+    private EditText mobileEditText;
     private static int IMAGE_CAPTURE_RC = 191;
     private Bitmap imageBitmap = null;
     private ArrayList<File> mImages;
@@ -64,14 +70,17 @@ public class CheckInActivity extends AppCompatActivity {
     private boolean isReportSubmitted = false;
     private String TAG = "CheckInActivity";
     private String imageFilePath = "";
+    private ArrayList<String> farmerNames;
+    private ArrayList<String> farmerFatherNames;
+    private String farmerDetailsUrl = "http://117.240.196.238:8080/api/CRM/getFarmerDetail";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkin_form);
-        intent = getIntent();
-        String id = intent.getStringExtra("id");
-        locationId = Integer.parseInt(id);
+//        intent = getIntent();
+//        String id = intent.getStringExtra("id");
+//        locationId = Integer.parseInt(id);
         SharedPreferences prefs = getSharedPreferences("tokenFile", MODE_PRIVATE);
         token = prefs.getString("token", "");
         getSupportActionBar().setTitle("Report Filing");
@@ -83,8 +92,13 @@ public class CheckInActivity extends AppCompatActivity {
         incidentText = findViewById(R.id.incident_reason);
         pickImageButton = findViewById(R.id.pick_photo);
         submitButton = findViewById(R.id.submit_report_ado);
+        villageEditText = findViewById(R.id.village_code);
+        farmerEditText = findViewById(R.id.farmer_code);
+        mobileEditText = findViewById(R.id.mobile_no);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mImages = new ArrayList<>();
+        farmerNames = new ArrayList<>();
+        farmerFatherNames = new ArrayList<>();
         adapter = new ReportImageRecyAdapter(this, mImages);
         recyclerView.setAdapter(adapter);
         pickImageButton.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +114,23 @@ public class CheckInActivity extends AppCompatActivity {
                     Toast.makeText(CheckInActivity.this, "Please add atleast one picture!", Toast.LENGTH_SHORT).show();
                 else
                     submitReport();
+            }
+        });
+
+        villageEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                getFarmerDetails();
             }
         });
     }
@@ -119,6 +150,7 @@ public class CheckInActivity extends AppCompatActivity {
                     @Override
                     public void onChoosePath(String s, File file) {
                         mImages.add(file);
+                        adapter.notifyDataSetChanged();
                     }
                 })
                 .withOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -223,6 +255,52 @@ public class CheckInActivity extends AppCompatActivity {
                     });
 
         }
+    }
+
+    private void getFarmerDetails() {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String villageCode = villageEditText.getText().toString().trim();
+        JSONObject params = new JSONObject();
+        try {
+            params.put("key", "agriHr@CRM");
+            params.put("vCode", villageCode);
+        } catch (JSONException e) {
+            Log.d(TAG, "getFarmerDetails: Params " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, farmerDetailsUrl, params,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject rootObject = new JSONObject(String.valueOf(response));
+                            JSONArray dataArray = rootObject.getJSONArray("data");
+                            for (int i = 0; i < dataArray.length(); i++) {
+                                JSONObject singleObject = dataArray.getJSONObject(i);
+                                String farmerName = singleObject.getString("FarmerName");
+                                farmerNames.add(farmerName);
+                                String farmerFatherName = singleObject.getString("father_name");
+                                farmerFatherNames.add(farmerFatherName);
+                            }
+                            Log.d(TAG, "onResponse: FARMER" + farmerNames.size());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "onErrorResponse: FARMER " + error.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return super.getParams();
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
     }
 
 }
