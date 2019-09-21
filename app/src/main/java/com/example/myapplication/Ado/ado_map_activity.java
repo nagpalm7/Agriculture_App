@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -411,13 +412,16 @@ public class ado_map_activity extends AppCompatActivity
 
     public void onClickCheckIn(View view) {
 
-        if (isEntered) {
+        if (true) {
             Intent intent = new Intent(this, CheckInActivity.class);
             intent.putExtra("id", id);
             Log.d(TAG, "onClickCheckIn: " + id);
             startActivity(intent);
         }
 
+        else {
+            Toast.makeText(this,"visit the location to enable the button",Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

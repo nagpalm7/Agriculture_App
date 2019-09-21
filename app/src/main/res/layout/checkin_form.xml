@@ -14,7 +14,7 @@
 
         <Button
             android:layout_marginTop="16dp"
-            android:layout_below="@id/cardview4"
+            android:layout_below="@id/pics_recyclerview"
             android:layout_marginRight="16dp"
             android:padding="16dp"
             android:textColor="#ffffff"
@@ -30,7 +30,7 @@
 
         <Button
             android:layout_marginTop="16dp"
-            android:layout_below="@id/cardview4"
+            android:layout_below="@id/pics_recyclerview"
             android:layout_marginLeft="16dp"
             android:id="@+id/submit_report_ado"
             android:layout_width="wrap_content"
@@ -273,7 +273,6 @@
             android:id="@+id/pics_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/pick_photo"
             android:layout_below="@id/cardview4"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"

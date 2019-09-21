@@ -1,6 +1,7 @@
 package com.example.myapplication.Ado;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,13 @@ import com.example.myapplication.R;
 
 import java.util.ArrayList;
 
+
 public class ReportImageRecyAdapter extends RecyclerView.Adapter<ReportImageRecyAdapter.CustomViewHolder> {
     private Context mContext;
     private ArrayList<String> mImages;
+
+    //tag
+    private final String TAG = "report_adapter";
 
     public ReportImageRecyAdapter(Context mContext, ArrayList<String> mImages) {
         this.mContext = mContext;
@@ -27,6 +32,7 @@ public class ReportImageRecyAdapter extends RecyclerView.Adapter<ReportImageRecy
     @NonNull
     @Override
     public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d(TAG, "onCreateViewHolder: rectest1 "+ mContext+mImages);
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.ado_report_image_item, parent, false);
         return new CustomViewHolder(view);
@@ -45,7 +51,7 @@ public class ReportImageRecyAdapter extends RecyclerView.Adapter<ReportImageRecy
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
+        ImageView imageView;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);

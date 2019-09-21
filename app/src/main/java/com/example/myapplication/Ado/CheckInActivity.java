@@ -197,6 +197,7 @@ public class CheckInActivity extends AppCompatActivity {
                     public void onChoosePath(String s, File file) {
                         mImages.add(file);
                         mImagesPath.add(s);
+                        Log.d(TAG, "onChoosePath: rectest"+mImages+mImagesPath);
                         adapter.notifyDataSetChanged();
                     }
                 })
