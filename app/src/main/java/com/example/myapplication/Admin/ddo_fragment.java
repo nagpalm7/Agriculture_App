@@ -92,7 +92,9 @@ public class ddo_fragment extends Fragment {
                     for (int i = 0; i < resultsArray.length(); i++) {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));
-                        userinfo.add(singleObject.getString("district"));
+                        JSONObject districtObject = singleObject.getJSONObject("district");
+                        userinfo.add(districtObject.getString("district") + ", " +
+                                districtObject.getString("district_code"));
                         String id = singleObject.getString("id");
                         mUserId.add(id);
                     }
@@ -159,7 +161,9 @@ public class ddo_fragment extends Fragment {
                     for (int i = 0; i < resultsArray.length(); i++) {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));
-                        userinfo.add(singleObject.getString("district"));
+                        JSONObject districtObject = singleObject.getJSONObject("district");
+                        userinfo.add(districtObject.getString("district") + ", " +
+                                districtObject.getString("district_code"));
                         String id = singleObject.getString("id");
                         mUserId.add(id);
                     }
