@@ -1,29 +1,47 @@
 package com.example.myapplication.Ado;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+
+import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.myapplication.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -32,7 +50,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class ado_map_activity extends AppCompatActivity {
+public class ado_map_activity extends AppCompatActivity
+        implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener,
+        ResultCallback<Status> {
 
     private final String ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private final String ACCESS_COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -43,8 +66,15 @@ public class ado_map_activity extends AppCompatActivity {
     private Boolean showmap;
 
     private final int RESULT_CODE = 786;
-    private GoogleMap map=null;
-    private final String TAG= "ado_map_activity";
+    private GoogleMap map = null;
+    private final String TAG = "ado_map_activity";
+    private boolean isEntered = false;
+
+    GoogleApiClient mGoogleApiClient;
+    LocationRequest mLocationRequest;
+    Location mLastLocation;
+    Marker mCurrLocationMarker;
+    MarkerOptions Dlocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,18 +87,17 @@ public class ado_map_activity extends AppCompatActivity {
         String title = intent.getStringExtra("title");
         getSupportActionBar().setTitle(title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Log.d(TAG, "onCreate: "+latitude+" "+longitude);
+        Log.d(TAG, "onCreate: " + latitude + " " + longitude);
 
 
-
-        if(getPermission()){
+        if (getPermission()) {
             SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.ado_map));
 
             mapFragment.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(GoogleMap googleMap) {
                     Log.d("inside onMapReady", "onMapReady: ");
-                    map=googleMap;
+                    map = googleMap;
 
                     //get latlong for corners for specified city
 
@@ -99,18 +128,100 @@ public class ado_map_activity extends AppCompatActivity {
                     //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
                     map.setMinZoomPreference(map.getCameraPosition().zoom);
 
+                    Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
                     //marking the position
-                    map.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title("edar aaa").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    map.addMarker(Dlocation);
+
+                    buildGoogleApiClient();
+                    map.setMyLocationEnabled(true);
+
+
 
                 }
-
 
 
             });
         }
 
 
+    }
 
+    GeofencingRequest geofencingRequest;
+
+    private void startgeofence(MarkerOptions dlocation) {
+        if (dlocation != null) {
+            Geofence geofence = creategeofence(dlocation.getPosition(), 400f);
+            geofencingRequest = creategeofencerequest(geofence);
+            addgeofence(geofence);
+        }
+    }
+
+    @Override
+    public void onResult(@NonNull Status status) {
+        drawGeofence();
+
+    }
+
+    Circle geofencelimit;
+
+    private void drawGeofence() {
+
+        if (geofencelimit != null) {
+            geofencelimit.remove();
+        }
+        CircleOptions circleOptions;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            circleOptions = new CircleOptions()
+                    .center(Dlocation.getPosition())
+                    .strokeColor(Color.argb(50, 70, 70, 70))
+                    .fillColor(Color.argb(100, 150, 150, 150))
+                    .radius(400f);
+        } else {
+            circleOptions = new CircleOptions()
+                    .center(Dlocation.getPosition())
+                    .strokeColor(Color.argb(50, 70, 70, 70))
+                    .radius(400f);
+
+
+        }
+
+        geofencelimit = map.addCircle(circleOptions);
+
+
+    }
+
+    private void addgeofence(Geofence geofence) {
+        LocationServices.GeofencingApi.addGeofences(mGoogleApiClient, geofencingRequest, creategeofencePendingIntent())
+                .setResultCallback(this);
+    }
+
+    PendingIntent geofencePendingIntent;
+
+    private PendingIntent creategeofencePendingIntent() {
+
+        if (geofencePendingIntent != null) {
+            return geofencePendingIntent;
+        }
+
+        Intent intent = new Intent(this, GeofenceTransitionService.class);
+
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private GeofencingRequest creategeofencerequest(Geofence geofence) {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        builder.addGeofence(geofence);
+        return builder.build();
+    }
+
+    private Geofence creategeofence(LatLng position, float v) {
+        return new Geofence.Builder().setRequestId("My Request")
+                .setCircularRegion(position.latitude, position.longitude, v)
+                .setExpirationDuration(60 * 60 * 1000)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                .build();
 
     }
 
@@ -199,7 +310,12 @@ public class ado_map_activity extends AppCompatActivity {
                         map.setMinZoomPreference(map.getCameraPosition().zoom);
 
                         //marking the position
-                        map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("edar aaa").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        map.addMarker(Dlocation);
+
+                        buildGoogleApiClient();
+                        map.setMyLocationEnabled(true);
+
+
 
                     }
 
@@ -256,6 +372,17 @@ public class ado_map_activity extends AppCompatActivity {
         }
     }
 
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+
+
+    }
+
     private AlertDialog showDialog(String title, String msg, String positiveLabel, DialogInterface.OnClickListener positiveOnclick,
                                    String negativeLabel, DialogInterface.OnClickListener negativeOnclick,
                                    boolean isCancelable) {
@@ -278,11 +405,79 @@ public class ado_map_activity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void onClickCheckIn(View view) {
-        Intent intent = new Intent(this, CheckInActivity.class);
-        intent.putExtra("id", id);
-        Log.d(TAG, "onClickCheckIn: " + id);
-        startActivity(intent);
+    void getStatus(Boolean status){
+        isEntered = status;
     }
+
+
+    public void onClickCheckIn(View view) {
+
+        if (true) {
+            Intent intent = new Intent(this, CheckInActivity.class);
+            intent.putExtra("id", id);
+            Log.d(TAG, "onClickCheckIn: " + id);
+            startActivity(intent);
+        }
+
+        else {
+            Toast.makeText(this,"visit the location to enable the button",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+        if (mCurrLocationMarker != null) {
+            mCurrLocationMarker.remove();
+        }
+
+        //Place current location marker
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.title("Current Position");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        mCurrLocationMarker = map.addMarker(markerOptions);
+
+        //move map camera
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11));
+    }
+
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        if (getPermission()) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
+        startgeofence(Dlocation);
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        //stop location updates when Activity is no longer active
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+    }
+
+
 }
 
