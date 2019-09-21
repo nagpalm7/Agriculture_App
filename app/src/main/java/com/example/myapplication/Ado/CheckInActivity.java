@@ -199,6 +199,7 @@ public class CheckInActivity extends AppCompatActivity {
             final int finalPos = pos;
             AndroidNetworking.upload(imageUploadUrl)
                     .addHeaders("Authorization", "Token " + token)
+                    .addHeaders("report", reportId)
                     .addMultipartFile("", mImages.get(pos))
                     .setTag("Upload Images")
                     .setPriority(Priority.HIGH)
