@@ -45,7 +45,7 @@ public class notassignedfragment extends Fragment {
     private String token;
     private View view;
     private String locationid;
-    private boolean isReferesh;
+    private boolean isRefresh;
     private int length_of_array;
 
     private String nextUrl;
@@ -59,7 +59,7 @@ public class notassignedfragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_notassignedfragment, container, false);
-        isReferesh = false;
+        isRefresh = false;
         Id = new ArrayList<String>();
         Address = new ArrayList<String>();
         ddapendingUnassignedAdapter = new DdapendingUnassignedAdapter(getActivity(),Id, Address);
@@ -148,28 +148,29 @@ public class notassignedfragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: ");
-        isReferesh = false;
+        isRefresh = false;
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause: ");
-        isReferesh = true;
+        isRefresh = true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume: ");
-        if(isReferesh)
+        if (isRefresh)
         {
             getFragmentManager().beginTransaction().detach(notassignedfragment.this)
                     .attach(notassignedfragment.this).commit();
             Log.d(TAG, "onResume: REFRESH");
-            isReferesh = false;
+            isRefresh = false;
         }
     }
+
     private void getNextLocations() {
         final RequestQueue unassignedrequestqueue = Volley.newRequestQueue(getActivity());
         isNextBusy = true;

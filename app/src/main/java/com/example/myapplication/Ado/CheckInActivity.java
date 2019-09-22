@@ -158,15 +158,51 @@ public class CheckInActivity extends AppCompatActivity {
                 isRequestFinished = false;
             }
         });
+
+        khasraNo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                isTextChanged = true;
+                isRequestFinished = false;
+            }
+        });
+
+        villageEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (!b) {
+                    String villageCode = villageEditText.getText().toString().trim();
+                    if (villageCode.isEmpty()) {
+
+                    }
+                }
+            }
+        });
+
         name.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Log.d(TAG, "onTouch: outside " + isRequestFinished + " " + isTextChanged);
-                if (!isTextChanged)
-                    Toast.makeText(CheckInActivity.this, "Please fill the Village Code first", Toast.LENGTH_SHORT).show();
+                String villCode = villageEditText.getText().toString().trim();
+                String farmerCode = khasraNo.getText().toString().trim();
+
+                if (villCode.isEmpty())
+                    Toast.makeText(CheckInActivity.this, "Please fill the Village Code", Toast.LENGTH_SHORT).show();
+                else if (farmerCode.isEmpty())
+                    Toast.makeText(CheckInActivity.this, "Please fill the Farmer Code ", Toast.LENGTH_SHORT).show();
                 else if (!isRequestFinished && motionEvent.getAction() == MotionEvent.ACTION_DOWN && !isBusy) {
                     Log.d(TAG, "onTouch: ");
-                    getFarmerDetails();
+                    getFarmerDetails(villCode, farmerCode);
 
                     ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, farmerNames);
                     adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -315,13 +351,12 @@ public class CheckInActivity extends AppCompatActivity {
         }
     }
 
-    private void getFarmerDetails() {
+    private void getFarmerDetails(final String villCode, final String farmerCode) {
         isBusy = true;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         farmerNames = new ArrayList<>();
         farmerFatherNames = new ArrayList<>();
-        final String villageCode = villageEditText.getText().toString().trim();
-        String finalUrl = farmerDetailsUrl + "?key=agriHr@CRM&vCode=" + villageCode;
+        String finalUrl = farmerDetailsUrl + "?key=agriHr@CRM&vCode=" + villCode;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, finalUrl, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -331,20 +366,23 @@ public class CheckInActivity extends AppCompatActivity {
                             JSONArray dataArray = rootObject.getJSONArray("data");
                             if (dataArray.length() == 0) {
                                 Toast toast = Toast.makeText(CheckInActivity.this, "No Data Found for Village Code "
-                                        + villageCode, Toast.LENGTH_SHORT);
+                                        + villCode, Toast.LENGTH_SHORT);
                                 toast.setGravity(Gravity.CENTER, 0, 0);
                                 toast.show();
                                 isBusy = false;
                             }
                             for (int i = 0; i < dataArray.length(); i++) {
                                 JSONObject singleObject = dataArray.getJSONObject(i);
-                                String farmerName = singleObject.getString("FarmerName");
-                                farmerNames.add(farmerName);
-                                String farmerFatherName = singleObject.getString("father_name");
-                                farmerFatherNames.add(farmerFatherName);
+                                String farmerId = singleObject.getString("idFarmer");
+                                if (farmerId.equals(farmerCode)) {
+                                    String farmerName = singleObject.getString("FarmerName");
+                                    farmerNames.add(farmerName);
+                                    String farmerFatherName = singleObject.getString("father_name");
+                                    farmerFatherNames.add(farmerFatherName);
+                                }
+                            }
                                 isRequestFinished = true;
                                 isBusy = false;
-                            }
                             Log.d(TAG, "onResponse: FARMER" + farmerNames.size());
                         } catch (JSONException e) {
                             e.printStackTrace();

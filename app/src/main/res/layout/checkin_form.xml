@@ -66,10 +66,32 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardview1"
+            android:id="@+id/cardview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/cardview0"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:elevation="8dp"
+            app:cardCornerRadius="15dp">
+
+            <EditText
+                android:id="@+id/khasra_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="start"
+                android:hint="Farmer Code*"
+                android:minLines="2"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cardview"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
             android:elevation="8dp"
@@ -143,32 +165,10 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cardview2"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:elevation="8dp"
-            app:cardCornerRadius="15dp">
-
-            <EditText
-                android:id="@+id/khasra_no"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:gravity="start"
-                android:hint="Khasra Number*"
-                android:minLines="2"
-                android:paddingLeft="8dp"
-                android:paddingTop="8dp" />
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
             android:id="@+id/cardview8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cardview"
+            android:layout_below="@id/cardview2"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
             android:elevation="8dp"
