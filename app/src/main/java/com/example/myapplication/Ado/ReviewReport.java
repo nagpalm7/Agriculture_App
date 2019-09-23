@@ -53,6 +53,7 @@ public class ReviewReport extends AppCompatActivity {
     private ProgressBar progressBar;
     private TableLayout tableLayout;
     private String mUrl;
+    private boolean isComplete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class ReviewReport extends AppCompatActivity {
         Button startButton = findViewById(R.id.start);
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
+        isComplete = intent.getBooleanExtra("isComplete", false);
         boolean isDdo = intent.getBooleanExtra("isDdo", false);
         mUrl = "http://13.235.100.235:8000/api/report-ado/8/";
         getDetails();
@@ -92,8 +94,10 @@ public class ReviewReport extends AppCompatActivity {
             addRowtoTable("Data1", "Data2", true);
             addRowtoTable("Data3", "Data4", true);
             addRowtoTable("Data5", "Data6", true);
-            startButton.setVisibility(View.VISIBLE);
-            forfeitButton.setVisibility(View.VISIBLE);
+            if (isComplete)
+                startButton.setVisibility(View.VISIBLE);
+            else
+                forfeitButton.setVisibility(View.VISIBLE);
             startButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

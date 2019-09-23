@@ -1,16 +1,17 @@
 package com.example.myapplication.Dda;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.Ado.ReviewReport;
 import com.example.myapplication.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -34,7 +35,19 @@ public class DdacompletedAdapter extends RecyclerView.Adapter<DdacompletedAdapte
     @Override
     public DdacompletedAdapter.ViewHolderCompletedDda onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mcontext).inflate(R.layout.notassignedlist,parent,false);
-        ViewHolderCompletedDda viewHolderCompletedDda = new ViewHolderCompletedDda(view);
+        final ViewHolderCompletedDda viewHolderCompletedDda = new ViewHolderCompletedDda(view);
+        viewHolderCompletedDda.cardcompleted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!showcomletedshimmer) {
+                    Intent intent = new Intent(mcontext, ReviewReport.class);
+                    intent.putExtra("isDdo", true);
+                    intent.putExtra("id", mtextview1.get(viewHolderCompletedDda.getAdapterPosition()));
+                    intent.putExtra("isComplete", true);
+                    mcontext.startActivity(intent);
+                }
+            }
+        });
         return viewHolderCompletedDda;
     }
 

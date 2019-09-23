@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -139,7 +141,12 @@ public class ado_pending_fragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(getActivity(), "Please Check your internet connection",
+                                    Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(getActivity(), "Something went wrong, please try again",
+                                    Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
