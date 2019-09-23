@@ -188,8 +188,6 @@ public class assignedfragment extends Fragment {
                         JSONObject c = jsonArray.getJSONObject(i);
                         JSONObject a = c.getJSONObject("ado");
                         Name.add(a.getString("name"));
-
-
                         Id.add(c.getString("id"));
                         Name.add(c.getString("name"));
                         villagename = c.getString("village_name");

@@ -129,7 +129,7 @@ public class DdaOngoingFragment extends Fragment {
                     ddaongoingAdapter.notifyDataSetChanged();
 
                 }catch (JSONException e){
-                    Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
+                    Log.d(TAG, "onResponse: JSON EXCEPTION " + e);
                     e.printStackTrace();
                 }
             }
@@ -184,6 +184,7 @@ public class DdaOngoingFragment extends Fragment {
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                Log.d(TAG, "onResponse: JSON EXCEPTION " + e);
                             }
 
                         }

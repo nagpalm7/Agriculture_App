@@ -5,13 +5,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -40,6 +44,10 @@ public class DdaselectAdo extends AppCompatActivity {
     private String idtopass;
     private String adoid;
     public static boolean isAssigned = false;
+    private LinearLayoutManager layoutManager;
+    private String nextUrl;
+    private boolean isNextBusy = false;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +57,12 @@ public class DdaselectAdo extends AppCompatActivity {
 
         nameofado = new ArrayList<String>();
         villagename = new ArrayList<String>();
-
+        progressBar = findViewById(R.id.ado_list_loading);
         ddaAdoListAdapter = new DdaAdoListAdapter(DdaselectAdo.this,nameofado,villagename);
         RecyclerView review = findViewById(R.id.RecyclerViewadolist);
         review.setAdapter(ddaAdoListAdapter);
-        review.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        layoutManager = new LinearLayoutManager(this);
+        review.setLayoutManager(layoutManager);
 
         //getting location id coming from unassigned fragment to this activity
         Bundle extras = getIntent().getExtras();
@@ -65,31 +74,59 @@ public class DdaselectAdo extends AppCompatActivity {
         Toast.makeText(this, "List of Ado's", Toast.LENGTH_SHORT).show();
         loadData(urlget);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("List of Ado's");        SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
+        getSupportActionBar().setTitle("List of Ado's");
+        SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
         Log.d(TAG, "onCreateView: " + token);
+
+        review.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                int totalCount, pastItemCount, visibleItemCount;
+                if (dy > 0) {
+                    totalCount = layoutManager.getItemCount();
+                    pastItemCount = layoutManager.findFirstVisibleItemPosition();
+                    visibleItemCount = layoutManager.getChildCount();
+                    if ((pastItemCount + visibleItemCount) >= totalCount) {
+                        Log.d(TAG, "onScrolled: " + nextUrl);
+                        if (!nextUrl.equals("null") && !isNextBusy) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            loadData(nextUrl);
+                        }
+                    }
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
 
     }
 
     private void loadData(String url){
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
-
+        isNextBusy = true;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
+
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c =jsonArray.getJSONObject(i);
                         adoid = c.getString("id");
                         ddaAdoListAdapter.getadoid(adoid);
                         nameofado.add(c.getString("name"));
-                        villagename.add(c.getString("village_name"));
+                        JSONObject villageObject = c.getJSONObject("village");
+                        villagename.add(villageObject.getString("village"));
                     }
+                    isNextBusy = false;
                     ddaAdoListAdapter.notifyDataSetChanged();
+                    progressBar.setVisibility(View.GONE);
                 }catch (JSONException e){
                     Log.d(TAG, "onResponse: "+e);
+                    isNextBusy = false;
+                    progressBar.setVisibility(View.GONE);
+                    Log.d(TAG, "onResponse: JSON EXCEPTION " + e);
                 }
 
 
@@ -98,6 +135,11 @@ public class DdaselectAdo extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "onErrorResponse: "+error.getLocalizedMessage());
+                if (error instanceof NoConnectionError)
+                    Toast.makeText(DdaselectAdo.this, "Please Check your internet connection",
+                            Toast.LENGTH_LONG).show();
+                isNextBusy = false;
+                progressBar.setVisibility(View.GONE);
             }
         })
         {

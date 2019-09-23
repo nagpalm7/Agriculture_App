@@ -1,5 +1,6 @@
 package com.example.myapplication.Admin;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -29,6 +30,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 
+import dmax.dialog.SpotsDialog;
+
 public class upload_fragment extends Fragment {
 
     private String url = "http://13.235.100.235:8000/api/upload/locations/";
@@ -36,6 +39,7 @@ public class upload_fragment extends Fragment {
     private static final String TAG = "UploadFragment";
     private String filePath;
     private File csvFile;
+    private AlertDialog uploadingDialog;
 
     @Nullable
     @Override
@@ -68,6 +72,11 @@ public class upload_fragment extends Fragment {
                     public void onChoosePath(String s, File file) {
                         filePath = s;
                         csvFile = file;
+                        uploadingDialog = new SpotsDialog.Builder().setContext(getActivity())
+                                .setMessage("Uploading Csv...")
+                                .setCancelable(false)
+                                .build();
+                        uploadingDialog.show();
                         uploadCsv();
                     }
                 })
@@ -103,8 +112,10 @@ public class upload_fragment extends Fragment {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             count = rootObject.getString("count");
                             Toast.makeText(getActivity(), "Successfully Uploaded " + count + " locations", Toast.LENGTH_LONG).show();
+                            uploadingDialog.dismiss();
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            uploadingDialog.dismiss();
                         }
                     }
 
@@ -113,8 +124,8 @@ public class upload_fragment extends Fragment {
                         Log.d(TAG, "onError: " + anError.getErrorDetail() + " " + anError.getErrorBody() +
                                 " " + anError.getMessage() + " " + anError.getErrorCode());
                         Toast.makeText(getActivity(), "Sorry something went wrong, please try again!", Toast.LENGTH_LONG).show();
+                        uploadingDialog.dismiss();
                     }
                 });
     }
-
 }
