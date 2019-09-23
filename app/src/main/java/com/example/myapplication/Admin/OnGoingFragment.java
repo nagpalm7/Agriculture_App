@@ -107,7 +107,7 @@ public class OnGoingFragment extends Fragment {
                                 adapter.mShowShimmer = false;
                                 adapter.notifyDataSetChanged();
 
-                                view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
                                 //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
                             }
                             for (int i = 0; i < resultsArray.length(); i++) {

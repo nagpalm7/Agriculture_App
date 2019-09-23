@@ -16,11 +16,14 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,6 +54,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
+
+import static com.example.myapplication.AppNotificationChannels.CHANNEL_1_ID;
 
 public class CheckInActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -85,11 +90,13 @@ public class CheckInActivity extends AppCompatActivity {
     //spinner
     private Spinner name;
     private Spinner fname;
+    private ProgressBar nameProgressBar;
     private ToggleButton ownerlease;
     private ToggleButton action;
     private boolean isRequestFinished = false;
     private boolean isTextChanged = false;
     private boolean isBusy = false;
+    private NotificationManagerCompat notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,10 +123,11 @@ public class CheckInActivity extends AppCompatActivity {
         // reference to spinners
         name = findViewById(R.id.sname);
         fname = findViewById(R.id.sfname);
+        nameProgressBar = findViewById(R.id.spinner_progressbar);
         //reference to toggle button
         ownerlease = findViewById(R.id.toggleol);
         action = findViewById(R.id.toggleaction);
-
+        notificationManager = NotificationManagerCompat.from(this);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mImages = new ArrayList<>();
         mImagesPath = new ArrayList<>();
@@ -136,8 +144,21 @@ public class CheckInActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (mImages.isEmpty())
                     Toast.makeText(CheckInActivity.this, "Please add atleast one picture!", Toast.LENGTH_SHORT).show();
-                else
-                    submitReport();
+                else {
+                    showdialogbox("Sumbit Report", "Are you sure?", "Yes",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    submitReport();
+                                }
+                            }, "No",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            }, true);
+                }
             }
         });
 
@@ -202,15 +223,8 @@ public class CheckInActivity extends AppCompatActivity {
                     Toast.makeText(CheckInActivity.this, "Please fill the Farmer Code ", Toast.LENGTH_SHORT).show();
                 else if (!isRequestFinished && motionEvent.getAction() == MotionEvent.ACTION_DOWN && !isBusy) {
                     Log.d(TAG, "onTouch: ");
+                    nameProgressBar.setVisibility(View.VISIBLE);
                     getFarmerDetails(villCode, farmerCode);
-
-                    ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, farmerNames);
-                    adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    ArrayAdapter<String> adapterfname = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
-                    adapterfname.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                    name.setAdapter(adaptername);
-                    fname.setAdapter(adapterfname);
                 }
                 return false;
             }
@@ -263,6 +277,7 @@ public class CheckInActivity extends AppCompatActivity {
                 String fathername = (String) name.getSelectedItem();
                 String rtype = (String) ownerlease.getText();
                 String actiontype = (String) action.getText();
+                String mobile = mobileEditText.getText().toString();
 
                 postParams.put("farmer_name", farmername);
                 postParams.put("father_name", fathername);
@@ -271,6 +286,7 @@ public class CheckInActivity extends AppCompatActivity {
                 postParams.put("location", locationId);
                 postParams.put("remarks", remarks);
                 postParams.put("incident_reason", incidentReason);
+                postParams.put("number", mobile);
 
             } catch (JSONException e) {
                 Toast.makeText(this, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
@@ -320,6 +336,18 @@ public class CheckInActivity extends AppCompatActivity {
     }
 
     private void uploadPhotos() {
+        final int progressMax = mImages.size();
+        final boolean[] isUploaded = new boolean[1];
+        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle("Upload")
+                .setContentText("Uploading Photos")
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setProgress(progressMax, 0, false);
+        notificationManager.notify(1, notificationBuilder.build());
+
         for (int pos = 0; pos < mImages.size(); pos++) {
             final int finalPos = pos;
             AndroidNetworking.upload(imageUploadUrl)
@@ -333,6 +361,10 @@ public class CheckInActivity extends AppCompatActivity {
                         @Override
                         public void onProgress(long bytesUploaded, long totalBytes) {
                             Log.d(TAG, "onProgress: " + bytesUploaded + "files uploaded: " + finalPos);
+                            if (bytesUploaded == totalBytes) {
+                                notificationBuilder.setProgress(progressMax, finalPos + 1, false);
+                                notificationManager.notify(1, notificationBuilder.build());
+                            }
                         }
                     })
                     .getAsJSONObject(new JSONObjectRequestListener() {
@@ -340,14 +372,27 @@ public class CheckInActivity extends AppCompatActivity {
                         public void onResponse(JSONObject response) {
                             Log.d(TAG, "onResponse: " + response);
                             Toast.makeText(CheckInActivity.this, "Photos Uploaded", Toast.LENGTH_SHORT).show();
+                            isUploaded[0] = true;
                         }
 
                         @Override
                         public void onError(ANError anError) {
                             Log.d(TAG, "onError: " + anError.getErrorBody());
+                            isUploaded[0] = false;
                         }
                     });
 
+        }
+        if (isUploaded[0]) {
+            notificationBuilder.setContentText("Upload Successful!")
+                    .setProgress(0, 0, false)
+                    .setOngoing(false);
+            notificationManager.notify(1, notificationBuilder.build());
+        } else {
+            notificationBuilder.setContentText("Upload Failed")
+                    .setProgress(0, 0, false)
+                    .setOngoing(false);
+            notificationManager.notify(1, notificationBuilder.build());
         }
     }
 
@@ -364,13 +409,14 @@ public class CheckInActivity extends AppCompatActivity {
                         try {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             JSONArray dataArray = rootObject.getJSONArray("data");
-                            if (dataArray.length() == 0) {
+                            Log.d(TAG, "onResponse: DATAARRAY " + dataArray.length());
+                            /*if (dataArray.length() == 0) {
                                 Toast toast = Toast.makeText(CheckInActivity.this, "No Data Found for Village Code "
                                         + villCode, Toast.LENGTH_SHORT);
                                 toast.setGravity(Gravity.CENTER, 0, 0);
                                 toast.show();
                                 isBusy = false;
-                            }
+                            }*/
                             for (int i = 0; i < dataArray.length(); i++) {
                                 JSONObject singleObject = dataArray.getJSONObject(i);
                                 String farmerId = singleObject.getString("idFarmer");
@@ -381,11 +427,24 @@ public class CheckInActivity extends AppCompatActivity {
                                     farmerFatherNames.add(farmerFatherName);
                                 }
                             }
-                                isRequestFinished = true;
-                                isBusy = false;
+                            String message = rootObject.getString("message");
+                            if (farmerNames.size() == 0)
+                                Toast.makeText(CheckInActivity.this, message, Toast.LENGTH_SHORT).show();
+                            else {
+                                ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, farmerNames);
+                                adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                ArrayAdapter<String> adapterfname = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
+                                adapterfname.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                name.setAdapter(adaptername);
+                                fname.setAdapter(adapterfname);
+                            }
+                            nameProgressBar.setVisibility(View.GONE);
+                            isRequestFinished = true;
+                            isBusy = false;
                             Log.d(TAG, "onResponse: FARMER" + farmerNames.size());
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            nameProgressBar.setVisibility(View.GONE);
                         }
                     }
                 },
@@ -399,11 +458,30 @@ public class CheckInActivity extends AppCompatActivity {
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
                         }
+                        nameProgressBar.setVisibility(View.GONE);
                     }
                 }) {
         };
         requestQueue.add(jsonObjectRequest);
     }
 
+    private void updateNotification() {
+
+    }
+
+    private AlertDialog showdialogbox(String title, String msg, String positiveLabel, DialogInterface.OnClickListener positiveOnclick,
+                                      String negativeLabel, DialogInterface.OnClickListener negativeOnclick,
+                                      boolean isCancelable) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setPositiveButton(positiveLabel, positiveOnclick);
+        builder.setNegativeButton(negativeLabel, negativeOnclick);
+        builder.setCancelable(isCancelable);
+        AlertDialog alert = builder.create();
+        alert.show();
+        return alert;
+    }
 }
 

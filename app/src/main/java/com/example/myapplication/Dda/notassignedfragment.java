@@ -86,7 +86,7 @@ public class notassignedfragment extends Fragment {
                     if(length_of_array==0){
                         ddapendingUnassignedAdapter.showunassignedshimmer = false;
                         ddapendingUnassignedAdapter.notifyDataSetChanged();
-                        view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                        view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
                     }
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
@@ -186,7 +186,7 @@ public class notassignedfragment extends Fragment {
                         ddapendingUnassignedAdapter.showunassignedshimmer = false;
                         Log.d(TAG, "onResponse: ");
                         ddapendingUnassignedAdapter.notifyDataSetChanged();
-                        view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                        view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
                     }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);

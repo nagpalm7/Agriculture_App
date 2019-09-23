@@ -111,7 +111,7 @@ public class DdaOngoingFragment extends Fragment {
                     if(length_of_results_array==0){
                         ddaongoingAdapter.showongoingshimmer = false;
                         ddaongoingAdapter.notifyDataSetChanged();
-                        view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                        view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
                     }
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
@@ -166,7 +166,7 @@ public class DdaOngoingFragment extends Fragment {
                                 if(length_of_results_array==0){
                                     ddaongoingAdapter.showongoingshimmer = false;
                                     ddaongoingAdapter.notifyDataSetChanged();
-                                    view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                    view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
                                 }
                                 for (int i = 0; i < resultsArray.length(); i++) {
                                     JSONObject singleObject = resultsArray.getJSONObject(i);

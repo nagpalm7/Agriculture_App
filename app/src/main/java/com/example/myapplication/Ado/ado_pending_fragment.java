@@ -103,7 +103,7 @@ public class ado_pending_fragment extends Fragment {
                                 adoListAdapter.mshowshimmer = false;
                                 adoListAdapter.notifyDataSetChanged();
 
-                                view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
                                 //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
                             }
                             for (int i = 0; i < resultsArray.length(); i++) {
@@ -129,7 +129,7 @@ public class ado_pending_fragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Fragment fragment = getFragmentManager().findFragmentById(R.id.rootView);
-                            fragment.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                            fragment.getView().setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
 
 
                         }

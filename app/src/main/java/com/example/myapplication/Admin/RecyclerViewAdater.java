@@ -88,6 +88,11 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
                 Intent intent = new Intent(mcontext, EditActivity.class);
                 int pos = viewHolder.getAdapterPosition();
                 intent.putExtra("id", mUserId.get(pos));
+                if (isDdoFragment)
+                    intent.putExtra("isDdo", true);
+                else
+                    intent.putExtra("isDdo", false);
+                intent.putExtra("place", mtextview2.get(pos));
                 mcontext.startActivity(intent);
             }
         });

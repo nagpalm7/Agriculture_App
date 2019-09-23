@@ -16,7 +16,7 @@
             android:layout_marginRight="16dp"
             android:padding="16dp"
             android:textColor="#ffffff"
-            android:text="take picture"
+            android:text="Add Photos"
             android:id="@+id/pick_photo"
             android:background="@drawable/shape"
             android:layout_marginBottom="16dp"
@@ -83,8 +83,10 @@
                 android:gravity="start"
                 android:hint="Farmer Code*"
                 android:minLines="2"
+                android:inputType="number"
                 android:paddingLeft="8dp"
-                android:paddingTop="8dp" />
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp" />
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
@@ -107,11 +109,27 @@
                 android:minLines="2"
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp" />-->
-            <Spinner
-                android:id="@+id/sname"
-                android:textAlignment="center"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"/>
+                android:layout_height="wrap_content">
+
+                <Spinner
+                    android:id="@+id/sname"
+                    android:textAlignment="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"/>
+
+                <ProgressBar
+                    android:id="@+id/spinner_progressbar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="40dp"
+                    android:indeterminateDrawable="@drawable/progress"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
