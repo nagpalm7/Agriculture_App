@@ -101,7 +101,7 @@ public class ado_map_activity extends AppCompatActivity
 
                     //get latlong for corners for specified city
 
-                    LatLng one = new LatLng(7.798000, 68.14712);
+                  /*  LatLng one = new LatLng(latitude,longitude);
                     LatLng two = new LatLng(37.090000, 97.34466);
 
                     LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -126,7 +126,7 @@ public class ado_map_activity extends AppCompatActivity
                     map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
 
                     //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
-                    map.setMinZoomPreference(map.getCameraPosition().zoom);
+                    map.setMinZoomPreference(map.getCameraPosition().zoom);*/
 
                     Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
@@ -282,7 +282,7 @@ public class ado_map_activity extends AppCompatActivity
 
                         //get latlong for corners for specified city
 
-                        LatLng one = new LatLng(7.798000, 68.14712);
+                       /* LatLng one = new LatLng(7.798000, 68.14712);
                         LatLng two = new LatLng(37.090000, 97.34466);
 
                         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -310,7 +310,7 @@ public class ado_map_activity extends AppCompatActivity
                         map.setMinZoomPreference(map.getCameraPosition().zoom);
 
                         //marking the position
-                        map.addMarker(Dlocation);
+                        map.addMarker(Dlocation);*/
 
                         buildGoogleApiClient();
                         map.setMyLocationEnabled(true);
@@ -412,7 +412,7 @@ public class ado_map_activity extends AppCompatActivity
 
     public void onClickCheckIn(View view) {
 
-        if (true) {
+        if (isEntered) {
             Intent intent = new Intent(this, CheckInActivity.class);
             intent.putExtra("id", id);
             Log.d(TAG, "onClickCheckIn: " + id);
@@ -439,8 +439,36 @@ public class ado_map_activity extends AppCompatActivity
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         mCurrLocationMarker = map.addMarker(markerOptions);
 
-        //move map camera
+        LatLng one = new LatLng(latitude,longitude);
+        LatLng two =latLng;
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        //add them to builder
+        builder.include(one);
+        builder.include(two);
+
+        LatLngBounds bounds = builder.build();
+
+        //get width and height to current display screen
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+
+        // 20% padding
+        int padding = (int) (width * 0.20);
+
+        //set latlong bounds
+        map.setLatLngBoundsForCameraTarget(bounds);
+
+        //move camera to fill the bound to screen
+        map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+
+        //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
+        map.setMinZoomPreference(map.getCameraPosition().zoom);
+
+        /*//move map camera
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11));
+        map.moveCamera();*/
     }
 
 

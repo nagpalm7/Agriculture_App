@@ -11,6 +11,14 @@
         tools:context=".MapsActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
 
+    <ProgressBar
+        android:id="@+id/pbar"
+        android:outlineAmbientShadowColor="@color/default_grey"
+        android:layout_centerInParent="true"
+        android:indeterminateDrawable="@drawable/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 
 
 
