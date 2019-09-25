@@ -95,7 +95,8 @@ public class ado_fragment extends Fragment {
                         JSONObject villageObject = singleObject.getJSONObject("village");
                         userinfo.add(villageObject.getString("village") + ", "
                                 + villageObject.getString("village_code"));
-                        String id = singleObject.getString("id");
+                        JSONObject authObject = singleObject.getJSONObject("auth_user");
+                        String id = authObject.getString("pk");
                         mUserId.add(id);
                     }
                     Log.d(TAG, "onResponse: " + username);

@@ -4,9 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,9 +24,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,8 +55,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
@@ -70,7 +77,6 @@ public class CheckInActivity extends AppCompatActivity {
     private EditText farmerEditText;
     private EditText mobileEditText;
     private static int IMAGE_CAPTURE_RC = 191;
-    private Bitmap imageBitmap = null;
     private ArrayList<File> mImages;
     private ArrayList<String> mImagesPath;
     private ReportImageRecyAdapter adapter;
@@ -92,6 +98,10 @@ public class CheckInActivity extends AppCompatActivity {
 
     //spinner
     private Spinner name;
+    private Spinner vCodeSpinner;
+    private ProgressBar vCodeProgressBar;
+    private ArrayList<String> villageNames;
+    private String pk;
     private String actionTaken = "FIR";
     private ProgressBar nameProgressBar;
     private ToggleButton ownerlease;
@@ -104,15 +114,17 @@ public class CheckInActivity extends AppCompatActivity {
     private Button addChalaanButton;
     private ImageView chalaanImageView;
     private File chalaanFile = null;
+    private String imageFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkin_form);
-//        intent = getIntent();
-//        String id = intent.getStringExtra("id");
-//        locationId = Integer.parseInt(id);
+        intent = getIntent();
+        String id = intent.getStringExtra("id");
+        locationId = Integer.parseInt(id);
         SharedPreferences prefs = getSharedPreferences("tokenFile", MODE_PRIVATE);
+        pk = prefs.getString("pk", "");
         token = prefs.getString("token", "");
         getSupportActionBar().setTitle("Report Filing");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -130,6 +142,8 @@ public class CheckInActivity extends AppCompatActivity {
 
         // reference to spinners
         name = findViewById(R.id.sname);
+        vCodeSpinner = findViewById(R.id.vCodeSpinner);
+        vCodeProgressBar = findViewById(R.id.vCodespinner_progressbar);
         //fname = findViewById(R.id.sfname);
         nameProgressBar = findViewById(R.id.spinner_progressbar);
         //reference to toggle button
@@ -144,7 +158,8 @@ public class CheckInActivity extends AppCompatActivity {
         pickImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openImagePicker();
+                //openImagePicker();
+                openCameraIntent();
             }
         });
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -334,6 +349,47 @@ public class CheckInActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void openCameraIntent() {
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (pictureIntent.resolveActivity(getPackageManager()) != null) {
+
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                Log.d(TAG, "openCameraIntent: IOEXCEPTION PHOTOFILE: " + e.getMessage());
+                e.printStackTrace();
+                return;
+            }
+            Uri photoUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", photoFile);
+            pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            pictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivityForResult(pictureIntent, IMAGE_CAPTURE_RC);
+        }
+    }
+
+    private File createImageFile() throws IOException {
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        imageFilePath = image.getAbsolutePath();
+        return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == IMAGE_CAPTURE_RC) {
+            if (resultCode == RESULT_OK) {
+                mImagesPath.add(imageFilePath);
+                //File file = new File(imageFilePath);
+                //mImages.add(file);
+                adapter.notifyDataSetChanged();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     private void submitReport() {
         reportSubmitLoading = new SpotsDialog.Builder().setContext(this).setMessage("Submitting Report").setCancelable(false)
@@ -353,12 +409,16 @@ public class CheckInActivity extends AppCompatActivity {
 
                 postParams.put("farmer_name", farmername);
                 postParams.put("father_name", fathername);
+                postParams.put("farmer_code", "bfhsdf");
+                postParams.put("village_code", " dfddfs");
                 postParams.put("ownership", rtype);
                 postParams.put("action", actionTaken);
                 postParams.put("location", locationId);
                 postParams.put("remarks", remarks);
                 postParams.put("incident_reason", incidentReason);
-                postParams.put("number", mobile);
+                postParams.put("kila_num", "fgdfgfd");
+                postParams.put("murrabba_num", "bdhfbh");
+                //postParams.put("number", mobile);
 
             } catch (JSONException e) {
                 Toast.makeText(this, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
@@ -408,7 +468,7 @@ public class CheckInActivity extends AppCompatActivity {
     }
 
     private void uploadPhotos() {
-        if (actionTaken.equals("Chalaan"))
+        if (actionTaken.equals("chalaan"))
             mImages.add(chalaanFile);
         final int progressMax = mImages.size();
         final boolean[] isUploaded = new boolean[1];
@@ -425,8 +485,8 @@ public class CheckInActivity extends AppCompatActivity {
             final int finalPos = pos;
             AndroidNetworking.upload(imageUploadUrl)
                     .addHeaders("Authorization", "Token " + token)
-                    .addHeaders("report", reportId)
-                    .addMultipartFile("", mImages.get(pos))
+                    .addMultipartParameter("report", reportId)
+                    .addMultipartFile("image", mImages.get(pos))
                     .setTag("Upload Images")
                     .setPriority(Priority.HIGH)
                     .build()
@@ -446,31 +506,28 @@ public class CheckInActivity extends AppCompatActivity {
                             Log.d(TAG, "onResponse: " + response);
                             Toast.makeText(CheckInActivity.this, "Photos Uploaded", Toast.LENGTH_SHORT).show();
                             isUploaded[0] = true;
+                            notificationBuilder.setContentText("Upload Successful!")
+                                    .setProgress(0, 0, false)
+                                    .setOngoing(false);
+                            notificationManager.notify(1, notificationBuilder.build());
+                            Toast.makeText(CheckInActivity.this, "Report Submitted Successfully", Toast.LENGTH_SHORT).show();
+                            reportSubmitLoading.dismiss();
+                            finish();
                         }
 
                         @Override
                         public void onError(ANError anError) {
                             Log.d(TAG, "onError: " + anError.getErrorBody());
                             isUploaded[0] = false;
+                            notificationBuilder.setContentText("Upload Failed")
+                                    .setProgress(0, 0, false)
+                                    .setOngoing(false);
+                            notificationManager.notify(1, notificationBuilder.build());
+                            reportSubmitLoading.dismiss();
+                            Toast.makeText(CheckInActivity.this, "Photos Upload failed, please try again", Toast.LENGTH_SHORT).show();
                         }
                     });
 
-        }
-        if (isUploaded[0]) {
-            notificationBuilder.setContentText("Upload Successful!")
-                    .setProgress(0, 0, false)
-                    .setOngoing(false);
-            notificationManager.notify(1, notificationBuilder.build());
-            Toast.makeText(this, "Report Submitted Successfully", Toast.LENGTH_SHORT).show();
-            reportSubmitLoading.dismiss();
-            finish();
-        } else {
-            notificationBuilder.setContentText("Upload Failed")
-                    .setProgress(0, 0, false)
-                    .setOngoing(false);
-            notificationManager.notify(1, notificationBuilder.build());
-            reportSubmitLoading.dismiss();
-            Toast.makeText(this, "Photos Upload failed, please try again", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -513,10 +570,10 @@ public class CheckInActivity extends AppCompatActivity {
                                 ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),
                                         android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
                                 adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                name.setAdapter(adaptername);
 //                                ArrayAdapter<String> adapterfname = new ArrayAdapter<>(getApplicationContext(),
 //                                        android.R.layout.simple_dropdown_item_1line, fatherNames);
 //                                adapterfname.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                name.setAdapter(adaptername);
                                 //fname.setAdapter(adapterfname);
                             }
                             nameProgressBar.setVisibility(View.GONE);
@@ -546,8 +603,52 @@ public class CheckInActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
-    private void updateNotification() {
-
+    private void getVillageCode() {
+        String url = "";
+        villageNames = new ArrayList<>();
+        if (!pk.equals("")) {
+            url = "http://13.235.100.235:8000/api/user/" + pk + "/";
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONObject rootObject = new JSONObject(String.valueOf(response));
+                                JSONObject villageObject = rootObject.getJSONObject("village");
+                                String village = villageObject.getString("village");
+                                villageNames.add(village);
+                                ArrayAdapter<String> vCodeSpinnerAdapter = new ArrayAdapter<String>(CheckInActivity.this,
+                                        android.R.layout.simple_dropdown_item_1line, villageNames);
+                                vCodeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                vCodeSpinner.setAdapter(vCodeSpinnerAdapter);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Log.d(TAG, "onResponse: getVillageCode JSON " + e);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(TAG, "onErrorResponse: getVillageCode " + error);
+                            if (error instanceof NoConnectionError)
+                                Toast.makeText(CheckInActivity.this, "Please Check your" +
+                                        " internet connection!", Toast.LENGTH_LONG).show();
+                            else
+                                Toast.makeText(CheckInActivity.this, "Something went wrong, Please try again!",
+                                        Toast.LENGTH_LONG).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("Authorization", "Token " + token);
+                    return map;
+                }
+            };
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            requestQueue.add(jsonObjectRequest);
+        }
     }
 
     private AlertDialog showdialogbox(String title, String msg, String positiveLabel, DialogInterface.OnClickListener positiveOnclick,

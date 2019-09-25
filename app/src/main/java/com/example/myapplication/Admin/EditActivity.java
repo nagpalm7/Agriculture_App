@@ -70,7 +70,7 @@ public class EditActivity extends AppCompatActivity {
         } else {
             spinnerUrl = "http://localhost:8000/api/villages-list/";
         }
-        id = "2";
+        //id = "2";
         final String url = "http://13.235.100.235:8000/api/user/" + id + "/";
         getDetails(url);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +103,7 @@ public class EditActivity extends AppCompatActivity {
                             fetchSpinnerData(spinnerUrl);
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Log.d(TAG, "onResponse: JSON EXCEPTION: " + e);
+                            Log.d(TAG, "onResponse: JSON EXCEPTION: getDetails " + e);
                         }
 
                     }
@@ -111,7 +111,7 @@ public class EditActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "onErrorResponse: " + error);
+                        Log.d(TAG, "onErrorResponse: getDetails " + error);
                         Toast.makeText(EditActivity.this, "Something went wrong, try again later!",
                                 Toast.LENGTH_LONG).show();
                     }
@@ -143,7 +143,7 @@ public class EditActivity extends AppCompatActivity {
                 params.put("village", villageIds.get(pos));
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d(TAG, "saveChanges: PARAMS EXCEPTION " + e);
+            Log.d(TAG, "saveChanges: PARAMS EXCEPTION saveChanges " + e);
         }
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, params,
                 new Response.Listener<JSONObject>() {
@@ -157,7 +157,7 @@ public class EditActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "onErrorResponse: " + error);
+                        Log.d(TAG, "onErrorResponse: saveChanges " + error);
                         Toast.makeText(EditActivity.this, "Something went wrong, try again later!",
                                 Toast.LENGTH_LONG).show();
                     }

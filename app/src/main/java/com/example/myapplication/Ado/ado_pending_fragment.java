@@ -113,8 +113,8 @@ public class ado_pending_fragment extends Fragment {
                                 String id = singleObject.getString("id");
                                 idList.add(id);
                                 String location_name = singleObject.getString("village_name");
-                                String location_address = singleObject.getString("block_name") + ", "
-                                        + singleObject.getString("district") + ", " + singleObject.getString("state");
+                                String location_address = singleObject.getString("block_name") + ", " +
+                                        singleObject.getString("district") + ", " + singleObject.getString("state");
                                 String slongitude = singleObject.getString("longitude");
                                 String slatitude = singleObject.getString("latitude");
                                 mtextview1.add(location_name);
@@ -122,8 +122,6 @@ public class ado_pending_fragment extends Fragment {
                                 longitude.add(slongitude);
                                 latitude.add(slatitude);
                                 adoListAdapter.sendPostion(longitude,latitude);
-
-
                             }
                             adoListAdapter.mshowshimmer = false;
                             adoListAdapter.notifyDataSetChanged();
@@ -147,6 +145,7 @@ public class ado_pending_fragment extends Fragment {
                         else
                             Toast.makeText(getActivity(), "Something went wrong, please try again",
                                     Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "onErrorResponse: " + error);
                     }
                 }) {
             @Override

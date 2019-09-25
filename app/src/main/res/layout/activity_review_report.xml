@@ -84,7 +84,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
             android:textAlignment="viewStart"
             android:textSize="18sp" />
     </LinearLayout>
@@ -202,7 +201,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/view8"
+        android:id="@+id/view10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/view7"
@@ -210,7 +209,7 @@
         android:weightSum="2">
 
         <TextView
-            android:id="@+id/remarksLeft"
+            android:id="@+id/chalaan_amount_left"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -220,11 +219,35 @@
             />
 
         <TextView
+            android:id="@+id/chalaan_amount_right"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="viewStart"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/view8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view10"
+        android:layout_marginTop="8dp"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/remarksLeft"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/remarksRight"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
             android:textAlignment="viewStart"
             android:textSize="18sp" />
     </LinearLayout>
@@ -296,7 +319,8 @@
         android:layout_below="@id/review_pics_recyclerview"
         android:layout_marginHorizontal="18dp"
         android:layout_marginTop="16dp"
-        android:background="#f1f1f1"></TableLayout>
+        android:background="#f1f1f1"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/review_pics_recyclerview"

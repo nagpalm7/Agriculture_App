@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -25,9 +28,11 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,10 +55,16 @@ public class ReviewReport extends AppCompatActivity {
     private TextView reasonRight;
     private TextView actionLeft;
     private TextView actionRight;
+    private static String TAG = "ReviewReport";
+    private TextView chalaanLeft;
     private ProgressBar progressBar;
     private TableLayout tableLayout;
     private String mUrl;
     private boolean isComplete;
+    private TextView chalaanRight;
+    private RecyclerView recyclerView;
+    private ReviewPicsRecyclerviewAdapter adapter;
+    private ArrayList<String> mImagesUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,19 +92,28 @@ public class ReviewReport extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         actionLeft = findViewById(R.id.actionLeft);
         actionRight = findViewById(R.id.actionRight);
+        chalaanLeft = findViewById(R.id.chalaan_amount_left);
+        chalaanRight = findViewById(R.id.chalaan_amount_right);
+        recyclerView = findViewById(R.id.review_pics_recyclerview);
+        mImagesUrl = new ArrayList<>();
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        adapter = new ReviewPicsRecyclerviewAdapter(this, mImagesUrl);
+        recyclerView.setAdapter(adapter);
         Button forfeitButton = findViewById(R.id.forfeit);
         Button startButton = findViewById(R.id.start);
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
+        Log.d(TAG, "onCreate: ID " + id);
         isComplete = intent.getBooleanExtra("isComplete", false);
         boolean isDdo = intent.getBooleanExtra("isDdo", false);
-        mUrl = "http://13.235.100.235:8000/api/report-ado/8/";
+        mUrl = "http://13.235.100.235:8000/api/report-ado/" + id + "/";
         getDetails();
         if (isDdo) {
             addRowtoTable("Column1", "Column2", false);
             addRowtoTable("Data1", "Data2", true);
             addRowtoTable("Data3", "Data4", true);
             addRowtoTable("Data5", "Data6", true);
+            tableLayout.setVisibility(View.VISIBLE);
             if (isComplete)
                 startButton.setVisibility(View.VISIBLE);
             else
@@ -129,40 +149,63 @@ public class ReviewReport extends AppCompatActivity {
                         try {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             String villCode = rootObject.getString("village_code");
-                            String khasraNo = rootObject.getString("farmer_code");
+                            //String khasraNo = rootObject.getString("farmer_code");
                             String name = rootObject.getString("farmer_name");
                             String fatherName = rootObject.getString("father_name");
                             String ownership = rootObject.getString("ownership");
                             String action = rootObject.getString("action");
                             String remarks = rootObject.getString("remarks");
                             String reason = rootObject.getString("incident_reason");
+                            //String number = rootObject.getString("number");
+                            JSONArray imagesArray = rootObject.getJSONArray("images");
+                            for (int i = 0; i < imagesArray.length(); i++) {
+                                JSONObject imageObject = imagesArray.getJSONObject(i);
+                                String imageUrl = imageObject.getString("image");
+                                mImagesUrl.add(imageUrl);
+                                adapter.notifyDataSetChanged();
+                            }
+                            Log.d(TAG, "onResponse: ACTION " + action);
                             villCodeLeft.setText("Village Code");
                             villCodeRight.setText(villCode);
                             nameLeft.setText("Farmer Name");
                             nameRight.setText(name);
-                            khasraLeft.setText("Khasra Number");
-                            khasraRight.setText(khasraNo);
+                            //khasraLeft.setText("Khasra Number");
+                            //khasraRight.setText(khasraNo);
+                            khasraLeft.setVisibility(View.GONE);
+                            khasraRight.setVisibility(View.GONE);
                             fatherNameLeft.setText("Father Name");
                             fatherNameRight.setText(fatherName);
                             ownLeaseLeft.setText("Ownership/Lease");
                             ownLeaseRight.setText(ownership);
                             actionLeft.setText("Action Taken");
                             actionRight.setText(action);
+                            if (action.equals("chalaan")) {
+                                chalaanLeft.setText("Chalaan Amount");
+                                String chalaanAmount = rootObject.getString("amount");
+                                chalaanRight.setText(chalaanAmount);
+                            } else {
+                                chalaanLeft.setVisibility(View.GONE);
+                                chalaanRight.setVisibility(View.GONE);
+                            }
                             remarksLeft.setText("Remarks");
                             remarksRight.setText(remarks);
-                            mobileLeft.setText("Mobile No");
+                            //mobileLeft.setText("Mobile No");
+                            //mobileRight.setText(number);
+                            mobileLeft.setVisibility(View.GONE);
+                            mobileRight.setVisibility(View.GONE);
                             reasonLeft.setText("Incident Reason");
                             reasonRight.setText(reason);
                             progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            Log.d(TAG, "onResponse: JSON EXCEPTION " + e);
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Log.d(TAG, "onErrorResponse: " + error);
                     }
                 }) {
             @Override

@@ -51,7 +51,7 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
             holder.tv2.setBackground(null);
             holder.tv3.setBackground(null);
             holder.tv4.setBackground(null);
-            holder.tv1.setText("DDO     : " + mtextview1.get(position));
+            holder.tv1.setText("DDA     : " + mtextview1.get(position));
             holder.tv2.setText("ADO     : " + mtextview2.get(position));
             holder.tv3.setText("ADDRESS : " + mtextview3.get(position));
             holder.tv4.setText(String.valueOf(position + 1));
