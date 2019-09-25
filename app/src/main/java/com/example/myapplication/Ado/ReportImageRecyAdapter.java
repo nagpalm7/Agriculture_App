@@ -41,7 +41,7 @@ public class ReportImageRecyAdapter extends RecyclerView.Adapter<ReportImageRecy
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         Glide.with(mContext).load(mImages.get(position))
-                .apply(new RequestOptions().error(R.drawable.no_entry_background))
+                .apply(new RequestOptions().error(R.mipmap.no_entry_background))
                 .into(holder.imageView);
     }
 

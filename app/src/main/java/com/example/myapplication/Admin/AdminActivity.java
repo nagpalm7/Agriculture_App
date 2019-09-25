@@ -80,7 +80,7 @@ public class AdminActivity extends AppCompatActivity
     }
 
     private boolean getPermission() {
-        List<String> Permission = new ArrayList();
+        List<String> Permission = new ArrayList<>();
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             Permission.add(ACCESS_FINE_LOCATION);

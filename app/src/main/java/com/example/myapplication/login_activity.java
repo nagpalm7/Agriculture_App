@@ -82,8 +82,10 @@ public class login_activity extends AppCompatActivity {
                 intent = new Intent(this, AdoActivity.class);
             if (Usertype.equals("admin"))
                 intent = new Intent(this, AdminActivity.class);
-            startActivity(intent);
-            finish();
+            if (intent != null) {
+                startActivity(intent);
+                finish();
+            }
 
         }
 
@@ -184,9 +186,11 @@ public class login_activity extends AppCompatActivity {
                             JSONObject a = c.getJSONObject("auth_user");
                             typeOfUser = a.getString("type_of_user");
                             Name = c.getString("name");
+                            String pk = a.getString("pk");
                             SharedPreferences.Editor editor = getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
                             editor.putString("typeOfUser", typeOfUser);
                             editor.putString("Name", Name);
+                            editor.putString("pk", pk);
                             editor.apply();
 
                             Log.d(TAG, "onResponse: typeOfUser:" + typeOfUser);

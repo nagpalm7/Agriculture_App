@@ -46,19 +46,22 @@ public class ado_fragment extends Fragment {
     private LinearLayoutManager layoutManager;
     private boolean isNextBusy = false;
     private View view;
+    private boolean isRefresh;
 
     private final String TAG = "ado_fragment";
 
     public ado_fragment() {
-        username = new ArrayList<>();
-        userinfo = new ArrayList<>();
-        mUserId = new ArrayList<>();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.ado_fragment, container, false);
+        Log.d(TAG, "onCreateView: ");
+        isRefresh = false;
+        username = new ArrayList<>();
+        userinfo = new ArrayList<>();
+        mUserId = new ArrayList<>();
         progressBar = view.findViewById(R.id.ado_list_progressbar);
         recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, mUserId, false);
         RecyclerView Rview = view.findViewById(R.id.recyclerViewado);
@@ -83,7 +86,7 @@ public class ado_fragment extends Fragment {
                         recyclerViewAdater.mShowShimmer = false;
                         recyclerViewAdater.notifyDataSetChanged();
 
-                        view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                        view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
                         //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
                     }
                     for (int i = 0; i < resultsArray.length(); i++) {
@@ -92,7 +95,8 @@ public class ado_fragment extends Fragment {
                         JSONObject villageObject = singleObject.getJSONObject("village");
                         userinfo.add(villageObject.getString("village") + ", "
                                 + villageObject.getString("village_code"));
-                        String id = singleObject.getString("id");
+                        JSONObject authObject = singleObject.getJSONObject("auth_user");
+                        String id = authObject.getString("pk");
                         mUserId.add(id);
                     }
                     Log.d(TAG, "onResponse: " + username);
@@ -207,4 +211,31 @@ public class ado_fragment extends Fragment {
         });
 
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
+        isRefresh = false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+        if (isRefresh) {
+            getFragmentManager().beginTransaction().detach(ado_fragment.this)
+                    .attach(ado_fragment.this).commit();
+            Log.d(TAG, "onResume: REFRESH");
+            isRefresh = false;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+        isRefresh = true;
+    }
+
 }

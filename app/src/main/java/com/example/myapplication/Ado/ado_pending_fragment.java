@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -103,7 +105,7 @@ public class ado_pending_fragment extends Fragment {
                                 adoListAdapter.mshowshimmer = false;
                                 adoListAdapter.notifyDataSetChanged();
 
-                                view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
                                 //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
                             }
                             for (int i = 0; i < resultsArray.length(); i++) {
@@ -111,8 +113,8 @@ public class ado_pending_fragment extends Fragment {
                                 String id = singleObject.getString("id");
                                 idList.add(id);
                                 String location_name = singleObject.getString("village_name");
-                                String location_address = singleObject.getString("block_name") + ", "
-                                        + singleObject.getString("district") + ", " + singleObject.getString("state");
+                                String location_address = singleObject.getString("block_name") + ", " +
+                                        singleObject.getString("district") + ", " + singleObject.getString("state");
                                 String slongitude = singleObject.getString("longitude");
                                 String slatitude = singleObject.getString("latitude");
                                 mtextview1.add(location_name);
@@ -120,8 +122,6 @@ public class ado_pending_fragment extends Fragment {
                                 longitude.add(slongitude);
                                 latitude.add(slatitude);
                                 adoListAdapter.sendPostion(longitude,latitude);
-
-
                             }
                             adoListAdapter.mshowshimmer = false;
                             adoListAdapter.notifyDataSetChanged();
@@ -129,7 +129,7 @@ public class ado_pending_fragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Fragment fragment = getFragmentManager().findFragmentById(R.id.rootView);
-                            fragment.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                            fragment.getView().setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
 
 
                         }
@@ -139,7 +139,13 @@ public class ado_pending_fragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(getActivity(), "Please Check your internet connection",
+                                    Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(getActivity(), "Something went wrong, please try again",
+                                    Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "onErrorResponse: " + error);
                     }
                 }) {
             @Override

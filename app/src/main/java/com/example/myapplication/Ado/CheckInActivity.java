@@ -4,9 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -15,12 +16,19 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,6 +46,7 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.obsez.android.lib.filechooser.ChooserDialog;
 
@@ -46,15 +55,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
 
+import static com.example.myapplication.AppNotificationChannels.CHANNEL_1_ID;
+
 public class CheckInActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private EditText khasraNo;
     private EditText remarkText;
     private EditText incidentText;
     private Button pickImageButton;
@@ -63,7 +77,6 @@ public class CheckInActivity extends AppCompatActivity {
     private EditText farmerEditText;
     private EditText mobileEditText;
     private static int IMAGE_CAPTURE_RC = 191;
-    private Bitmap imageBitmap = null;
     private ArrayList<File> mImages;
     private ArrayList<String> mImagesPath;
     private ReportImageRecyAdapter adapter;
@@ -80,46 +93,63 @@ public class CheckInActivity extends AppCompatActivity {
 
     //arraylist
     private ArrayList<String> farmerNames;
+    private ArrayList<String> fatherNames;
     private ArrayList<String> farmerFatherNames;
 
     //spinner
     private Spinner name;
-    private Spinner fname;
+    private Spinner vCodeSpinner;
+    private ProgressBar vCodeProgressBar;
+    private ArrayList<String> villageNames;
+    private String pk;
+    private String actionTaken = "FIR";
+    private ProgressBar nameProgressBar;
     private ToggleButton ownerlease;
     private ToggleButton action;
     private boolean isRequestFinished = false;
     private boolean isTextChanged = false;
     private boolean isBusy = false;
+    private NotificationManagerCompat notificationManager;
+    private EditText chalaanEdittext;
+    private Button addChalaanButton;
+    private ImageView chalaanImageView;
+    private File chalaanFile = null;
+    private String imageFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkin_form);
-//        intent = getIntent();
-//        String id = intent.getStringExtra("id");
-//        locationId = Integer.parseInt(id);
+        intent = getIntent();
+        String id = intent.getStringExtra("id");
+        locationId = Integer.parseInt(id);
         SharedPreferences prefs = getSharedPreferences("tokenFile", MODE_PRIVATE);
+        pk = prefs.getString("pk", "");
         token = prefs.getString("token", "");
         getSupportActionBar().setTitle("Report Filing");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Log.d(TAG, "onCreate: TOKEN " + token);
         recyclerView = findViewById(R.id.pics_recyclerview);
-        khasraNo = findViewById(R.id.khasra_no);
         remarkText = findViewById(R.id.ado_report_remarks);
         incidentText = findViewById(R.id.incident_reason);
         pickImageButton = findViewById(R.id.pick_photo);
         submitButton = findViewById(R.id.submit_report_ado);
         villageEditText = findViewById(R.id.village_code);
         mobileEditText = findViewById(R.id.mobile_no);
-
+        chalaanEdittext = findViewById(R.id.chalaan_amount);
+        addChalaanButton = findViewById(R.id.chalaan_photo_button);
+        chalaanImageView = findViewById(R.id.chalaan_photo);
 
         // reference to spinners
         name = findViewById(R.id.sname);
-        fname = findViewById(R.id.sfname);
+        vCodeSpinner = findViewById(R.id.vCodeSpinner);
+        vCodeProgressBar = findViewById(R.id.vCodespinner_progressbar);
+        //fname = findViewById(R.id.sfname);
+        nameProgressBar = findViewById(R.id.spinner_progressbar);
         //reference to toggle button
         ownerlease = findViewById(R.id.toggleol);
         action = findViewById(R.id.toggleaction);
-
+        notificationManager = NotificationManagerCompat.from(this);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mImages = new ArrayList<>();
         mImagesPath = new ArrayList<>();
@@ -128,16 +158,80 @@ public class CheckInActivity extends AppCompatActivity {
         pickImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openImagePicker();
+                //openImagePicker();
+                openCameraIntent();
             }
         });
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mImages.isEmpty())
-                    Toast.makeText(CheckInActivity.this, "Please add atleast one picture!", Toast.LENGTH_SHORT).show();
-                else
-                    submitReport();
+                if (actionTaken.equals("Chalaan")) {
+                    if (chalaanFile == null)
+                        Toast.makeText(CheckInActivity.this, "Please add a photo of" +
+                                " Chalaan", Toast.LENGTH_SHORT).show();
+                    else if (mImages.isEmpty())
+                        Toast.makeText(CheckInActivity.this, "Please add atleast one picture of incident!",
+                                Toast.LENGTH_SHORT).show();
+                    else {
+                        showdialogbox("Sumbit Report", "Are you sure?", "Yes",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        if (villageEditText.getText().toString().isEmpty())
+                                            Toast.makeText(CheckInActivity.this, "Please enter Village Code",
+                                                    Toast.LENGTH_SHORT).show();
+                                        else if (name.getSelectedItemPosition() == 0 || farmerNames == null)
+                                            Toast.makeText(CheckInActivity.this, "Please select a farmer name and" +
+                                                    " father name", Toast.LENGTH_LONG).show();
+                                        else if (remarkText.getText().toString().isEmpty())
+                                            Toast.makeText(CheckInActivity.this, "Please fill Remarks",
+                                                    Toast.LENGTH_SHORT).show();
+                                        else if (incidentText.getText().toString().isEmpty())
+                                            Toast.makeText(CheckInActivity.this, "Please fill Incident " +
+                                                    "Reason", Toast.LENGTH_SHORT).show();
+                                        else
+                                            submitReport();
+                                    }
+                                }, "No",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                }, true);
+                    }
+                } else if (mImages.isEmpty())
+                    Toast.makeText(CheckInActivity.this, "Please add atleast one picture of incident!",
+                            Toast.LENGTH_SHORT).show();
+                else {
+                    showdialogbox("Sumbit Report", "Are you sure?", "Yes",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    if (villageEditText.getText().toString().isEmpty())
+                                        Toast.makeText(CheckInActivity.this, "Please enter Village Code",
+                                                Toast.LENGTH_SHORT).show();
+                                    else if (name.getSelectedItemPosition() == 0 || farmerNames == null)
+                                        Toast.makeText(CheckInActivity.this, "Please select a farmer name and" +
+                                                " father name", Toast.LENGTH_LONG).show();
+                                    else if (remarkText.getText().toString().isEmpty())
+                                        Toast.makeText(CheckInActivity.this, "Please fill Remarks",
+                                                Toast.LENGTH_SHORT).show();
+                                    else if (incidentText.getText().toString().isEmpty())
+                                        Toast.makeText(CheckInActivity.this, "Please fill Incident " +
+                                                "Reason", Toast.LENGTH_SHORT).show();
+                                    else
+                                        submitReport();
+                                }
+                            }, "No",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            }, true);
+                }
+
             }
         });
 
@@ -158,25 +252,69 @@ public class CheckInActivity extends AppCompatActivity {
                 isRequestFinished = false;
             }
         });
+
         name.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Log.d(TAG, "onTouch: outside " + isRequestFinished + " " + isTextChanged);
-                if (!isTextChanged)
-                    Toast.makeText(CheckInActivity.this, "Please fill the Village Code first", Toast.LENGTH_SHORT).show();
+                String villCode = villageEditText.getText().toString().trim();
+
+                if (villCode.isEmpty())
+                    Toast.makeText(CheckInActivity.this, "Please fill the Village Code", Toast.LENGTH_SHORT).show();
                 else if (!isRequestFinished && motionEvent.getAction() == MotionEvent.ACTION_DOWN && !isBusy) {
                     Log.d(TAG, "onTouch: ");
-                    getFarmerDetails();
-
-                    ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, farmerNames);
-                    adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    ArrayAdapter<String> adapterfname = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
-                    adapterfname.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                    name.setAdapter(adaptername);
-                    fname.setAdapter(adapterfname);
+                    nameProgressBar.setVisibility(View.VISIBLE);
+                    getFarmerDetails(villCode);
                 }
                 return false;
+            }
+        });
+
+        action.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    actionTaken = action.getTextOn().toString();
+                    chalaanEdittext.setVisibility(View.VISIBLE);
+                    addChalaanButton.setVisibility(View.VISIBLE);
+                    Log.d(TAG, "onCheckedChanged: " + b + " " + action.getTextOn().toString());
+                } else {
+                    actionTaken = action.getTextOff().toString();
+                    chalaanEdittext.setVisibility(View.GONE);
+                    addChalaanButton.setVisibility(View.GONE);
+                    chalaanImageView.setVisibility(View.GONE);
+                    chalaanFile = null;
+                    Log.d(TAG, "onCheckedChanged: " + b + " " + action.getTextOff().toString());
+                }
+            }
+        });
+
+        addChalaanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                File file = Environment.getExternalStorageDirectory();
+                String start = file.getAbsolutePath();
+                new ChooserDialog(CheckInActivity.this)
+                        .withStartFile(start)
+                        .withChosenListener(new ChooserDialog.Result() {
+                            @Override
+                            public void onChoosePath(String s, File file) {
+                                chalaanFile = file;
+                                Glide.with(CheckInActivity.this)
+                                        .load(file)
+                                        .into(chalaanImageView);
+                                chalaanImageView.setVisibility(View.VISIBLE);
+                                Log.d(TAG, "onChoosePath: rectest" + mImages + mImagesPath);
+                            }
+                        })
+                        .withOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialogInterface) {
+                                dialogInterface.cancel();
+                            }
+                        })
+                        .build()
+                        .show();
             }
         });
     }
@@ -211,6 +349,47 @@ public class CheckInActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void openCameraIntent() {
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (pictureIntent.resolveActivity(getPackageManager()) != null) {
+
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                Log.d(TAG, "openCameraIntent: IOEXCEPTION PHOTOFILE: " + e.getMessage());
+                e.printStackTrace();
+                return;
+            }
+            Uri photoUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", photoFile);
+            pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            pictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivityForResult(pictureIntent, IMAGE_CAPTURE_RC);
+        }
+    }
+
+    private File createImageFile() throws IOException {
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        imageFilePath = image.getAbsolutePath();
+        return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == IMAGE_CAPTURE_RC) {
+            if (resultCode == RESULT_OK) {
+                mImagesPath.add(imageFilePath);
+                //File file = new File(imageFilePath);
+                //mImages.add(file);
+                adapter.notifyDataSetChanged();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     private void submitReport() {
         reportSubmitLoading = new SpotsDialog.Builder().setContext(this).setMessage("Submitting Report").setCancelable(false)
@@ -223,18 +402,23 @@ public class CheckInActivity extends AppCompatActivity {
             try {
                 String remarks = remarkText.getText().toString();
                 String incidentReason = incidentText.getText().toString();
-                String farmername = (String) name.getSelectedItem();
-                String fathername = (String) name.getSelectedItem();
+                String farmername = farmerNames.get(name.getSelectedItemPosition() - 1);
+                String fathername = fatherNames.get(name.getSelectedItemPosition() - 1);
                 String rtype = (String) ownerlease.getText();
-                String actiontype = (String) action.getText();
+                String mobile = mobileEditText.getText().toString();
 
                 postParams.put("farmer_name", farmername);
                 postParams.put("father_name", fathername);
+                postParams.put("farmer_code", "bfhsdf");
+                postParams.put("village_code", " dfddfs");
                 postParams.put("ownership", rtype);
-                postParams.put("action", actiontype);
+                postParams.put("action", actionTaken);
                 postParams.put("location", locationId);
                 postParams.put("remarks", remarks);
                 postParams.put("incident_reason", incidentReason);
+                postParams.put("kila_num", "fgdfgfd");
+                postParams.put("murrabba_num", "bdhfbh");
+                //postParams.put("number", mobile);
 
             } catch (JSONException e) {
                 Toast.makeText(this, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
@@ -284,12 +468,25 @@ public class CheckInActivity extends AppCompatActivity {
     }
 
     private void uploadPhotos() {
+        if (actionTaken.equals("chalaan"))
+            mImages.add(chalaanFile);
+        final int progressMax = mImages.size();
+        final boolean[] isUploaded = new boolean[1];
+        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle("Upload")
+                .setContentText("Uploading Photos")
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setProgress(progressMax, 0, false);
+        notificationManager.notify(1, notificationBuilder.build());
         for (int pos = 0; pos < mImages.size(); pos++) {
             final int finalPos = pos;
             AndroidNetworking.upload(imageUploadUrl)
                     .addHeaders("Authorization", "Token " + token)
-                    .addHeaders("report", reportId)
-                    .addMultipartFile("", mImages.get(pos))
+                    .addMultipartParameter("report", reportId)
+                    .addMultipartFile("image", mImages.get(pos))
                     .setTag("Upload Images")
                     .setPriority(Priority.HIGH)
                     .build()
@@ -297,6 +494,10 @@ public class CheckInActivity extends AppCompatActivity {
                         @Override
                         public void onProgress(long bytesUploaded, long totalBytes) {
                             Log.d(TAG, "onProgress: " + bytesUploaded + "files uploaded: " + finalPos);
+                            if (bytesUploaded == totalBytes) {
+                                notificationBuilder.setProgress(progressMax, finalPos + 1, false);
+                                notificationManager.notify(1, notificationBuilder.build());
+                            }
                         }
                     })
                     .getAsJSONObject(new JSONObjectRequestListener() {
@@ -304,24 +505,39 @@ public class CheckInActivity extends AppCompatActivity {
                         public void onResponse(JSONObject response) {
                             Log.d(TAG, "onResponse: " + response);
                             Toast.makeText(CheckInActivity.this, "Photos Uploaded", Toast.LENGTH_SHORT).show();
+                            isUploaded[0] = true;
+                            notificationBuilder.setContentText("Upload Successful!")
+                                    .setProgress(0, 0, false)
+                                    .setOngoing(false);
+                            notificationManager.notify(1, notificationBuilder.build());
+                            Toast.makeText(CheckInActivity.this, "Report Submitted Successfully", Toast.LENGTH_SHORT).show();
+                            reportSubmitLoading.dismiss();
+                            finish();
                         }
 
                         @Override
                         public void onError(ANError anError) {
                             Log.d(TAG, "onError: " + anError.getErrorBody());
+                            isUploaded[0] = false;
+                            notificationBuilder.setContentText("Upload Failed")
+                                    .setProgress(0, 0, false)
+                                    .setOngoing(false);
+                            notificationManager.notify(1, notificationBuilder.build());
+                            reportSubmitLoading.dismiss();
+                            Toast.makeText(CheckInActivity.this, "Photos Upload failed, please try again", Toast.LENGTH_SHORT).show();
                         }
                     });
 
         }
     }
 
-    private void getFarmerDetails() {
+    private void getFarmerDetails(final String villCode) {
         isBusy = true;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         farmerNames = new ArrayList<>();
+        fatherNames = new ArrayList<>();
         farmerFatherNames = new ArrayList<>();
-        final String villageCode = villageEditText.getText().toString().trim();
-        String finalUrl = farmerDetailsUrl + "?key=agriHr@CRM&vCode=" + villageCode;
+        String finalUrl = farmerDetailsUrl + "?key=agriHr@CRM&vCode=" + villCode;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, finalUrl, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -329,25 +545,44 @@ public class CheckInActivity extends AppCompatActivity {
                         try {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             JSONArray dataArray = rootObject.getJSONArray("data");
-                            if (dataArray.length() == 0) {
+                            Log.d(TAG, "onResponse: DATAARRAY " + dataArray.length());
+                            farmerFatherNames.add("Farmer Name, Father Name");
+                            /*if (dataArray.length() == 0) {
                                 Toast toast = Toast.makeText(CheckInActivity.this, "No Data Found for Village Code "
-                                        + villageCode, Toast.LENGTH_SHORT);
+                                        + villCode, Toast.LENGTH_SHORT);
                                 toast.setGravity(Gravity.CENTER, 0, 0);
                                 toast.show();
                                 isBusy = false;
-                            }
+                            }*/
                             for (int i = 0; i < dataArray.length(); i++) {
                                 JSONObject singleObject = dataArray.getJSONObject(i);
+                                String farmerId = singleObject.getString("idFarmer");
                                 String farmerName = singleObject.getString("FarmerName");
                                 farmerNames.add(farmerName);
-                                String farmerFatherName = singleObject.getString("father_name");
-                                farmerFatherNames.add(farmerFatherName);
-                                isRequestFinished = true;
-                                isBusy = false;
+                                String fatherName = singleObject.getString("father_name");
+                                fatherNames.add(fatherName);
+                                farmerFatherNames.add(farmerName + ", " + fatherName);
                             }
+                            String message = rootObject.getString("message");
+                            if (farmerNames.size() == 0)
+                                Toast.makeText(CheckInActivity.this, message, Toast.LENGTH_SHORT).show();
+                            else {
+                                ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),
+                                        android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
+                                adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                name.setAdapter(adaptername);
+//                                ArrayAdapter<String> adapterfname = new ArrayAdapter<>(getApplicationContext(),
+//                                        android.R.layout.simple_dropdown_item_1line, fatherNames);
+//                                adapterfname.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                //fname.setAdapter(adapterfname);
+                            }
+                            nameProgressBar.setVisibility(View.GONE);
+                            isRequestFinished = true;
+                            isBusy = false;
                             Log.d(TAG, "onResponse: FARMER" + farmerNames.size());
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            nameProgressBar.setVisibility(View.GONE);
                         }
                     }
                 },
@@ -361,11 +596,74 @@ public class CheckInActivity extends AppCompatActivity {
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
                         }
+                        nameProgressBar.setVisibility(View.GONE);
                     }
                 }) {
         };
         requestQueue.add(jsonObjectRequest);
     }
 
+    private void getVillageCode() {
+        String url = "";
+        villageNames = new ArrayList<>();
+        if (!pk.equals("")) {
+            url = "http://13.235.100.235:8000/api/user/" + pk + "/";
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONObject rootObject = new JSONObject(String.valueOf(response));
+                                JSONObject villageObject = rootObject.getJSONObject("village");
+                                String village = villageObject.getString("village");
+                                villageNames.add(village);
+                                ArrayAdapter<String> vCodeSpinnerAdapter = new ArrayAdapter<String>(CheckInActivity.this,
+                                        android.R.layout.simple_dropdown_item_1line, villageNames);
+                                vCodeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                vCodeSpinner.setAdapter(vCodeSpinnerAdapter);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Log.d(TAG, "onResponse: getVillageCode JSON " + e);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(TAG, "onErrorResponse: getVillageCode " + error);
+                            if (error instanceof NoConnectionError)
+                                Toast.makeText(CheckInActivity.this, "Please Check your" +
+                                        " internet connection!", Toast.LENGTH_LONG).show();
+                            else
+                                Toast.makeText(CheckInActivity.this, "Something went wrong, Please try again!",
+                                        Toast.LENGTH_LONG).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("Authorization", "Token " + token);
+                    return map;
+                }
+            };
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            requestQueue.add(jsonObjectRequest);
+        }
+    }
+
+    private AlertDialog showdialogbox(String title, String msg, String positiveLabel, DialogInterface.OnClickListener positiveOnclick,
+                                      String negativeLabel, DialogInterface.OnClickListener negativeOnclick,
+                                      boolean isCancelable) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setPositiveButton(positiveLabel, positiveOnclick);
+        builder.setNegativeButton(negativeLabel, negativeOnclick);
+        builder.setCancelable(isCancelable);
+        AlertDialog alert = builder.create();
+        alert.show();
+        return alert;
+    }
 }
 

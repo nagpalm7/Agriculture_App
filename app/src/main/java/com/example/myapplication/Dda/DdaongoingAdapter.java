@@ -1,20 +1,19 @@
 package com.example.myapplication.Dda;
 
 import android.content.Context;
-
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.Ado.ReviewReport;
 import com.example.myapplication.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
-
 
 import java.util.ArrayList;
 
@@ -24,7 +23,7 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
     private ArrayList<String> mtextview3;
     private Context mcontext;
     public boolean showongoingshimmer = true;
-    private int shimmer_item_count = 6;
+    private int shimmer_item_count = 4;
 
     public DdaongoingAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2,ArrayList<String> mtextview3) {
         this.mcontext = mcontext;
@@ -35,9 +34,19 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
 
     @NonNull
     @Override
-    public ViewHolderOngoingDda onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolderOngoingDda onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mcontext).inflate(R.layout.ddaongoinglist, parent, false);
-        ViewHolderOngoingDda viewHolderOngoingDda = new ViewHolderOngoingDda(view);
+        final ViewHolderOngoingDda viewHolderOngoingDda = new ViewHolderOngoingDda(view);
+        viewHolderOngoingDda.cardongoing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mcontext, ReviewReport.class);
+                int pos = viewHolderOngoingDda.getAdapterPosition();
+                intent.putExtra("id", mtextview1.get(pos));
+                intent.putExtra("isDdo", true);
+                mcontext.startActivity(intent);
+            }
+        });
         return viewHolderOngoingDda;
     }
 

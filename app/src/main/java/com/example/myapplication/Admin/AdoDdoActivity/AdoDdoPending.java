@@ -143,7 +143,7 @@ public class AdoDdoPending extends Fragment {
                                 adapter.mshowshimmer = false;
                                 adapter.notifyDataSetChanged();
 
-                                view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
                                 //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
                             }
                             Log.d(TAG, "onResponse: "+resultsArray.length());
@@ -209,7 +209,7 @@ public class AdoDdoPending extends Fragment {
                                 adapter.mshowshimmer = false;
                                 adapter.notifyDataSetChanged();
 
-                                view.setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                                view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
                                 //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
                             }
                             Log.d(TAG, "onResponse: "+resultsArray.length());
