@@ -39,6 +39,7 @@ public class ddo_fragment extends Fragment {
     private ArrayList<String> username;
     private ArrayList<String> userinfo;
     private ArrayList<String> mUserId;
+    private ArrayList<String> mPkList;
     private String mUrl = "http://13.235.100.235:8000/api/users-list/dda/";
     private final String TAG = "ddo_fragment";
     private RecyclerViewAdater recyclerViewAdater;
@@ -64,8 +65,9 @@ public class ddo_fragment extends Fragment {
         username = new ArrayList<>();
         userinfo = new ArrayList<>();
         mUserId = new ArrayList<>();
+        mPkList = new ArrayList<>();
         progressBar = view.findViewById(R.id.ddo_list_progressbar);
-        recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, mUserId, true);
+        recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, mUserId, true, mPkList);
         RecyclerView Rview = view.findViewById(R.id.recyclerViewddo);
         Rview.setAdapter(recyclerViewAdater);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -96,10 +98,11 @@ public class ddo_fragment extends Fragment {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));
                         JSONObject districtObject = singleObject.getJSONObject("district");
-                        userinfo.add(districtObject.getString("district") + ", " +
-                                districtObject.getString("district_code"));
+                        userinfo.add(districtObject.getString("district"));
                         JSONObject authObject = singleObject.getJSONObject("auth_user");
-                        String id = authObject.getString("pk");
+                        String pk = authObject.getString("pk");
+                        mPkList.add(pk);
+                        String id = singleObject.getString("id");
                         mUserId.add(id);
                     }
                     Log.d(TAG, "onResponse: " + username);
@@ -166,10 +169,13 @@ public class ddo_fragment extends Fragment {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));
                         JSONObject districtObject = singleObject.getJSONObject("district");
-                        userinfo.add(districtObject.getString("district") + ", " +
-                                districtObject.getString("district_code"));
+                        userinfo.add(districtObject.getString("district"));
+                        JSONObject authObject = singleObject.getJSONObject("auth_user");
+                        String pk = authObject.getString("pk");
+                        mPkList.add(pk);
                         String id = singleObject.getString("id");
                         mUserId.add(id);
+
                     }
                     Log.d(TAG, "onResponse: " + username);
                     recyclerViewAdater.notifyDataSetChanged();

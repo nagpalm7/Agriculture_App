@@ -45,7 +45,6 @@ public class pending_fragment extends Fragment {
     private String villagename;
     private String blockname;
     private String district;
-    private String state;
 
     //tags
     private static final String TAG = "pending_fragment";
@@ -92,19 +91,17 @@ public class pending_fragment extends Fragment {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     next_assigned_url = jsonObject.getString("next");
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
-                    if(jsonArray.length()== 0){
+                    if (jsonArray.length() == 0 && mDdaName.isEmpty()) {
                         recyclerViewAdater.mShowShimmer = false;
                         recyclerViewAdater.notifyDataSetChanged();
 
                         view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
-                        //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
                     }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
-                        state = c.getString("state");
                         JSONObject mDdaObject = c.getJSONObject("dda");
                         String ddaName = mDdaObject.getString("name");
                         mDdaName.add(ddaName);
@@ -119,7 +116,7 @@ public class pending_fragment extends Fragment {
                             mAdaName.add("Not Assigned");
                             Log.d(TAG, "exception: ");
                         }
-                        mAddress.add(villagename + "," + blockname + "," + district + "," + state);
+                        mAddress.add(villagename + "," + blockname + "," + district);
                         Log.d(TAG, "onResponse: next");
                     }
                     recyclerViewAdater.mShowShimmer = false;
@@ -158,7 +155,6 @@ public class pending_fragment extends Fragment {
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
-                        state = c.getString("state");
                         JSONObject mDdaObject = c.getJSONObject("dda");
                         String ddaName = mDdaObject.getString("name");
                         mDdaName.add(ddaName);
@@ -170,7 +166,7 @@ public class pending_fragment extends Fragment {
                         } catch (JSONException e) {
                             mAdaName.add("Not Assigned");
                         }
-                        mAddress.add(villagename + "," + blockname + "," + district + "," + state);
+                        mAddress.add(villagename + "," + blockname + "," + district);
                     }
                     requestQueue.add(jsonObjectRequest2);
                 } catch (JSONException e) {
@@ -252,7 +248,6 @@ public class pending_fragment extends Fragment {
                             villagename = c.getString("village_name");
                             blockname = c.getString("block_name");
                             district = c.getString("district");
-                            state = c.getString("state");
                             JSONObject mDdaObject = c.getJSONObject("dda");
                             String ddaName = mDdaObject.getString("name");
                             mDdaName.add(ddaName);
@@ -263,7 +258,7 @@ public class pending_fragment extends Fragment {
                             } catch (JSONException e) {
                                 mAdaName.add("Not Assigned");
                             }
-                            mAddress.add(villagename + "," + blockname + "," + district + "," + state);
+                            mAddress.add(villagename + "," + blockname + "," + district);
                             recyclerViewAdater.notifyDataSetChanged();
                             isNextBusy = false;
                         }
@@ -307,7 +302,6 @@ public class pending_fragment extends Fragment {
                             villagename = c.getString("village_name");
                             blockname = c.getString("block_name");
                             district = c.getString("district");
-                            state = c.getString("state");
                             JSONObject mDdaObject = c.getJSONObject("dda");
                             String ddaName = mDdaObject.getString("name");
                             mDdaName.add(ddaName);
@@ -318,7 +312,7 @@ public class pending_fragment extends Fragment {
                             } catch (JSONException e) {
                                 mAdaName.add("Not Assigned");
                             }
-                            mAddress.add(villagename + "," + blockname + "," + district + "," + state);
+                            mAddress.add(villagename + "," + blockname + "," + district);
                             recyclerViewAdater.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {

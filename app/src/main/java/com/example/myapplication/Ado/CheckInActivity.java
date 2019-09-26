@@ -383,8 +383,8 @@ public class CheckInActivity extends AppCompatActivity {
         if (requestCode == IMAGE_CAPTURE_RC) {
             if (resultCode == RESULT_OK) {
                 mImagesPath.add(imageFilePath);
-                //File file = new File(imageFilePath);
-                //mImages.add(file);
+                File file = new File(imageFilePath);
+                mImages.add(file);
                 adapter.notifyDataSetChanged();
             }
         }

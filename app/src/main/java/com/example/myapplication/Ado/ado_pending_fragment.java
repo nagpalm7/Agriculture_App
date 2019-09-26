@@ -48,6 +48,7 @@ public class ado_pending_fragment extends Fragment {
     private String nextUrl;
     private boolean isNextBusy = false;
     View view;
+    private boolean isRefresh;
 
     @Nullable
     @Override
@@ -58,6 +59,7 @@ public class ado_pending_fragment extends Fragment {
         longitude = new ArrayList<>();
         latitude = new ArrayList<>();
         idList = new ArrayList<>();
+        isRefresh = false;
         Log.d("pending", "onCreateView: ");
         //add data in the array with load data
         getData(url);
@@ -158,5 +160,31 @@ public class ado_pending_fragment extends Fragment {
             }
         };
         requestQueue.add(jsonObjectRequest);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
+        isRefresh = false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+        isRefresh = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+        if (isRefresh) {
+            getFragmentManager().beginTransaction().detach(ado_pending_fragment.this)
+                    .attach(ado_pending_fragment.this).commit();
+            Log.d(TAG, "onResume: REFRESH");
+            isRefresh = false;
+        }
     }
 }

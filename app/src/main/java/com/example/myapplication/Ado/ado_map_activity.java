@@ -126,10 +126,7 @@ public class ado_map_activity extends AppCompatActivity
                     //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
                     map.setMinZoomPreference(map.getCameraPosition().zoom);*/
 
-                    Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
-                    //marking the position
-                    map.addMarker(Dlocation);
 
                     buildGoogleApiClient();
                     map.setMyLocationEnabled(true);
@@ -411,7 +408,7 @@ public class ado_map_activity extends AppCompatActivity
 
     public void onClickCheckIn(View view) {
 
-        if (isEntered) {
+        if (true) {
             Intent intent = new Intent(this, CheckInActivity.class);
             intent.putExtra("id", id);
             Log.d(TAG, "onClickCheckIn: " + id);
@@ -468,6 +465,11 @@ public class ado_map_activity extends AppCompatActivity
         /*//move map camera
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11));
         map.moveCamera();*/
+
+        Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
+        //marking the position
+        map.addMarker(Dlocation);
     }
 
 
@@ -498,7 +500,6 @@ public class ado_map_activity extends AppCompatActivity
     @Override
     public void onPause() {
         super.onPause();
-
         //stop location updates when Activity is no longer active
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
