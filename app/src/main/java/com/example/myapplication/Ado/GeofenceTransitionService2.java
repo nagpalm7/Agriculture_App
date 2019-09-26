@@ -11,14 +11,14 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
 
-public class GeofenceTransitionService extends IntentService {
+public class GeofenceTransitionService2 extends IntentService {
 
 
-    public GeofenceTransitionService(String name) {
+    public GeofenceTransitionService2(String name) {
         super(name);
     }
 
-    public GeofenceTransitionService(){
+    public GeofenceTransitionService2(){
         super("GeofenceTransitionService");
     }
 
@@ -37,14 +37,9 @@ public class GeofenceTransitionService extends IntentService {
         int geofencingTransition = geofencingEvent.getGeofenceTransition();
 
         if (geofencingTransition == Geofence.GEOFENCE_TRANSITION_ENTER){
-            Log.d("intentservice", "onHandleIntent: heretooo");
+            Log.d("intentservice", "onHandleIntent: heretooo2");
 
-
-
-
-
-
-                ado_map_activity.getStatus(true);
+            CheckInActivity.getStatus(true);
 
         }
 

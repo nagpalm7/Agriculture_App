@@ -66,7 +66,7 @@ public class ado_map_activity extends AppCompatActivity
     private final int RESULT_CODE = 786;
     private GoogleMap map = null;
     private final String TAG = "ado_map_activity";
-    private boolean isEntered = false;
+    public static boolean isEntered = false;
 
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
@@ -126,7 +126,10 @@ public class ado_map_activity extends AppCompatActivity
                     //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
                     map.setMinZoomPreference(map.getCameraPosition().zoom);*/
 
+                    Dlocation = new MarkerOptions().position(new LatLng(30.76338, 76.7689826)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
+                    //marking the position
+                    map.addMarker(Dlocation);
 
                     buildGoogleApiClient();
                     map.setMyLocationEnabled(true);
@@ -171,12 +174,12 @@ public class ado_map_activity extends AppCompatActivity
                     .center(Dlocation.getPosition())
                     .strokeColor(Color.argb(50, 70, 70, 70))
                     .fillColor(Color.argb(100, 150, 150, 150))
-                    .radius(400f);
+                    .radius(250f);
         } else {
             circleOptions = new CircleOptions()
                     .center(Dlocation.getPosition())
                     .strokeColor(Color.argb(50, 70, 70, 70))
-                    .radius(400f);
+                    .radius(250f);
 
 
         }
@@ -201,7 +204,8 @@ public class ado_map_activity extends AppCompatActivity
 
         Intent intent = new Intent(this, GeofenceTransitionService.class);
 
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        geofencePendingIntent =PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return geofencePendingIntent;
     }
 
     private GeofencingRequest creategeofencerequest(Geofence geofence) {
@@ -401,16 +405,20 @@ public class ado_map_activity extends AppCompatActivity
         startActivity(intent);
     }
 
-    void getStatus(Boolean status){
+    public static void  getStatus(Boolean status){
+        Log.d("getstatus", "getStatus: herehere"+ status);
         isEntered = status;
     }
 
 
     public void onClickCheckIn(View view) {
+        Log.d(TAG, "onClickCheckIn: is "+isEntered);
 
-        if (true) {
+        if (isEntered) {
             Intent intent = new Intent(this, CheckInActivity.class);
             intent.putExtra("id", id);
+            intent.putExtra("lat",latitude);
+            intent.putExtra("long",longitude);
             Log.d(TAG, "onClickCheckIn: " + id);
             startActivity(intent);
         }
@@ -465,11 +473,6 @@ public class ado_map_activity extends AppCompatActivity
         /*//move map camera
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11));
         map.moveCamera();*/
-
-        Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-
-        //marking the position
-        map.addMarker(Dlocation);
     }
 
 

@@ -11,6 +11,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
+
+        <service android:name=".Ado.GeofenceTransitionService"/>
+        <service android:name=".Ado.GeofenceTransitionService2"/>
+
+
+
         <activity android:name=".Ado.ReviewReport"></activity>
         <activity android:name=".Admin.EditActivity" />
         <activity android:name=".Ado.CheckInActivity" />
