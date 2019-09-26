@@ -1,9 +1,11 @@
 package com.example.myapplication.Ado;
 
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -48,6 +51,18 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.obsez.android.lib.filechooser.ChooserDialog;
 
 import org.json.JSONArray;
@@ -67,7 +82,13 @@ import dmax.dialog.SpotsDialog;
 
 import static com.example.myapplication.AppNotificationChannels.CHANNEL_1_ID;
 
-public class CheckInActivity extends AppCompatActivity {
+public class CheckInActivity extends AppCompatActivity
+        implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener,
+        ResultCallback<Status> {
+
     private RecyclerView recyclerView;
     private EditText remarkText;
     private EditText incidentText;
@@ -90,6 +111,7 @@ public class CheckInActivity extends AppCompatActivity {
     private boolean isReportSubmitted = false;
     private String TAG = "CheckInActivity";
     private String farmerDetailsUrl = "http://117.240.196.238:8080/api/CRM/getFarmerDetail";
+    public static  boolean isEntered = false;
 
     //arraylist
     private ArrayList<String> farmerNames;
@@ -115,12 +137,18 @@ public class CheckInActivity extends AppCompatActivity {
     private ImageView chalaanImageView;
     private File chalaanFile = null;
     private String imageFilePath;
+    private LocationRequest mLocationRequest;
+    GoogleApiClient mGoogleApiClient;
+    private MarkerOptions Dlocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkin_form);
         intent = getIntent();
+        Double latitude = intent.getDoubleExtra("lat",0);
+        Double longitude = intent.getDoubleExtra("long",0);
+
         String id = intent.getStringExtra("id");
         locationId = Integer.parseInt(id);
         SharedPreferences prefs = getSharedPreferences("tokenFile", MODE_PRIVATE);
@@ -139,6 +167,9 @@ public class CheckInActivity extends AppCompatActivity {
         chalaanEdittext = findViewById(R.id.chalaan_amount);
         addChalaanButton = findViewById(R.id.chalaan_photo_button);
         chalaanImageView = findViewById(R.id.chalaan_photo);
+        Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        buildGoogleApiClient();
+
 
         // reference to spinners
         name = findViewById(R.id.sname);
@@ -162,14 +193,50 @@ public class CheckInActivity extends AppCompatActivity {
                 openCameraIntent();
             }
         });
+
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (actionTaken.equals("Chalaan")) {
-                    if (chalaanFile == null)
-                        Toast.makeText(CheckInActivity.this, "Please add a photo of" +
-                                " Chalaan", Toast.LENGTH_SHORT).show();
-                    else if (mImages.isEmpty())
+                Log.d(TAG, "onClick: koko  "+isEntered);
+                if(isEntered){
+                    Log.d(TAG, "onClick: inside it damn!");
+
+                    if (actionTaken.equals("Chalaan")) {
+                        if (chalaanFile == null)
+                            Toast.makeText(CheckInActivity.this, "Please add a photo of" +
+                                    " Chalaan", Toast.LENGTH_SHORT).show();
+                        else if (mImages.isEmpty())
+                            Toast.makeText(CheckInActivity.this, "Please add atleast one picture of incident!",
+                                    Toast.LENGTH_SHORT).show();
+                        else {
+                            showdialogbox("Sumbit Report", "Are you sure?", "Yes",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            if (villageEditText.getText().toString().isEmpty())
+                                                Toast.makeText(CheckInActivity.this, "Please enter Village Code",
+                                                        Toast.LENGTH_SHORT).show();
+                                            else if (name.getSelectedItemPosition() == 0 || farmerNames == null)
+                                                Toast.makeText(CheckInActivity.this, "Please select a farmer name and" +
+                                                        " father name", Toast.LENGTH_LONG).show();
+                                            else if (remarkText.getText().toString().isEmpty())
+                                                Toast.makeText(CheckInActivity.this, "Please fill Remarks",
+                                                        Toast.LENGTH_SHORT).show();
+                                            else if (incidentText.getText().toString().isEmpty())
+                                                Toast.makeText(CheckInActivity.this, "Please fill Incident " +
+                                                        "Reason", Toast.LENGTH_SHORT).show();
+                                            else
+                                                submitReport();
+                                        }
+                                    }, "No",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        }
+                                    }, true);
+                        }
+                    } else if (mImages.isEmpty())
                         Toast.makeText(CheckInActivity.this, "Please add atleast one picture of incident!",
                                 Toast.LENGTH_SHORT).show();
                     else {
@@ -200,37 +267,12 @@ public class CheckInActivity extends AppCompatActivity {
                                     }
                                 }, true);
                     }
-                } else if (mImages.isEmpty())
-                    Toast.makeText(CheckInActivity.this, "Please add atleast one picture of incident!",
-                            Toast.LENGTH_SHORT).show();
-                else {
-                    showdialogbox("Sumbit Report", "Are you sure?", "Yes",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    if (villageEditText.getText().toString().isEmpty())
-                                        Toast.makeText(CheckInActivity.this, "Please enter Village Code",
-                                                Toast.LENGTH_SHORT).show();
-                                    else if (name.getSelectedItemPosition() == 0 || farmerNames == null)
-                                        Toast.makeText(CheckInActivity.this, "Please select a farmer name and" +
-                                                " father name", Toast.LENGTH_LONG).show();
-                                    else if (remarkText.getText().toString().isEmpty())
-                                        Toast.makeText(CheckInActivity.this, "Please fill Remarks",
-                                                Toast.LENGTH_SHORT).show();
-                                    else if (incidentText.getText().toString().isEmpty())
-                                        Toast.makeText(CheckInActivity.this, "Please fill Incident " +
-                                                "Reason", Toast.LENGTH_SHORT).show();
-                                    else
-                                        submitReport();
-                                }
-                            }, "No",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-
-                                }
-                            }, true);
                 }
+                else {
+                    Toast.makeText(getApplicationContext(),"enter the location to submit the report",Toast.LENGTH_LONG).show();
+                }
+
+
 
             }
         });
@@ -335,7 +377,7 @@ public class CheckInActivity extends AppCompatActivity {
                     public void onChoosePath(String s, File file) {
                         mImages.add(file);
                         mImagesPath.add(s);
-                        Log.d(TAG, "onChoosePath: rectest"+mImages+mImagesPath);
+                        Log.d(TAG, "onChoosePath: rectest" + mImages + mImagesPath);
                         adapter.notifyDataSetChanged();
                     }
                 })
@@ -512,7 +554,6 @@ public class CheckInActivity extends AppCompatActivity {
                             notificationManager.notify(1, notificationBuilder.build());
                             Toast.makeText(CheckInActivity.this, "Report Submitted Successfully", Toast.LENGTH_SHORT).show();
                             reportSubmitLoading.dismiss();
-                            finish();
                         }
 
                         @Override
@@ -525,8 +566,11 @@ public class CheckInActivity extends AppCompatActivity {
                             notificationManager.notify(1, notificationBuilder.build());
                             reportSubmitLoading.dismiss();
                             Toast.makeText(CheckInActivity.this, "Photos Upload failed, please try again", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
-                    });
+
+                        }
+                    );
 
         }
     }
@@ -664,6 +708,110 @@ public class CheckInActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.show();
         return alert;
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        startgeofence(Dlocation);
+
+
+    }
+    GeofencingRequest geofencingRequest;
+
+    private void startgeofence(MarkerOptions dlocation) {
+        if (dlocation != null) {
+            Geofence geofence = creategeofence(dlocation.getPosition(), 250f);
+            geofencingRequest = creategeofencerequest(geofence);
+            addgeofence(geofence);
+        }
+    }
+
+    private Geofence creategeofence(LatLng position, float v) {
+        return new Geofence.Builder().setRequestId("My Request")
+                .setCircularRegion(position.latitude, position.longitude, v)
+                .setExpirationDuration(60 * 60 * 1000)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                .build();
+
+    }
+
+    private GeofencingRequest creategeofencerequest(Geofence geofence) {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        builder.addGeofence(geofence);
+        return builder.build();
+    }
+
+    private void addgeofence(Geofence geofence) {
+        LocationServices.GeofencingApi.addGeofences(mGoogleApiClient, geofencingRequest, creategeofencePendingIntent())
+                .setResultCallback(this);
+    }
+
+    PendingIntent geofencePendingIntent;
+
+    private PendingIntent creategeofencePendingIntent() {
+
+        if (geofencePendingIntent != null) {
+            return geofencePendingIntent;
+        }
+
+        Intent intent = new Intent(this, GeofenceTransitionService2.class);
+
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public static void getStatus(Boolean status){
+        Log.d("getStatus2", "getStatus: comehere"+ status);
+        isEntered = status;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        //stop location updates when Activity is no longer active
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+    }
+
+
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onResult(@NonNull Status status) {
+        Log.d(TAG, "onResult: "+status);
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
     }
 }
 
