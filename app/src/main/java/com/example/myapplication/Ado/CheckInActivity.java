@@ -736,7 +736,7 @@ public class CheckInActivity extends AppCompatActivity
 
     private void startgeofence(MarkerOptions dlocation) {
         if (dlocation != null) {
-            Geofence geofence = creategeofence(dlocation.getPosition(), 250f);
+            Geofence geofence = creategeofence(dlocation.getPosition(), 400f);
             geofencingRequest = creategeofencerequest(geofence);
             addgeofence(geofence);
         }

@@ -126,7 +126,7 @@ public class ado_map_activity extends AppCompatActivity
                     //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
                     map.setMinZoomPreference(map.getCameraPosition().zoom);*/
 
-                    Dlocation = new MarkerOptions().position(new LatLng(30.76338, 76.7689826)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
                     //marking the position
                     map.addMarker(Dlocation);
@@ -310,6 +310,10 @@ public class ado_map_activity extends AppCompatActivity
 
                         //marking the position
                         map.addMarker(Dlocation);*/
+                        Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
+                        //marking the position
+                        map.addMarker(Dlocation);
 
                         buildGoogleApiClient();
                         map.setMyLocationEnabled(true);
