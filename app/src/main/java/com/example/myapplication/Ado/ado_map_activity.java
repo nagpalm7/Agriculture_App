@@ -310,7 +310,8 @@ public class ado_map_activity extends AppCompatActivity
 
                         //marking the position
                         map.addMarker(Dlocation);*/
-
+                        Dlocation = new MarkerOptions().position(new LatLng(30.76338, 76.7689826)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                        map.addMarker(Dlocation);
                         buildGoogleApiClient();
                         map.setMyLocationEnabled(true);
 

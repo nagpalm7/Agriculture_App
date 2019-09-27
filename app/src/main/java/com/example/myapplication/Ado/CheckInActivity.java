@@ -32,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -140,6 +141,7 @@ public class CheckInActivity extends AppCompatActivity
     private LocationRequest mLocationRequest;
     GoogleApiClient mGoogleApiClient;
     private MarkerOptions Dlocation;
+    private int photosUploadedCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,7 +169,7 @@ public class CheckInActivity extends AppCompatActivity
         chalaanEdittext = findViewById(R.id.chalaan_amount);
         addChalaanButton = findViewById(R.id.chalaan_photo_button);
         chalaanImageView = findViewById(R.id.chalaan_photo);
-        Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        Dlocation = new MarkerOptions().position(new LatLng(30.76338, 76.7689826)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         buildGoogleApiClient();
 
 
@@ -272,8 +274,6 @@ public class CheckInActivity extends AppCompatActivity
                     Toast.makeText(getApplicationContext(),"enter the location to submit the report",Toast.LENGTH_LONG).show();
                 }
 
-
-
             }
         });
 
@@ -367,30 +367,6 @@ public class CheckInActivity extends AppCompatActivity
         return true;
     }
 
-    private void openImagePicker() {
-        File file = Environment.getExternalStorageDirectory();
-        String start = file.getAbsolutePath();
-        new ChooserDialog(this)
-                .withStartFile(start)
-                .withChosenListener(new ChooserDialog.Result() {
-                    @Override
-                    public void onChoosePath(String s, File file) {
-                        mImages.add(file);
-                        mImagesPath.add(s);
-                        Log.d(TAG, "onChoosePath: rectest" + mImages + mImagesPath);
-                        adapter.notifyDataSetChanged();
-                    }
-                })
-                .withOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialogInterface) {
-                        dialogInterface.cancel();
-                    }
-                })
-                .build()
-                .show();
-    }
-
     private void openCameraIntent() {
         Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (pictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -446,7 +422,8 @@ public class CheckInActivity extends AppCompatActivity
                 String incidentReason = incidentText.getText().toString();
                 String farmername = farmerNames.get(name.getSelectedItemPosition() - 1);
                 String fathername = fatherNames.get(name.getSelectedItemPosition() - 1);
-                String rtype = (String) ownerlease.getText();
+                String rtype = ownerlease.getText().toString().toLowerCase();
+                Log.d(TAG, "submitReport: " + rtype);
                 String mobile = mobileEditText.getText().toString();
 
                 postParams.put("farmer_name", farmername);
@@ -454,12 +431,15 @@ public class CheckInActivity extends AppCompatActivity
                 postParams.put("farmer_code", "bfhsdf");
                 postParams.put("village_code", " dfddfs");
                 postParams.put("ownership", rtype);
-                postParams.put("action", actionTaken);
-                postParams.put("location", locationId);
+                //postParams.put("action", actionTaken);
+                postParams.put("location", String.valueOf(locationId));
                 postParams.put("remarks", remarks);
                 postParams.put("incident_reason", incidentReason);
                 postParams.put("kila_num", "fgdfgfd");
                 postParams.put("murrabba_num", "bdhfbh");
+                postParams.put("longitude", "23.123");
+                postParams.put("latitude", "42.123");
+                postParams.put("action", "chalaan");
                 //postParams.put("number", mobile);
 
             } catch (JSONException e) {
@@ -492,7 +472,7 @@ public class CheckInActivity extends AppCompatActivity
                                 Toast.makeText(CheckInActivity.this, "Check your internet connection!", Toast.LENGTH_LONG).show();
                             else {
                                 Toast.makeText(CheckInActivity.this, "Something went wrong, Please try again!", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "onErrorResponse: reportSubmitRequest " + error);
+                                Log.d(TAG, "onErrorResponse: reportSubmitRequest " + error.getStackTrace());
                             }
                             reportSubmitLoading.dismiss();
                         }
@@ -512,18 +492,17 @@ public class CheckInActivity extends AppCompatActivity
     private void uploadPhotos() {
         if (actionTaken.equals("chalaan"))
             mImages.add(chalaanFile);
-        final int progressMax = mImages.size();
-        final boolean[] isUploaded = new boolean[1];
+        final int progressMax = (int) mImages.get(photosUploadedCount).length() - photosUploadedCount;
         final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.logo)
-                .setContentTitle("Upload")
-                .setContentText("Uploading Photos")
-                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setSmallIcon(R.drawable.ic_upload)
+                .setContentTitle("Uploading Photos")
+                .setContentText("0/" + progressMax)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
-                .setProgress(progressMax, 0, false);
+                .setProgress((int) mImages.get(photosUploadedCount).length(), 0, false);
         notificationManager.notify(1, notificationBuilder.build());
-        for (int pos = 0; pos < mImages.size(); pos++) {
+        for (int pos = photosUploadedCount; pos < mImages.size(); pos++) {
             final int finalPos = pos;
             AndroidNetworking.upload(imageUploadUrl)
                     .addHeaders("Authorization", "Token " + token)
@@ -537,7 +516,11 @@ public class CheckInActivity extends AppCompatActivity
                         public void onProgress(long bytesUploaded, long totalBytes) {
                             Log.d(TAG, "onProgress: " + bytesUploaded + "files uploaded: " + finalPos);
                             if (bytesUploaded == totalBytes) {
-                                notificationBuilder.setProgress(progressMax, finalPos + 1, false);
+                                notificationBuilder.setProgress(0, 0, false)
+                                        .setContentText((finalPos + 1) + "/" + mImages.size());
+                                notificationManager.notify(1, notificationBuilder.build());
+                            } else {
+                                notificationBuilder.setProgress((int) totalBytes, (int) (bytesUploaded / totalBytes), false);
                                 notificationManager.notify(1, notificationBuilder.build());
                             }
                         }
@@ -546,27 +529,36 @@ public class CheckInActivity extends AppCompatActivity
                         @Override
                         public void onResponse(JSONObject response) {
                             Log.d(TAG, "onResponse: " + response);
-                            Toast.makeText(CheckInActivity.this, "Photos Uploaded", Toast.LENGTH_SHORT).show();
-                            isUploaded[0] = true;
-                            notificationBuilder.setContentText("Upload Successful!")
-                                    .setProgress(0, 0, false)
-                                    .setOngoing(false);
-                            notificationManager.notify(1, notificationBuilder.build());
-                            Toast.makeText(CheckInActivity.this, "Report Submitted Successfully", Toast.LENGTH_SHORT).show();
-                            reportSubmitLoading.dismiss();
+                            photosUploadedCount++;
+                            if (finalPos == mImages.size() - 1) {
+                                Toast.makeText(CheckInActivity.this, "Photos Uploaded", Toast.LENGTH_SHORT).show();
+                                notificationBuilder.setContentText("Upload Successful!")
+                                        .setProgress(0, 0, false)
+                                        .setOngoing(false);
+                                notificationManager.notify(1, notificationBuilder.build());
+                                Toast.makeText(CheckInActivity.this, "Report Submitted Successfully", Toast.LENGTH_SHORT).show();
+                                reportSubmitLoading.dismiss();
+                                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                Intent intent = new Intent(CheckInActivity.this, com.example.myapplication.login_activity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                notificationBuilder.setProgress(0, 0, false)
+                                        .setContentText((finalPos + 1) + "/" + (int) mImages.get(finalPos + 1).length());
+                                notificationManager.notify(1, notificationBuilder.build());
+                            }
                         }
 
                         @Override
                         public void onError(ANError anError) {
                             Log.d(TAG, "onError: " + anError.getErrorBody());
-                            isUploaded[0] = false;
-                            notificationBuilder.setContentText("Upload Failed")
+                            notificationBuilder.setContentText("Upload Failed!")
                                     .setProgress(0, 0, false)
                                     .setOngoing(false);
                             notificationManager.notify(1, notificationBuilder.build());
                             reportSubmitLoading.dismiss();
                             Toast.makeText(CheckInActivity.this, "Photos Upload failed, please try again", Toast.LENGTH_SHORT).show();
-                            finish();
                         }
 
                         }
