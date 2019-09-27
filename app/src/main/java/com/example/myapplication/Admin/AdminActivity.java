@@ -262,7 +262,7 @@ public class AdminActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_ddo) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new ddo_fragment()).commit();
-            getSupportActionBar().setTitle("DDO");
+            getSupportActionBar().setTitle("DDA");
 
         } else if (id == R.id.nav_ado) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new ado_fragment()).commit();

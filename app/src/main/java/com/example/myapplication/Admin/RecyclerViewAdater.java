@@ -43,6 +43,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
     Context mcontext;
     private boolean isDdoFragment;
     ArrayList<String> mUserId;
+    private ArrayList<String> mPkList;
     private int SHIMMER_ITEM_COUNT = 6;
     private String TAG = "RecyclerViewAdapter";
 
@@ -55,12 +56,13 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
     }
 
     public RecyclerViewAdater(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2,
-                              ArrayList<String> mUserId, boolean isDdoFragment) {
+                              ArrayList<String> mUserId, boolean isDdoFragment, ArrayList<String> pkList) {
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         this.mUserId = mUserId;
         this.mcontext = mcontext;
         this.isDdoFragment = isDdoFragment;
+        mPkList = pkList;
     }
 
     @Override
@@ -87,7 +89,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
             public void onClick(View view) {
                 Intent intent = new Intent(mcontext, EditActivity.class);
                 int pos = viewHolder.getAdapterPosition();
-                intent.putExtra("id", mUserId.get(pos));
+                intent.putExtra("id", mPkList.get(pos));
                 if (isDdoFragment)
                     intent.putExtra("isDdo", true);
                 else

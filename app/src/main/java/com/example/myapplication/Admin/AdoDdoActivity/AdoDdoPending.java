@@ -139,13 +139,6 @@ public class AdoDdoPending extends Fragment {
                                 else
                                     nextPendingUrl = nextUrl;
                             JSONArray resultsArray = rootObject.getJSONArray("results");
-                            if (resultsArray.length() == 0) {
-                                adapter.mshowshimmer = false;
-                                adapter.notifyDataSetChanged();
-
-                                view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
-                                //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
-                            }
                             Log.d(TAG, "onResponse: "+resultsArray.length());
 
                             for (int i = 0; i < resultsArray.length(); i++) {
@@ -205,7 +198,7 @@ public class AdoDdoPending extends Fragment {
                             String nextUrl = rootObject.getString("next");
                             nextUnAssignedUrl = nextUrl;
                             JSONArray resultsArray = rootObject.getJSONArray("results");
-                            if(flag && resultsArray.length() == 0){
+                            if (resultsArray.length() == 0 && mAdoNames.isEmpty()) {
                                 adapter.mshowshimmer = false;
                                 adapter.notifyDataSetChanged();
 

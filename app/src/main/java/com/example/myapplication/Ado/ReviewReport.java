@@ -14,12 +14,14 @@ import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -65,6 +67,7 @@ public class ReviewReport extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ReviewPicsRecyclerviewAdapter adapter;
     private ArrayList<String> mImagesUrl;
+    private String farmerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +152,7 @@ public class ReviewReport extends AppCompatActivity {
                         try {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             String villCode = rootObject.getString("village_code");
-                            //String khasraNo = rootObject.getString("farmer_code");
+                            farmerId = rootObject.getString("farmer_code");
                             String name = rootObject.getString("farmer_name");
                             String fatherName = rootObject.getString("father_name");
                             String ownership = rootObject.getString("ownership");
@@ -248,6 +251,41 @@ public class ReviewReport extends AppCompatActivity {
         tableRow1.addView(colName1);
         tableRow1.addView(colName2);
         tableLayout.addView(tableRow1);
-
     }
+
+    //flag = 1 for Add in BlockedList and 0 for remove from Blocked List
+    private void actionOnFarmerSub(int flag) {
+        String url = "http://117.240.196.238:8080/api/CRM/setFarmerID?key=agriHr@CRM&fID="
+                + farmerId + "&flag=" + flag;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject singleObject = new JSONObject(String.valueOf(response));
+                            String message = singleObject.getString("message");
+                            Toast.makeText(ReviewReport.this, message, Toast.LENGTH_SHORT).show();
+                            finish();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "onResponse: JSON blockFarmerSub " + e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(ReviewReport.this, "Check your internet connection",
+                                    Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(ReviewReport.this, "Something went wrong, " +
+                                    "please try again!", Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "onErrorResponse: blockFarmerSub " + error);
+                    }
+                });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonObjectRequest);
+    }
+
 }

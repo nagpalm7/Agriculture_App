@@ -18,7 +18,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
@@ -68,7 +67,7 @@ public class EditActivity extends AppCompatActivity {
         if (isDdo) {
             spinnerUrl = "http://13.235.100.235:8000/api/district/";
         } else {
-            spinnerUrl = "http://localhost:8000/api/villages-list/";
+            spinnerUrl = "http://13.235.100.235:8000/api/villages-list/";
         }
         //id = "2";
         final String url = "http://13.235.100.235:8000/api/user/" + id + "/";
@@ -76,7 +75,16 @@ public class EditActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveChanges(url);
+                if (spinner.getSelectedItemPosition() == 0) {
+                    String message;
+                    if (isDdo)
+                        message = "District";
+                    else
+                        message = "Village";
+                    Toast.makeText(EditActivity.this, "Please Select a valid " + message,
+                            Toast.LENGTH_SHORT).show();
+                } else
+                    saveChanges(url);
             }
         });
     }
@@ -179,42 +187,50 @@ public class EditActivity extends AppCompatActivity {
         districtNames = new ArrayList<>();
         villageIds = new ArrayList<>();
         villageNames = new ArrayList<>();
-        int startIndex = place.indexOf(",");
+        villageNames.add("Select Village Name");
+        villageIds.add("null");
+        districtNames.add("Select District Name");
+        districtIds.add("null");
+       /* int startIndex = place.indexOf(",");
         int endIndex = place.length() - 1;
         String toBeReplaced = place.substring(startIndex, endIndex);
-        final String extractedPlace = place.replace(toBeReplaced, "");
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONArray>() {
+        final String extractedPlace = place.replace(toBeReplaced, "");*/
+        JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(JSONObject response) {
                         try {
-                            JSONArray rootArray = new JSONArray(String.valueOf(response));
+                            JSONObject rootObject = new JSONObject(String.valueOf(response));
+                            JSONArray resultsArray = rootObject.getJSONArray("results");
                             int pos = 0;
-                            for (int i = 0; i < rootArray.length(); i++) {
-                                JSONObject singleObject = rootArray.getJSONObject(i);
+                            for (int i = 0; i < resultsArray.length(); i++) {
+                                JSONObject singleObject = resultsArray.getJSONObject(i);
                                 if (isDdo) {
                                     String district = singleObject.getString("district");
                                     String districtId = singleObject.getString("id");
-                                    if (extractedPlace.equals(district))
+                                    if (place.equals(district))
                                         pos = i;
                                     districtNames.add(district);
                                     districtIds.add(districtId);
                                 } else {
                                     String village = singleObject.getString("village");
                                     String villageId = singleObject.getString("id");
-                                    if (extractedPlace.equals(village))
+                                    if (place.equals(village))
                                         pos = i;
                                     villageNames.add(village);
                                     villageIds.add(villageId);
                                 }
                             }
                             if (isDdo) {
-                                ArrayAdapter<String> districtAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, districtNames);
+                                ArrayAdapter<String> districtAdapter = new ArrayAdapter<String>(getApplicationContext(),
+                                        android.R.layout.simple_dropdown_item_1line, districtNames);
                                 districtAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 spinner.setAdapter(districtAdapter);
                                 spinner.setSelection(pos);
                             } else {
-                                ArrayAdapter<String> villageAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, villageNames);
+                                Log.d(TAG, "onResponse: ADO " + villageNames);
+                                ArrayAdapter<String> villageAdapter = new ArrayAdapter<String>(getApplicationContext(),
+                                        android.R.layout.simple_dropdown_item_1line, villageNames);
                                 villageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 spinner.setAdapter(villageAdapter);
                                 spinner.setSelection(pos);

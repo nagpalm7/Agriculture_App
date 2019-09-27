@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,6 +50,7 @@ public class DdaOngoingFragment extends Fragment {
     private int length_of_results_array;
     private RecyclerView review;
     private View view;
+    private boolean isRefresh;
 //    private Toolbar toolbar;
 
     public DdaOngoingFragment() {
@@ -62,7 +64,7 @@ public class DdaOngoingFragment extends Fragment {
         Id = new ArrayList<String>();
         Name = new ArrayList<String>();
         Address = new ArrayList<String>();
-
+        isRefresh = false;
 
         view = inflater.inflate(R.layout.fragment_ongoing,container,false);
         review = view.findViewById(R.id.recyclerViewongoing);
@@ -205,5 +207,30 @@ public class DdaOngoingFragment extends Fragment {
             requestQueue1.add(jsonObjectRequest1);
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
+        isRefresh = false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+        isRefresh = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+        if (isRefresh) {
+            getFragmentManager().beginTransaction().detach(DdaOngoingFragment.this)
+                    .attach(DdaOngoingFragment.this).commit();
+            Log.d(TAG, "onResume: REFRESH");
+            isRefresh = false;
+        }
+    }
 
 }
