@@ -146,15 +146,11 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
             tv2 = itemView.findViewById(R.id.laddress);
             shimmerFrameLayout = itemView.findViewById(R.id.ado_location_shimmer);
             mAdoName = itemView.findViewById(R.id.ado_name);
-            Log.d(TAG, "AdoListHolder: error in this");
-
         }
     }
 
     public void sendPostion(ArrayList<String> longitude, ArrayList<String> latitdue) {
         this.longitude = longitude;
         this.latitude = latitdue;
-
-
     }
 }

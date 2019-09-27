@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -85,6 +86,8 @@ public class AdoDdoPending extends Fragment {
         else
             adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses, mAdoNames, false);
         recyclerView.setAdapter(adapter);
+        DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
+        recyclerView.addItemDecoration(divider);
         SharedPreferences prefs = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = prefs.getString("token", "");
         queue = Volley.newRequestQueue(getActivity());
@@ -139,7 +142,12 @@ public class AdoDdoPending extends Fragment {
                                     nextPendingUrl = nextUrl;
                             JSONArray resultsArray = rootObject.getJSONArray("results");
                             Log.d(TAG, "onResponse: "+resultsArray.length());
-
+                            if (!isDdo && resultsArray.length() == 0) {
+                                adapter.mshowshimmer = false;
+                                adapter.notifyDataSetChanged();
+                                Log.d(TAG, "onResponse: yo men im here " + view);
+                                view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
+                            }
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 if (isDdo) {
@@ -218,8 +226,8 @@ public class AdoDdoPending extends Fragment {
                                     }
                                 }
                                 String locName = singleObject.getString("village_name");
-                                String locAdd = singleObject.getString("block_name") + ", " +
-                                        singleObject.getString("block_name") + ", " + singleObject.getString("state");
+                                String locAdd = singleObject.getString("block_name") +
+                                        ", " + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
                             }
@@ -301,7 +309,7 @@ public class AdoDdoPending extends Fragment {
                                     }
                                     String locName = singleObject.getString("village_name");
                                     String locAdd = singleObject.getString("block_name") +
-                                            singleObject.getString("block_name") + singleObject.getString("state");
+                                            ", " + singleObject.getString("state");
                                     locationNames.add(locName);
                                     locationAddresses.add(locAdd);
                                 }

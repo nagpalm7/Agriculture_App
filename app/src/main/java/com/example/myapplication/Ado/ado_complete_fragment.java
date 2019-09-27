@@ -116,7 +116,7 @@ public class ado_complete_fragment extends Fragment {
                                 mId.add(id);
                                 String location_name = singleObject.getString("village_name");
                                 String location_address = singleObject.getString("block_name") + ", "
-                                        + singleObject.getString("district") + ", " + singleObject.getString("state");
+                                        + singleObject.getString("district");
                                 String slongitude = singleObject.getString("longitude");
                                 String slatitude = singleObject.getString("latitude");
                                 mtextview1.add(location_name);
