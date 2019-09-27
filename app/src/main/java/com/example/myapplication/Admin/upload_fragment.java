@@ -15,6 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import com.androidnetworking.AndroidNetworking;
@@ -32,6 +34,8 @@ import java.io.File;
 
 import dmax.dialog.SpotsDialog;
 
+import static com.example.myapplication.AppNotificationChannels.CHANNEL_2_ID;
+
 public class upload_fragment extends Fragment {
 
     private String url = "http://13.235.100.235:8000/api/upload/locations/";
@@ -40,6 +44,7 @@ public class upload_fragment extends Fragment {
     private String filePath;
     private File csvFile;
     private AlertDialog uploadingDialog;
+    private NotificationManagerCompat manager;
 
     @Nullable
     @Override
@@ -56,8 +61,7 @@ public class upload_fragment extends Fragment {
 
             }
         });
-
-
+        manager = NotificationManagerCompat.from(getActivity());
         return view;
     }
 
@@ -91,6 +95,15 @@ public class upload_fragment extends Fragment {
     }
 
     private void uploadCsv() {
+        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getActivity(), CHANNEL_2_ID)
+                .setSmallIcon(R.drawable.ic_upload)
+                .setContentTitle("Uploading Csv")
+                .setContentText("0/100")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setProgress((int) csvFile.length(), 0, false);
+        manager.notify(2, notificationBuilder.build());
         AndroidNetworking.upload(url)
                 .addHeaders("Authorization", "Token " + token)
                 .addMultipartFile("location_csv", csvFile)
@@ -101,6 +114,10 @@ public class upload_fragment extends Fragment {
                     @Override
                     public void onProgress(long bytesUploaded, long totalBytes) {
                         Log.d(TAG, "onProgress: " + bytesUploaded);
+                        notificationBuilder.setContentText(String.valueOf((int) (bytesUploaded / totalBytes) * 100) + "/100")
+                                .setProgress((int) totalBytes, (int) ((bytesUploaded / totalBytes) * 100), false);
+                        manager.notify(2, notificationBuilder.build());
+
                     }
                 })
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -113,6 +130,10 @@ public class upload_fragment extends Fragment {
                             count = rootObject.getString("count");
                             Toast.makeText(getActivity(), "Successfully Uploaded " + count + " locations", Toast.LENGTH_LONG).show();
                             uploadingDialog.dismiss();
+                            notificationBuilder.setContentText("Upload Successful!")
+                                    .setProgress(0, 0, false)
+                                    .setOngoing(false);
+                            manager.notify(2, notificationBuilder.build());
                         } catch (JSONException e) {
                             e.printStackTrace();
                             uploadingDialog.dismiss();
@@ -123,7 +144,12 @@ public class upload_fragment extends Fragment {
                     public void onError(ANError anError) {
                         Log.d(TAG, "onError: " + anError.getErrorDetail() + " " + anError.getErrorBody() +
                                 " " + anError.getMessage() + " " + anError.getErrorCode());
-                        Toast.makeText(getActivity(), "Sorry something went wrong, please try again!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Sorry something went wrong, please try again!",
+                                Toast.LENGTH_LONG).show();
+                        notificationBuilder.setContentText("Upload Failed!")
+                                .setProgress(0, 0, false)
+                                .setOngoing(false);
+                        manager.notify(2, notificationBuilder.build());
                         uploadingDialog.dismiss();
                     }
                 });
