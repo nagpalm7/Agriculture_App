@@ -554,12 +554,14 @@
                     android:layout_height="wrap_content">
 
                     <RadioButton
+                        android:id="@+id/rbowner"
                         android:textColor="@color/colorPrimaryDark"
                         android:layout_marginRight="15dp"
                         android:text="OWNERSHIP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <RadioButton
+                        android:id="@+id/rblease"
                         android:textColor="@color/colorPrimaryDark"
                         android:layout_marginLeft="15dp"
                         android:text="LEASE"
