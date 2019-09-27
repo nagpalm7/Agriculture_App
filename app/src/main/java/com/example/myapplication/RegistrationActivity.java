@@ -13,7 +13,7 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         webView = findViewById(R.id.reg_webview);
-        webView.loadUrl("www.google.com");
+        webView.loadUrl("http://theagriculture.tk");
     }
 
     @Override

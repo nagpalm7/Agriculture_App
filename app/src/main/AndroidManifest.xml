@@ -12,11 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".RegistrationActivity"></activity>
-
+        <activity android:name=".Dda.villagenameActivity"></activity>
+        <activity android:name=".RegistrationActivity" />
         <activity android:name=".Ado.ReviewReport" />
         <activity android:name=".Admin.EditActivity" />
-
         <activity android:name=".Ado.CheckInActivity" />
         <activity
             android:name=".Ado.ado_map_activity"
@@ -90,6 +89,7 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -108,7 +108,6 @@
         </provider>
 
         <service android:name=".Ado.GeofenceTransitionService" />
-
         <service android:name=".Ado.GeofenceTransitionService2" />
     </application>
 

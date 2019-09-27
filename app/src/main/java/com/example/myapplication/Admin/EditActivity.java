@@ -3,7 +3,9 @@ package com.example.myapplication.Admin;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -62,6 +64,7 @@ public class EditActivity extends AppCompatActivity {
         token = prefs.getString("token", "");
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
+        Log.d(TAG, "onCreate: gettheidhere"+id);
         isDdo = intent.getBooleanExtra("isDdo", false);
         place = intent.getStringExtra("place");
         if (isDdo) {
@@ -75,6 +78,8 @@ public class EditActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String mobile = mobileEditText.getText().toString();
+                String email = emailEditText.getText().toString();
                 if (spinner.getSelectedItemPosition() == 0) {
                     String message;
                     if (isDdo)
@@ -83,10 +88,20 @@ public class EditActivity extends AppCompatActivity {
                         message = "Village";
                     Toast.makeText(EditActivity.this, "Please Select a valid " + message,
                             Toast.LENGTH_SHORT).show();
-                } else
+                } else if(mobile.length() != 10){
+                    Toast.makeText(EditActivity.this,"enter the valid mobile number",Toast.LENGTH_LONG).show();
+                }else if(!isValidEmail(email)){
+                    Toast.makeText(EditActivity.this,"enter the valid email address",Toast.LENGTH_LONG).show();
+
+                }
+                else
                     saveChanges(url);
             }
         });
+    }
+
+    public static boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
     @Override
@@ -145,14 +160,18 @@ public class EditActivity extends AppCompatActivity {
             params.put("number", number);
             params.put("email", email);
             int pos = spinner.getSelectedItemPosition();
+            Log.d(TAG, "saveChanges: "+villageIds.get(pos));
+
             if (isDdo)
                 params.put("district", districtIds.get(pos));
+
             else
                 params.put("village", villageIds.get(pos));
         } catch (JSONException e) {
             e.printStackTrace();
             Log.d(TAG, "saveChanges: PARAMS EXCEPTION saveChanges " + e);
         }
+        Log.d(TAG, "saveChanges: params_value "+name+" "+number+" "+email+" ");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, params,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -166,7 +185,7 @@ public class EditActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, "onErrorResponse: saveChanges " + error);
-                        Toast.makeText(EditActivity.this, "Something went wrong, try again later!",
+                        Toast.makeText(EditActivity.this, "Something went wrong, try again later!"+error,
                                 Toast.LENGTH_LONG).show();
                     }
                 }) {

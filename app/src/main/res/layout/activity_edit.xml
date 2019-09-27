@@ -156,7 +156,7 @@
             <TextView
                 android:id="@+id/textname3"
                 android:textColor="@color/colorPrimaryDark"
-                android:text="NUMBER"
+                android:text="MOBILE"
                 android:layout_marginRight="16dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"

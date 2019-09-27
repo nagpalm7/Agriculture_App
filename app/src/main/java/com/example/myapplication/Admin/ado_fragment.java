@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
@@ -25,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.myapplication.Dda.notassignedfragment;
 import com.example.myapplication.R;
 
 import org.json.JSONArray;
@@ -50,6 +52,7 @@ public class ado_fragment extends Fragment {
     private View view;
     private boolean isRefresh;
     private final String TAG = "ado_fragment";
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public ado_fragment() {
     }
@@ -64,6 +67,14 @@ public class ado_fragment extends Fragment {
         userinfo = new ArrayList<>();
         mUserId = new ArrayList<>();
         mPkList = new ArrayList<>();
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFragmentManager().beginTransaction().detach(ado_fragment.this)
+                        .attach(ado_fragment.this).commit();
+            }
+        });
         progressBar = view.findViewById(R.id.ado_list_progressbar);
         recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, mUserId, false, mPkList);
         RecyclerView Rview = view.findViewById(R.id.recyclerViewado);
