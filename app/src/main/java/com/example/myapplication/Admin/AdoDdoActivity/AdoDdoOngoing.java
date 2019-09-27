@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -126,7 +128,7 @@ public class AdoDdoOngoing extends Fragment {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 String locName = singleObject.getString("village_name");
                                 String locAdd = singleObject.getString("block_name") +
-                                        singleObject.getString("block_name") + singleObject.getString("state");
+                                        ", " + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
                             }
@@ -141,7 +143,12 @@ public class AdoDdoOngoing extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(getActivity(), "Please Check your Internet " +
+                                    "Connection!", Toast.LENGTH_SHORT).show();
+                        else Toast.makeText(getActivity(), "Something went wrong, please try " +
+                                "again!", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "onErrorResponse: getData " + error);
                     }
                 }) {
 
@@ -177,7 +184,7 @@ public class AdoDdoOngoing extends Fragment {
                                     JSONObject singleObject = resultsArray.getJSONObject(i);
                                     String locName = singleObject.getString("village_name");
                                     String locAdd = singleObject.getString("block_name") +
-                                            singleObject.getString("block_name") + singleObject.getString("state");
+                                            ", " + singleObject.getString("state");
                                     locationNames.add(locName);
                                     locationAddresses.add(locAdd);
                                     adapter.notifyDataSetChanged();

@@ -39,6 +39,7 @@ public class completed_fragment extends Fragment {
     private ArrayList<String> mDdaNames;
     private ArrayList<String> mAdoNames;
     private ArrayList<String> mAddresses;
+    private ArrayList<String> mIds;
     private AdminLocationAdapter adapter;
     private LinearLayoutManager layoutManager;
     private String completedUrl = "http://13.235.100.235:8000/api/locations/completed";
@@ -61,7 +62,8 @@ public class completed_fragment extends Fragment {
         mDdaNames = new ArrayList<>();
         mAdoNames = new ArrayList<>();
         mAddresses = new ArrayList<>();
-        adapter = new AdminLocationAdapter(getActivity(), mDdaNames, mAdoNames, mAddresses);
+        mIds = new ArrayList<>();
+        adapter = new AdminLocationAdapter(getActivity(), mDdaNames, mAdoNames, mAddresses, true, mIds);
         recyclerView.setAdapter(adapter);
         SharedPreferences prefs = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = prefs.getString("token", "");
@@ -107,6 +109,8 @@ public class completed_fragment extends Fragment {
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 JSONObject ddaObject = singleObject.getJSONObject("dda");
+                                String id = singleObject.getString("id");
+                                mIds.add(id);
                                 mDdaNames.add(ddaObject.getString("name"));
                                 JSONObject adoObject = singleObject.getJSONObject("ado");
                                 String adoName = adoObject.getString("name");
@@ -115,7 +119,7 @@ public class completed_fragment extends Fragment {
                                 else
                                     mAdoNames.add(adoName);
                                 String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
-                                        + singleObject.getString("district") + ", " + singleObject.getString("state");
+                                        + singleObject.getString("district");
                                 mAddresses.add(location);
 
                             }
@@ -159,13 +163,15 @@ public class completed_fragment extends Fragment {
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 mDdaNames.add(singleObject.getString("dda"));
+                                String id = singleObject.getString("id");
+                                mIds.add(id);
                                 String adoName = singleObject.getString("ado");
                                 if (adoName.isEmpty())
                                     mAdoNames.add("Not Assigned");
                                 else
                                     mAdoNames.add(adoName);
                                 String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
-                                        + singleObject.getString("district") + ", " + singleObject.getString("state");
+                                        + singleObject.getString("district");
                                 mAddresses.add(location);
                             }
                             adapter.notifyDataSetChanged();

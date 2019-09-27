@@ -3,6 +3,7 @@
 package com.example.myapplication.Admin;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.Ado.ReviewReport;
 import com.example.myapplication.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -21,6 +23,8 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
     ArrayList<String> mtextview1;
     ArrayList<String> mtextview2;
     ArrayList<String> mtextview3;
+    private ArrayList<String> mIds;
+    private boolean isComplete = false;
     boolean mShowShimmer = true;
     private int SHIMMER_ITEM_NO = 5;
     Context mcontext;
@@ -32,11 +36,33 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
         this.mtextview3 = mtextview3;
     }
 
+    public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3, boolean isComplete, ArrayList<String> mIds) {
+        this.mcontext = mcontext;
+        this.mtextview1 = mtextview1;
+        this.mtextview2 = mtextview2;
+        this.mtextview3 = mtextview3;
+        this.mIds = mIds;
+        this.isComplete = isComplete;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mcontext).inflate(R.layout.adminlocationlist,parent,false);
-        ViewHolder viewHolderDda = new ViewHolder(view);
+        final ViewHolder viewHolderDda = new ViewHolder(view);
+        viewHolderDda.parentnotassigned.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isComplete) {
+                    Intent intent = new Intent(mcontext, ReviewReport.class);
+                    int pos = viewHolderDda.getAdapterPosition();
+                    intent.putExtra("id", mIds.get(pos));
+                    intent.putExtra("isDdo", true);
+                    intent.putExtra("isAdmin", true);
+                    mcontext.startActivity(intent);
+                }
+            }
+        });
         return viewHolderDda;
     }
 

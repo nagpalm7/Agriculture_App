@@ -125,7 +125,7 @@ public class AdoDdoCompleted extends Fragment {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 String locName = singleObject.getString("village_name");
                                 String locAdd = singleObject.getString("block_name") +
-                                        singleObject.getString("block_name") + singleObject.getString("state");
+                                        ", " + singleObject.getString("state");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
                             }
@@ -176,7 +176,7 @@ public class AdoDdoCompleted extends Fragment {
                                     JSONObject singleObject = resultsArray.getJSONObject(i);
                                     String locName = singleObject.getString("village_name");
                                     String locAdd = singleObject.getString("block_name") +
-                                            singleObject.getString("block_name") + singleObject.getString("state");
+                                            ", " + singleObject.getString("state");
                                     locationNames.add(locName);
                                     locationAddresses.add(locAdd);
                                     adapter.notifyDataSetChanged();

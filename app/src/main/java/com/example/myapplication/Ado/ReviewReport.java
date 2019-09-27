@@ -63,6 +63,7 @@ public class ReviewReport extends AppCompatActivity {
     private TableLayout tableLayout;
     private String mUrl;
     private boolean isComplete;
+    private boolean isAdmin;
     private TextView chalaanRight;
     private RecyclerView recyclerView;
     private ReviewPicsRecyclerviewAdapter adapter;
@@ -108,6 +109,7 @@ public class ReviewReport extends AppCompatActivity {
         String id = intent.getStringExtra("id");
         Log.d(TAG, "onCreate: ID " + id);
         isComplete = intent.getBooleanExtra("isComplete", false);
+        isAdmin = intent.getBooleanExtra("isAdmin", false);
         boolean isDdo = intent.getBooleanExtra("isDdo", false);
         mUrl = "http://13.235.100.235:8000/api/report-ado/" + id + "/";
         getDetails();
