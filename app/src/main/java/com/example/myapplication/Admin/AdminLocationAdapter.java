@@ -78,7 +78,7 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
             holder.tv3.setBackground(null);
             holder.tv1.setText("DDA     : " + mtextview1.get(position));
             holder.tv2.setText("ADO     : " + mtextview2.get(position));
-            holder.tv3.setText("ADDRESS : " + mtextview3.get(position));
+            holder.tv3.setText(mtextview3.get(position));
         }
     }
 

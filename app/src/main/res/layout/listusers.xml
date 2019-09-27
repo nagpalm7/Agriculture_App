@@ -5,85 +5,82 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="8dp"
+    android:layout_marginTop="8dp"
     android:clickable="true"
-    android:elevation="8dp"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:cardCornerRadius="15dp">
+    android:foreground="?android:attr/selectableItemBackground">
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/ado_ddo_shimmer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <RelativeLayout
+            android:layout_marginBottom="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/imageuser"
+                android:layout_marginTop="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-
                 android:src="@drawable/user_circle" />
 
             <ImageView
+                android:layout_alignBottom="@id/tvuser"
                 android:id="@+id/edit_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/tvuser"
+                android:src="@drawable/edit_ic"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:src="@drawable/edit_ic" />
-
-            <ImageView
-                android:id="@+id/delete_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground" />
+            <ImageView
                 android:layout_alignBottom="@id/tvuser"
-                android:layout_marginTop="8dp"
                 android:layout_marginRight="16dp"
-                android:layout_toLeftOf="@id/edit_id"
+                android:id="@+id/delete_id"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/delete_ic"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground"
-                android:src="@drawable/delete_ic" />
+                android:layout_toLeftOf="@id/edit_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <TextView
-                android:id="@+id/tvuser"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginRight="16dp"
                 android:layout_toLeftOf="@id/delete_id"
+                android:layout_marginLeft="16dp"
+                android:id="@+id/tvuser"
+                android:layout_marginTop="8dp"
                 android:layout_toRightOf="@id/imageuser"
-                android:background="@color/shimmer_bg"
+                android:textStyle="bold"
                 android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvinfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvuser"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="4dp"
+                android:background="@color/shimmer_bg" />
+
+            <TextView
                 android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_toRightOf="@id/imageuser"
-                android:background="@color/shimmer_bg"
-                android:textSize="12sp" />
-            <!--            <ImageView-->
-            <!--                android:layout_alignBottom="@id/tvuser"-->
-            <!--                android:layout_alignParentRight="true"-->
-            <!--                android:src="@mipmap/edit"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content" />-->
+                android:id="@+id/tvinfo"
+                android:layout_below="@id/tvuser"
+                android:textSize="12sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@color/shimmer_bg" />
+<!--            <ImageView-->
+<!--                android:layout_alignBottom="@id/tvuser"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                android:src="@mipmap/edit"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content" />-->
 
         </RelativeLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
+
 </RelativeLayout>

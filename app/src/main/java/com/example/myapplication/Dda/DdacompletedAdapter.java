@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Ado.ReviewReport;
@@ -36,7 +36,7 @@ public class DdacompletedAdapter extends RecyclerView.Adapter<DdacompletedAdapte
     public DdacompletedAdapter.ViewHolderCompletedDda onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mcontext).inflate(R.layout.notassignedlist,parent,false);
         final ViewHolderCompletedDda viewHolderCompletedDda = new ViewHolderCompletedDda(view);
-        viewHolderCompletedDda.cardcompleted.setOnClickListener(new View.OnClickListener() {
+        viewHolderCompletedDda.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!showcomletedshimmer) {
@@ -78,13 +78,13 @@ public class DdacompletedAdapter extends RecyclerView.Adapter<DdacompletedAdapte
         TextView tv1;
         TextView tv2;
 
-        CardView cardcompleted;
+        RelativeLayout parent;
         ShimmerFrameLayout shimmercomleted;
 
         public ViewHolderCompletedDda(@NonNull View itemView) {
             super(itemView);
             mcontext = itemView.getContext();
-            cardcompleted = itemView.findViewById(R.id.card_unassigned);
+            parent = itemView.findViewById(R.id.card_unassigned);
             tv1 = itemView.findViewById(R.id.lid);
             tv2 = itemView.findViewById(R.id.address);
             shimmercomleted = itemView.findViewById(R.id.shimmer_unassigned);
