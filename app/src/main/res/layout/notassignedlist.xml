@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_unassigned"
-        app:cardCornerRadius="15dp"
-        android:elevation="8dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:focusable="true">
-
+        android:foreground="?android:attr/selectableItemBackground">
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_unassigned"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_marginHorizontal="16dp"
@@ -26,19 +22,22 @@
             android:layout_height="wrap_content">
 
                 <TextView
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"
                     android:id="@+id/lid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="24dp"
+                    android:textSize="18sp"
                     android:textColor="@color/colorPrimaryDark"
                     android:background="@color/shimmer_bg" />
 
 
                 <TextView
+                    android:layout_marginBottom="8dp"
                     android:id="@+id/address"
                     android:layout_below="@+id/lid"
                     android:layout_marginTop="8dp"
-                    android:textSize="18dp"
+                    android:textSize="14sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/shimmer_bg"
@@ -47,6 +46,6 @@
             </RelativeLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
 
-</androidx.cardview.widget.CardView>
+</RelativeLayout>
 
 

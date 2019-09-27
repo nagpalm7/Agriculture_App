@@ -6,11 +6,10 @@
     android:layout_height="wrap_content"
     android:id="@+id/adolistlayout">
 
-    <androidx.cardview.widget.CardView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:cardCornerRadius="5dp"
         android:elevation="8dp"
         android:layout_marginHorizontal="16dp"
         >
@@ -21,6 +20,7 @@
             android:layout_marginHorizontal="16dp">
 
             <Button
+                android:layout_centerVertical="true"
                 android:textColor="#ffffff"
                 android:background="@drawable/shape"
                 android:id="@+id/btnAssign"
@@ -35,19 +35,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/nameofado"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="2dp"
                 android:text="VillageName"
-                android:textSize="18dp" />
+                android:textSize="16dp" />
 
             <TextView
+                android:textStyle="bold"
                 android:id="@+id/nameofado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="AdoName"
                 android:textColor="@color/colorPrimary"
-                android:textSize="24dp" />
+                android:textSize="20dp" />
 
         </RelativeLayout>
-    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
 </RelativeLayout>

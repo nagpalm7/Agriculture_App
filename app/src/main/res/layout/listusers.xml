@@ -70,10 +70,10 @@
                 android:layout_toRightOf="@id/imageuser"
                 android:id="@+id/tvinfo"
                 android:layout_below="@id/tvuser"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:background="@color/shimmer_bg" />
 <!--            <ImageView-->
 <!--                android:layout_alignBottom="@id/tvuser"-->
@@ -84,4 +84,5 @@
 
         </RelativeLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
+    
 </RelativeLayout>

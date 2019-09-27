@@ -1,6 +1,5 @@
 package com.example.myapplication.Dda;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -11,11 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.example.myapplication.Ado.ado_map_activity;
 import com.example.myapplication.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -42,7 +39,7 @@ public class DdapendingUnassignedAdapter extends RecyclerView.Adapter<Ddapending
     public ViewHolderPendingDda onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mcontext).inflate(R.layout.notassignedlist,parent,false);
         final ViewHolderPendingDda viewHolderPendingDda = new ViewHolderPendingDda(view);
-        viewHolderPendingDda.cardinassigned.setOnClickListener(new View.OnClickListener() {
+        viewHolderPendingDda.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!showunassignedshimmer)
@@ -82,13 +79,13 @@ public class DdapendingUnassignedAdapter extends RecyclerView.Adapter<Ddapending
 
         TextView tv1;
         TextView tv2;
-        CardView cardinassigned;
+        RelativeLayout parent;
         ShimmerFrameLayout shimmerunassigned;
 
         public ViewHolderPendingDda(@NonNull View itemView) {
             super(itemView);
             mcontext = itemView.getContext();
-            cardinassigned = itemView.findViewById(R.id.card_unassigned);
+            parent = itemView.findViewById(R.id.card_unassigned);
             tv1 = itemView.findViewById(R.id.lid);
             tv2 = itemView.findViewById(R.id.address);
             shimmerunassigned = itemView.findViewById(R.id.shimmer_unassigned);
