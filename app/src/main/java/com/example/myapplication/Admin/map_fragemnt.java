@@ -60,6 +60,7 @@ public class map_fragemnt extends Fragment {
 
     private ArrayList<Double> latitude;
     private ArrayList<Double> longitude;
+    private ArrayList<String> villname;
 
 
 
@@ -72,6 +73,7 @@ public class map_fragemnt extends Fragment {
         token = preferences.getString("token", "");
         latitude = new ArrayList<>();
         longitude = new ArrayList<>();
+        villname = new ArrayList<>();
         pbar = view.findViewById(R.id.pbar);
 
 
@@ -146,8 +148,10 @@ public class map_fragemnt extends Fragment {
                         JSONObject c = jsonArray.getJSONObject(i);
                         Double lat = Double.valueOf(c.getString("latitude"));
                         Double lon = Double.valueOf(c.getString("longitude"));
+                        String vill = c.getString("village_name");
                         latitude.add(lat);
                         longitude.add(lon);
+                        villname.add(vill);
                     }
 
                 } catch (JSONException e) {
@@ -198,7 +202,7 @@ public class map_fragemnt extends Fragment {
     private void marklocation() {
 
         for(int i = 0 ; i < latitude.size();i++){
-            MarkerOptions Dlocation = new MarkerOptions().position(new LatLng(latitude.get(i), longitude.get(i))).title("Location").icon(bitmapDescriptorFromVector(getActivity(),R.drawable.ic_action_name));
+            MarkerOptions Dlocation = new MarkerOptions().position(new LatLng(latitude.get(i), longitude.get(i))).title(villname.get(i)).icon(bitmapDescriptorFromVector(getActivity(),R.drawable.ic_action_name));
             map.addMarker(Dlocation);
             if(i == 0 ){
                 pbar.setVisibility(View.GONE);
