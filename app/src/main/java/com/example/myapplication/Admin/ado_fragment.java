@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -71,6 +72,8 @@ public class ado_fragment extends Fragment {
         token = preferences.getString("token", "");
         layoutManager = new LinearLayoutManager(getActivity());
         Rview.setLayoutManager(layoutManager);
+        DividerItemDecoration divider = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
+        Rview.addItemDecoration(divider);
 
         final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 

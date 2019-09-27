@@ -75,8 +75,8 @@ public class AdminActivity extends AppCompatActivity
         TextView user_name = headerView.findViewById(R.id.nameOfUserLoggedIn);
         SharedPreferences pref = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         String username = pref.getString("Name", "");
-        user_name.setText(username);
-        getSupportActionBar().setTitle("Home");
+        user_name.setText(username.toUpperCase());
+        getSupportActionBar().setTitle("HOME");
     }
 
     private boolean getPermission() {

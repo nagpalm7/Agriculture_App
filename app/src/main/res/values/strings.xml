@@ -15,7 +15,7 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_logout">Logout</string>
-    <string name="menu_home">Home</string>
+    <string name="menu_home">HOME</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_tools">Tools</string>
@@ -31,7 +31,7 @@
     <string name="menu_ddo">DDA</string>
     <string name="menu_ado">ADO</string>
     <string name="menu_location">LOCATIONS</string>
-    <string name="ongoing">ONGOING</string>
+    <string name="ongoing">AWAITING ACTION</string>
     <string name="completed">COMPLETED</string>
     <string name="pending">PENDING</string>
     <string name="rooturl">http://13.235.100.235:8000/api-token-auth/</string>

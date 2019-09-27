@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
@@ -69,7 +68,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mcontext).inflate(R.layout.listusers, parent, false);
         final ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+        viewHolder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!mShowShimmer) {
@@ -194,7 +193,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
         TextView tv1;
         TextView tv2;
         RelativeLayout parentlayout;
-        CardView cardView;
+        RelativeLayout relativeLayout;
         ShimmerFrameLayout shimmerFrameLayout;
         ImageView editImage;
         ImageView deleteImage;
@@ -204,7 +203,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
             parentlayout= itemView.findViewById(R.id.parent);
             tv1= itemView.findViewById(R.id.tvuser);
             tv2= itemView.findViewById(R.id.tvinfo);
-            cardView = itemView.findViewById(R.id.ddo_profile_cardview);
+            relativeLayout = itemView.findViewById(R.id.ddo_profile_cardview);
             shimmerFrameLayout = itemView.findViewById(R.id.ado_ddo_shimmer);
             editImage = itemView.findViewById(R.id.edit_id);
             deleteImage = itemView.findViewById(R.id.delete_id);

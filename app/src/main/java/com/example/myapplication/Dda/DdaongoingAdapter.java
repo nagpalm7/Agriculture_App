@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Ado.ReviewReport;
@@ -37,7 +37,7 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
     public ViewHolderOngoingDda onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mcontext).inflate(R.layout.ddaongoinglist, parent, false);
         final ViewHolderOngoingDda viewHolderOngoingDda = new ViewHolderOngoingDda(view);
-        viewHolderOngoingDda.cardongoing.setOnClickListener(new View.OnClickListener() {
+        viewHolderOngoingDda.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mcontext, ReviewReport.class);
@@ -59,10 +59,8 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
         else {
             holder.shimmerongoing.stopShimmer();
             holder.shimmerongoing.setShimmer(null);
-            holder.tv1.setBackground(null);
             holder.tv2.setBackground(null);
             holder.tv3.setBackground(null);
-            holder.tv1.setText(mtextview1.get(position));
             holder.tv2.setText(mtextview2.get(position));
             holder.tv3.setText(mtextview3.get(position));
         }
@@ -75,20 +73,18 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
 
     public class ViewHolderOngoingDda extends RecyclerView.ViewHolder {
 
-        TextView tv1;
         TextView tv2;
         TextView tv3;
-        CardView cardongoing;
         ShimmerFrameLayout shimmerongoing;
+        RelativeLayout relativeLayout;
 
         public ViewHolderOngoingDda(@NonNull View itemView) {
             super(itemView);
             mcontext = itemView.getContext();
-            tv1 = itemView.findViewById(R.id.adoongoingid);
             tv2 = itemView.findViewById(R.id.adoongoingname);
             tv3 = itemView.findViewById(R.id.adoongoingaddress);
-            cardongoing = itemView.findViewById(R.id.card_ongoing);
             shimmerongoing = itemView.findViewById(R.id.shimmer_ongoing);
+            relativeLayout = itemView.findViewById(R.id.ongoing_parent);
         }
 
     }
