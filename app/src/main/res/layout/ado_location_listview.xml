@@ -6,28 +6,30 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
+        android:layout_marginBottom="8dp"
         android:id="@+id/ado_loaction_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
+            android:layout_marginTop="8dp"
             android:id="@+id/img"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@id/laddress"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
             android:layout_marginHorizontal="16dp"
-            android:src="@drawable/loaction" />
+            android:src="@drawable/location_circle" />
 
         <TextView
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
             android:id="@+id/lname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
             android:layout_marginBottom="8dp"
-            android:layout_toLeftOf="@id/img"
+            android:layout_toRightOf="@id/img"
             android:background="@color/shimmer_bg"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp" />
@@ -37,13 +39,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/lname"
-            android:layout_marginHorizontal="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_toLeftOf="@id/img"
+            android:layout_toRightOf="@id/img"
             android:background="@color/shimmer_bg"
             android:textSize="16sp" />
 
         <TextView
+            android:textSize="16sp"
             android:visibility="gone"
             android:background="@color/shimmer_bg"
             android:layout_toLeftOf="@id/img"

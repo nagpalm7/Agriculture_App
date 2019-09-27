@@ -4,8 +4,8 @@
     <string name="splash_subtitle">DEPARTMENT OF AGRICULTURE \n AND \nFARMER AND WELFARE</string>
     <string name="login">Login</string>
     <string name="welcome_admin">Welcome Admin</string>
-    <string name="username">Username:</string>
-    <string name="password">Password:</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
     <string name="eye_image">Eye image</string>
 
     //navigation activity

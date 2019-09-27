@@ -26,18 +26,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
-            android:fontFamily="monospace"
             android:text="@string/username"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <androidx.cardview.widget.CardView
             android:layout_marginHorizontal="16dp"
             app:cardCornerRadius="15dp"
             android:elevation="8dp"
             android:background="#ffffff"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -49,9 +48,9 @@
                     android:id="@+id/user"
                     android:layout_marginLeft="16dp"
                     android:layout_centerVertical="true"
-                    android:src="@mipmap/user_circle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:src="@drawable/userb_new"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
 
                 <EditText
                     android:id="@+id/editEmail"
@@ -76,16 +75,15 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
-            android:fontFamily="monospace"
             android:text="@string/password"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardview2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:background="#ffffff"
             android:elevation="8dp"
             app:cardCornerRadius="15dp">
@@ -99,11 +97,11 @@
 
                 <ImageView
                     android:id="@+id/lock"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
-                    android:src="@mipmap/lock_logo" />
+                    android:src="@drawable/lock_new" />
 
                 <EditText
                     android:id="@+id/editPassword"
@@ -122,7 +120,7 @@
                     android:layout_alignParentRight="true"
                     android:id="@+id/eyeIcon"
                     android:layout_width="39dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="24dp"
                     android:layout_centerVertical="true"
                     android:alpha="0.2"
                     android:button="@mipmap/eye"
@@ -138,7 +136,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginHorizontal="100dp"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/shape"
             android:text="@string/login"
             android:textColor="#ffffff" />

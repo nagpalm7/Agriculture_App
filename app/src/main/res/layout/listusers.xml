@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <RelativeLayout
-            android:layout_margin="16dp"
+            android:layout_marginBottom="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -26,13 +26,12 @@
                 android:layout_marginTop="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/user" />
+                android:src="@drawable/user_circle" />
 
             <ImageView
-                android:layout_alignBottom="@id/imageuser"
+                android:layout_alignBottom="@id/tvuser"
                 android:id="@+id/edit_id"
                 android:src="@drawable/edit_ic"
-                android:layout_marginTop="16dp"
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -40,8 +39,8 @@
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground" />
             <ImageView
-                android:layout_alignBottom="@id/imageuser"
-                android:layout_marginRight="16dp"
+                android:layout_alignBottom="@id/tvuser"
+                android:layout_marginRight="8dp"
                 android:id="@+id/delete_id"
                 android:layout_marginTop="16dp"
                 android:src="@drawable/delete_ic"
@@ -53,22 +52,26 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
+                android:layout_marginRight="16dp"
+                android:layout_toLeftOf="@id/delete_id"
+                android:layout_marginLeft="16dp"
                 android:id="@+id/tvuser"
                 android:layout_marginTop="16dp"
-                android:layout_below="@id/imageuser"
-                android:textColor="@color/colorPrimaryDark"
+                android:layout_toRightOf="@id/imageuser"
                 android:textStyle="bold"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/shimmer_bg" />
 
             <TextView
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_toRightOf="@id/imageuser"
                 android:id="@+id/tvinfo"
                 android:layout_below="@id/tvuser"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:layout_width="match_parent"
-                android:textColor="@color/colorPrimaryDark"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@color/shimmer_bg" />

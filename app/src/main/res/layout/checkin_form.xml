@@ -1,144 +1,385 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-        <Button
-            android:id="@+id/pick_photo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/pics_recyclerview"
-            android:layout_alignParentLeft="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/shape"
-            android:padding="16dp"
-            android:text="TAKE PICTURE"
-            android:textColor="#ffffff" />
-
-        <Button
-            android:id="@+id/submit_report_ado"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/pics_recyclerview"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/shape"
-            android:padding="16dp"
-            android:text="Submit Report"
-            android:textColor="#ffffff" />
-
-
-        <Button
-            android:id="@+id/chalaan_photo_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cardview7"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/shape"
-            android:paddingHorizontal="16dp"
-            android:text="ADD CHALLAN PHOTO"
-            android:textColor="@android:color/white"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/chalaan_photo"
+    <!--
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_below="@id/chalaan_photo_button"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="8dp"
-            android:scaleType="centerCrop"
-            android:visibility="gone" />
+            android:layout_height="match_parent">
 
 
-        <!--        <androidx.cardview.widget.CardView-->
-        <!--            android:id="@+id/cardview"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_below="@id/cardview0"-->
-        <!--            android:layout_marginHorizontal="16dp"-->
-        <!--            android:layout_marginTop="16dp"-->
-        <!--            android:elevation="8dp"-->
-        <!--            app:cardCornerRadius="15dp">-->
+            <Button
+                android:id="@+id/pick_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pics_recyclerview"
+                android:layout_alignParentLeft="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/shape"
+                android:padding="16dp"
+                android:text="TAKE PICTURE"
+                android:textColor="#ffffff" />
 
-        <!--            <EditText-->
-        <!--                android:id="@+id/khasra_no"-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:background="@android:color/transparent"-->
-        <!--                android:gravity="start"-->
-        <!--                android:hint="Farmer Code*"-->
-        <!--                android:minLines="2"-->
-        <!--                android:inputType="number"-->
-        <!--                android:paddingLeft="8dp"-->
-        <!--                android:paddingTop="8dp"-->
-        <!--                android:paddingBottom="16dp" />-->
-        <!--        </androidx.cardview.widget.CardView>-->
+            <Button
+                android:id="@+id/submit_report_ado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pics_recyclerview"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/shape"
+                android:padding="16dp"
+                android:text="Submit Report"
+                android:textColor="#ffffff" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardview0"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:elevation="8dp"
-            app:cardCornerRadius="15dp">
 
-            <EditText
-                android:id="@+id/village_code"
+            <Button
+                android:id="@+id/chalaan_photo_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cardview7"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/shape"
+                android:paddingHorizontal="16dp"
+                android:text="ADD CHALLAN PHOTO"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/chalaan_photo"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_below="@id/chalaan_photo_button"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="8dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+
+
+            &lt;!&ndash;        <androidx.cardview.widget.CardView&ndash;&gt;
+            &lt;!&ndash;            android:id="@+id/cardview"&ndash;&gt;
+            &lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;
+            &lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;
+            &lt;!&ndash;            android:layout_below="@id/cardview0"&ndash;&gt;
+            &lt;!&ndash;            android:layout_marginHorizontal="16dp"&ndash;&gt;
+            &lt;!&ndash;            android:layout_marginTop="16dp"&ndash;&gt;
+            &lt;!&ndash;            android:elevation="8dp"&ndash;&gt;
+            &lt;!&ndash;            app:cardCornerRadius="15dp">&ndash;&gt;
+
+            &lt;!&ndash;            <EditText&ndash;&gt;
+            &lt;!&ndash;                android:id="@+id/khasra_no"&ndash;&gt;
+            &lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;
+            &lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;
+            &lt;!&ndash;                android:background="@android:color/transparent"&ndash;&gt;
+            &lt;!&ndash;                android:gravity="start"&ndash;&gt;
+            &lt;!&ndash;                android:hint="Farmer Code*"&ndash;&gt;
+            &lt;!&ndash;                android:minLines="2"&ndash;&gt;
+            &lt;!&ndash;                android:inputType="number"&ndash;&gt;
+            &lt;!&ndash;                android:paddingLeft="8dp"&ndash;&gt;
+            &lt;!&ndash;                android:paddingTop="8dp"&ndash;&gt;
+            &lt;!&ndash;                android:paddingBottom="16dp" />&ndash;&gt;
+            &lt;!&ndash;        </androidx.cardview.widget.CardView>&ndash;&gt;
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:gravity="start"
-                android:hint="Village Code*"
-                android:inputType="number"
-                android:minLines="2"
-                android:paddingLeft="8dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="16dp" />
-        </androidx.cardview.widget.CardView>
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:elevation="8dp"
+                app:cardCornerRadius="15dp">
 
-        <!-- <androidx.cardview.widget.CardView
-             android:id="@+id/cardview7"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_below="@id/cardview1"
-             android:layout_marginHorizontal="16dp"
-             android:layout_marginTop="16dp"
-             android:elevation="8dp"
-             app:cardCornerRadius="15dp">
-             <Spinner
-                 android:id="@+id/sfname"
-                 android:textAlignment="center"
+                <EditText
+                    android:id="@+id/village_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:gravity="start"
+                    android:hint="Village Code*"
+                    android:inputType="number"
+                    android:minLines="2"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="16dp" />
+            </androidx.cardview.widget.CardView>
+
+            &lt;!&ndash; <androidx.cardview.widget.CardView
+                 android:id="@+id/cardview7"
                  android:layout_width="match_parent"
-                 android:layout_height="50dp"/>
+                 android:layout_height="wrap_content"
+                 android:layout_below="@id/cardview1"
+                 android:layout_marginHorizontal="16dp"
+                 android:layout_marginTop="16dp"
+                 android:elevation="8dp"
+                 app:cardCornerRadius="15dp">
+                 <Spinner
+                     android:id="@+id/sfname"
+                     android:textAlignment="center"
+                     android:layout_width="match_parent"
+                     android:layout_height="50dp"/>
 
-         </androidx.cardview.widget.CardView>-->
+             </androidx.cardview.widget.CardView>&ndash;&gt;
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cardview0"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:elevation="8dp"
+                app:cardCornerRadius="15dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ProgressBar
+                        android:id="@+id/vCodespinner_progressbar"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="40dp"
+                        android:indeterminateDrawable="@drawable/progress"
+                        android:visibility="gone" />
+
+                    <Spinner
+                        android:id="@+id/vCodeSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:textAlignment="center" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cardview2"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:elevation="8dp"
+                app:cardCornerRadius="15dp">
+
+                <RelativeLayout
+                    android:id="@+id/rv1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="16dp">
+
+                    <TextView
+                        android:id="@+id/tvowner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/toggleol"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Ownership/Lease"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/toggleaction"
+                        android:layout_marginHorizontal="16dp"
+                        android:text="Action"
+                        android:textSize="18sp" />
+
+                    <ToggleButton
+                        android:id="@+id/toggleaction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/toggleol"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="16dp"
+                        android:textOff="FIR"
+                        android:textOn="chalaan" />
+
+                    <ToggleButton
+                        android:id="@+id/toggleol"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="16dp"
+                        android:textOff="Ownership"
+                        android:textOn="Lease" />
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview7"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cardview8"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:elevation="8dp"
+                app:cardCornerRadius="15dp">
+
+                <EditText
+                    android:id="@+id/chalaan_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:gravity="start"
+                    android:hint="Chalaan Amount*"
+                    android:inputType="number"
+                    android:padding="8dp"
+                    android:visibility="gone" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cardview11"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:elevation="8dp"
+                app:cardCornerRadius="15dp">
+
+                &lt;!&ndash;<EditText
+                    android:id="@+id/farmer_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:gravity="start"
+                    android:hint="Farmer Code*"
+                    android:minLines="2"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp" />&ndash;&gt;
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ProgressBar
+                        android:id="@+id/spinner_progressbar"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="40dp"
+                        android:indeterminateDrawable="@drawable/progress"
+                        android:visibility="gone" />
+
+                    <Spinner
+                        android:id="@+id/sname"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:textAlignment="center" />
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cardview1"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:elevation="8dp"
+                app:cardCornerRadius="15dp">
+
+                <EditText
+                    android:id="@+id/mobile_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:background="@android:color/transparent"
+                    android:gravity="start"
+                    android:hint="Mobile Number*"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:minLines="2"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chalaan_photo"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:elevation="8dp"
+                app:cardCornerRadius="15dp">
+
+                <EditText
+                    android:id="@+id/ado_report_remarks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:gravity="start"
+                    android:hint="Remarks*"
+                    android:minLines="3"
+                    android:padding="8dp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cardview3"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:elevation="8dp"
+                app:cardCornerRadius="15dp">
+
+                <EditText
+                    android:id="@+id/incident_reason"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/transparent"
+                    android:gravity="start"
+                    android:hint="Incident Reason*"
+                    android:padding="8dp" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/pics_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cardview4"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:overScrollMode="never"
+                android:padding="16dp" />
+
+        </RelativeLayout>
+    -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardview11"
+            android:id="@+id/cardview1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cardview0"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
             android:elevation="8dp"
-            app:cardCornerRadius="15dp">
+            app:cardCornerRadius="3dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -157,118 +398,59 @@
                 <Spinner
                     android:id="@+id/vCodeSpinner"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="60dp"
                     android:textAlignment="center" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardview8"
+            android:layout_below="@id/cardview1"
+            android:id="@+id/cardview2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cardview2"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
             android:elevation="8dp"
-            app:cardCornerRadius="15dp">
+            app:cardCornerRadius="3dp">
 
             <RelativeLayout
-                android:id="@+id/rv1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="16dp">
+                android:layout_height="wrap_content">
 
+                <EditText
+                    android:layout_toLeftOf="@id/tvvillagename"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/sname"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp" />
                 <TextView
-                    android:id="@+id/tvowner"
+                    android:id="@+id/tvvillagename"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="VILLAGE NAME"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/toggleol"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Ownership/Lease"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/toggleaction"
-                    android:layout_marginHorizontal="16dp"
-                    android:text="Action"
-                    android:textSize="18sp" />
-
-                <ToggleButton
-                    android:id="@+id/toggleaction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/toggleol"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="16dp"
-                    android:textOff="FIR"
-                    android:textOn="chalaan" />
-
-                <ToggleButton
-                    android:id="@+id/toggleol"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="16dp"
-                    android:textOff="Ownership"
-                    android:textOn="Lease" />
-
+                    android:layout_height="wrap_content"/>
             </RelativeLayout>
-
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardview7"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cardview8"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:elevation="8dp"
-            app:cardCornerRadius="15dp">
-
-            <EditText
-                android:id="@+id/chalaan_amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:gravity="start"
-                android:hint="Chalaan Amount*"
-                android:inputType="number"
-                android:padding="8dp"
-                android:visibility="gone" />
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardview1"
+            android:layout_below="@id/cardview2"
+            android:id="@+id/cardview3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cardview11"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
             android:elevation="8dp"
-            app:cardCornerRadius="15dp">
+            app:cardCornerRadius="3dp">
 
-            <!--<EditText
-                android:id="@+id/farmer_code"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:gravity="start"
-                android:hint="Farmer Code*"
-                android:minLines="2"
-                android:paddingLeft="8dp"
-                android:paddingTop="8dp" />-->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <ProgressBar
-                    android:id="@+id/spinner_progressbar"
+                    android:id="@+id/vCodespinner_progressbar3"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentEnd="true"
@@ -278,90 +460,260 @@
                     android:visibility="gone" />
 
                 <Spinner
-                    android:id="@+id/sname"
+                    android:id="@+id/vCodeSpinner3"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="60dp"
                     android:textAlignment="center" />
             </RelativeLayout>
-
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardview2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cardview1"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:elevation="8dp"
-            app:cardCornerRadius="15dp">
-
-            <EditText
-                android:id="@+id/mobile_no"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@android:color/transparent"
-                android:gravity="start"
-                android:hint="Mobile Number*"
-                android:inputType="number"
-                android:maxLength="10"
-                android:minLines="2"
-                android:paddingLeft="8dp"
-                android:paddingTop="8dp" />
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardview3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/chalaan_photo"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:elevation="8dp"
-            app:cardCornerRadius="15dp">
-
-            <EditText
-                android:id="@+id/ado_report_remarks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:gravity="start"
-                android:hint="Remarks*"
-                android:minLines="3"
-                android:padding="8dp" />
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
+            android:layout_below="@id/cardview3"
             android:id="@+id/cardview4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cardview3"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
             android:elevation="8dp"
-            app:cardCornerRadius="15dp">
+            app:cardCornerRadius="3dp">
 
-            <EditText
-                android:id="@+id/incident_reason"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@android:color/transparent"
-                android:gravity="start"
-                android:hint="Incident Reason*"
-                android:padding="8dp" />
+                android:layout_height="wrap_content">
 
+                <EditText
+                    android:layout_toLeftOf="@id/tvvillagename4"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/sname2"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp" />
+                <TextView
+                    android:id="@+id/tvvillagename4"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="EDIT TEXT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_below="@id/cardview4"
+            android:id="@+id/cardview5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:elevation="8dp"
+            app:cardCornerRadius="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:layout_toLeftOf="@id/tvvillagename5"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/sname3"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp" />
+                <TextView
+                    android:id="@+id/tvvillagename5"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="EDIT TEXT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_below="@id/cardview5"
+            android:id="@+id/cardview6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:elevation="8dp"
+            app:cardCornerRadius="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioGroup
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <RadioButton
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_marginRight="15dp"
+                        android:text="OWNERSHIP"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <RadioButton
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_marginLeft="15dp"
+                        android:text="LEASE"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RadioGroup>
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_below="@id/cardview6"
+            android:id="@+id/cardview7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:elevation="8dp"
+            app:cardCornerRadius="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:layout_toLeftOf="@id/tvvillagename7"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/sname4"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp" />
+                <TextView
+                    android:id="@+id/tvvillagename7"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="EDIT TEXT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_below="@id/cardview7"
+            android:id="@+id/cardview8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:elevation="8dp"
+            app:cardCornerRadius="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:layout_toLeftOf="@id/tvvillagename8"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/sname5"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp" />
+                <TextView
+                    android:id="@+id/tvvillagename8"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="EDIT TEXT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_below="@id/cardview8"
+            android:id="@+id/cardview9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:elevation="8dp"
+            app:cardCornerRadius="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:layout_toLeftOf="@id/tvvillagename9"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/sname6"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp" />
+                <TextView
+                    android:id="@+id/tvvillagename9"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="EDIT TEXT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/pics_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cardview4"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:overScrollMode="never"
-            android:padding="16dp" />
+            android:layout_below="@id/cardview9"
+            android:id="@+id/rvimages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/pick_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rvimages"
+            android:layout_alignParentLeft="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/shape"
+            android:padding="16dp"
+            android:text="TAKE PICTURE"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/submit_report_ado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rvimages"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/shape"
+            android:padding="16dp"
+            android:text="Submit Report"
+            android:textColor="#ffffff" />
+
+
+
+
+
+
+
 
     </RelativeLayout>
 
