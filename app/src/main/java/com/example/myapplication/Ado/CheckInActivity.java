@@ -18,10 +18,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -50,7 +51,6 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
-import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -64,7 +64,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.obsez.android.lib.filechooser.ChooserDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -90,9 +89,6 @@ public class CheckInActivity extends AppCompatActivity
         LocationListener,
         ResultCallback<Status> {
 
-    private RecyclerView recyclerView;
-    private EditText remarkText;
-    private EditText incidentText;
     private Button pickImageButton;
     private Button submitButton;
     private EditText villageEditText;
@@ -104,6 +100,7 @@ public class CheckInActivity extends AppCompatActivity
     private ReportImageRecyAdapter adapter;
     private String reportSubmitUrl = "http://13.235.100.235:8000/api/report-ado/add/";
     private String imageUploadUrl = "http://13.235.100.235:8000/api/upload/images/";
+    private String villageListUrl = "http://13.235.100.235:8000/api/villages-list/";
     private Intent intent;
     private int locationId;
     private String reportId;
@@ -113,6 +110,10 @@ public class CheckInActivity extends AppCompatActivity
     private String TAG = "CheckInActivity";
     private String farmerDetailsUrl = "http://117.240.196.238:8080/api/CRM/getFarmerDetail";
     public static  boolean isEntered = false;
+    private EditText murrabbaEditText;
+    private EditText killaEditText;
+    private EditText remarksEditText;
+    private EditText reasonEditText;
 
     //arraylist
     private ArrayList<String> farmerNames;
@@ -120,9 +121,11 @@ public class CheckInActivity extends AppCompatActivity
     private ArrayList<String> farmerFatherNames;
 
     //spinner
-    private Spinner name;
     private Spinner vCodeSpinner;
     private ProgressBar vCodeProgressBar;
+    private Spinner nameSpinner;
+    private RadioGroup radioGroup;
+    private RadioButton radioButton;
     private ArrayList<String> villageNames;
     private String pk;
     private String actionTaken = "FIR";
@@ -133,8 +136,6 @@ public class CheckInActivity extends AppCompatActivity
     private boolean isTextChanged = false;
     private boolean isBusy = false;
     private NotificationManagerCompat notificationManager;
-    private EditText chalaanEdittext;
-    private Button addChalaanButton;
     private ImageView chalaanImageView;
     private File chalaanFile = null;
     private String imageFilePath;
@@ -142,6 +143,8 @@ public class CheckInActivity extends AppCompatActivity
     GoogleApiClient mGoogleApiClient;
     private MarkerOptions Dlocation;
     private int photosUploadedCount = 0;
+    private RecyclerView recyclerView;
+    private ArrayList<String> villageIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,35 +162,32 @@ public class CheckInActivity extends AppCompatActivity
         getSupportActionBar().setTitle("Report Filing");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Log.d(TAG, "onCreate: TOKEN " + token);
-        recyclerView = findViewById(R.id.pics_recyclerview);
-        remarkText = findViewById(R.id.ado_report_remarks);
-        incidentText = findViewById(R.id.incident_reason);
         pickImageButton = findViewById(R.id.pick_photo);
         submitButton = findViewById(R.id.submit_report_ado);
-        villageEditText = findViewById(R.id.village_code);
-        mobileEditText = findViewById(R.id.mobile_no);
-        chalaanEdittext = findViewById(R.id.chalaan_amount);
-        addChalaanButton = findViewById(R.id.chalaan_photo_button);
-        chalaanImageView = findViewById(R.id.chalaan_photo);
+        murrabbaEditText = findViewById(R.id.sname2);
+        killaEditText = findViewById(R.id.sname3);
+        remarksEditText = findViewById(R.id.sname4);
+        reasonEditText = findViewById(R.id.sname5);
+        recyclerView = findViewById(R.id.rvimages);
         Dlocation = new MarkerOptions().position(new LatLng(30.76338, 76.7689826)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         buildGoogleApiClient();
 
 
         // reference to spinners
-        name = findViewById(R.id.sname);
         vCodeSpinner = findViewById(R.id.vCodeSpinner);
         vCodeProgressBar = findViewById(R.id.vCodespinner_progressbar);
+        nameSpinner = findViewById(R.id.vCodeSpinner3);
+        radioGroup = findViewById(R.id.radio_group);
         //fname = findViewById(R.id.sfname);
-        nameProgressBar = findViewById(R.id.spinner_progressbar);
+
         //reference to toggle button
-        ownerlease = findViewById(R.id.toggleol);
-        action = findViewById(R.id.toggleaction);
         notificationManager = NotificationManagerCompat.from(this);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mImages = new ArrayList<>();
         mImagesPath = new ArrayList<>();
         adapter = new ReportImageRecyAdapter(this, mImagesPath);
         recyclerView.setAdapter(adapter);
+        fetchSpinnerData(villageListUrl);
         pickImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -218,13 +218,13 @@ public class CheckInActivity extends AppCompatActivity
                                             if (villageEditText.getText().toString().isEmpty())
                                                 Toast.makeText(CheckInActivity.this, "Please enter Village Code",
                                                         Toast.LENGTH_SHORT).show();
-                                            else if (name.getSelectedItemPosition() == 0 || farmerNames == null)
+                                            else if (vCodeSpinner.getSelectedItemPosition() == 0 || farmerNames == null)
                                                 Toast.makeText(CheckInActivity.this, "Please select a farmer name and" +
                                                         " father name", Toast.LENGTH_LONG).show();
-                                            else if (remarkText.getText().toString().isEmpty())
+                                            else if (remarksEditText.getText().toString().isEmpty())
                                                 Toast.makeText(CheckInActivity.this, "Please fill Remarks",
                                                         Toast.LENGTH_SHORT).show();
-                                            else if (incidentText.getText().toString().isEmpty())
+                                            else if (reasonEditText.getText().toString().isEmpty())
                                                 Toast.makeText(CheckInActivity.this, "Please fill Incident " +
                                                         "Reason", Toast.LENGTH_SHORT).show();
                                             else
@@ -249,13 +249,13 @@ public class CheckInActivity extends AppCompatActivity
                                         if (villageEditText.getText().toString().isEmpty())
                                             Toast.makeText(CheckInActivity.this, "Please enter Village Code",
                                                     Toast.LENGTH_SHORT).show();
-                                        else if (name.getSelectedItemPosition() == 0 || farmerNames == null)
+                                        else if (vCodeSpinner.getSelectedItemPosition() == 0 || farmerNames == null)
                                             Toast.makeText(CheckInActivity.this, "Please select a farmer name and" +
                                                     " father name", Toast.LENGTH_LONG).show();
-                                        else if (remarkText.getText().toString().isEmpty())
+                                        else if (remarksEditText.getText().toString().isEmpty())
                                             Toast.makeText(CheckInActivity.this, "Please fill Remarks",
                                                     Toast.LENGTH_SHORT).show();
-                                        else if (incidentText.getText().toString().isEmpty())
+                                        else if (reasonEditText.getText().toString().isEmpty())
                                             Toast.makeText(CheckInActivity.this, "Please fill Incident " +
                                                     "Reason", Toast.LENGTH_SHORT).show();
                                         else
@@ -295,24 +295,22 @@ public class CheckInActivity extends AppCompatActivity
             }
         });
 
-        name.setOnTouchListener(new View.OnTouchListener() {
+        nameSpinner.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                Log.d(TAG, "onTouch: outside " + isRequestFinished + " " + isTextChanged);
-                String villCode = villageEditText.getText().toString().trim();
+                if (vCodeSpinner.getSelectedItemPosition() == 0) {
+                    Toast.makeText(CheckInActivity.this, "Please select valid Village Name",
+                            Toast.LENGTH_SHORT).show();
+                } else if (vCodeSpinner.getSelectedItem().toString().equals("Other")) {
 
-                if (villCode.isEmpty())
-                    Toast.makeText(CheckInActivity.this, "Please fill the Village Code", Toast.LENGTH_SHORT).show();
-                else if (!isRequestFinished && motionEvent.getAction() == MotionEvent.ACTION_DOWN && !isBusy) {
-                    Log.d(TAG, "onTouch: ");
-                    nameProgressBar.setVisibility(View.VISIBLE);
-                    getFarmerDetails(villCode);
+                } else {
+                    getFarmerDetails(villageIds.get(vCodeSpinner.getSelectedItemPosition()));
                 }
                 return false;
             }
         });
 
-        action.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        /*action.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
@@ -330,8 +328,8 @@ public class CheckInActivity extends AppCompatActivity
                 }
             }
         });
-
-        addChalaanButton.setOnClickListener(new View.OnClickListener() {
+*/
+        /*addChalaanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 File file = Environment.getExternalStorageDirectory();
@@ -358,9 +356,70 @@ public class CheckInActivity extends AppCompatActivity
                         .build()
                         .show();
             }
-        });
+        });*/
+
     }
 
+
+    private void fetchSpinnerData(String url) {
+        villageIds = new ArrayList<>();
+        villageNames = new ArrayList<>();
+        villageNames.add("Select Village Name");
+        villageIds.add("null");
+       /* int startIndex = place.indexOf(",");
+        int endIndex = place.length() - 1;
+        String toBeReplaced = place.substring(startIndex, endIndex);
+        final String extractedPlace = place.replace(toBeReplaced, "");*/
+        JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject rootObject = new JSONObject(String.valueOf(response));
+                            JSONArray resultsArray = rootObject.getJSONArray("results");
+                            int pos = 0;
+                            for (int i = 0; i < resultsArray.length(); i++) {
+                                JSONObject singleObject = resultsArray.getJSONObject(i);
+                                String village = singleObject.getString("village");
+                                String villageId = singleObject.getString("village_code");
+//                                    if (place.equals(village))
+//                                        pos = i;
+                                villageNames.add(village);
+                                villageIds.add(villageId);
+
+                            }
+                            Log.d(TAG, "onResponse: ADO " + villageNames);
+                            villageNames.add("Other");
+                            villageIds.add("null");
+                            ArrayAdapter<String> villageAdapter = new ArrayAdapter<String>(getApplicationContext(),
+                                    android.R.layout.simple_dropdown_item_1line, villageNames);
+                            villageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            vCodeSpinner.setAdapter(villageAdapter);
+                            vCodeSpinner.setSelection(0);
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "onResponse: JSON EXCEPTION " + e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "onErrorResponse: " + error);
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Authorization", "Token " + token);
+                return map;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
+    }
     @Override
     public boolean onSupportNavigateUp() {
         finish();
@@ -413,24 +472,25 @@ public class CheckInActivity extends AppCompatActivity
         reportSubmitLoading = new SpotsDialog.Builder().setContext(this).setMessage("Submitting Report").setCancelable(false)
                 .build();
         reportSubmitLoading.show();
+        int radioButtonId = radioGroup.getCheckedRadioButtonId();
+        radioButton = findViewById(radioButtonId);
+        String ownLease = radioButton.getText().toString().toLowerCase();
         if (!isReportSubmitted) {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
 
             JSONObject postParams = new JSONObject();
             try {
-                String remarks = remarkText.getText().toString();
-                String incidentReason = incidentText.getText().toString();
-                String farmername = farmerNames.get(name.getSelectedItemPosition() - 1);
-                String fathername = fatherNames.get(name.getSelectedItemPosition() - 1);
-                String rtype = ownerlease.getText().toString().toLowerCase();
-                Log.d(TAG, "submitReport: " + rtype);
-                String mobile = mobileEditText.getText().toString();
+                String remarks = remarksEditText.getText().toString();
+                String incidentReason = reasonEditText.getText().toString();
+                String farmername = farmerNames.get(vCodeSpinner.getSelectedItemPosition() - 1);
+                String fathername = fatherNames.get(vCodeSpinner.getSelectedItemPosition() - 1);
+                //String mobile = mobileEditText.getText().toString();
 
                 postParams.put("farmer_name", farmername);
                 postParams.put("father_name", fathername);
                 postParams.put("farmer_code", "bfhsdf");
-                postParams.put("village_code", " dfddfs");
-                postParams.put("ownership", rtype);
+                postParams.put("village_code", "");
+                postParams.put("ownership", ownLease);
                 //postParams.put("action", actionTaken);
                 postParams.put("location", String.valueOf(locationId));
                 postParams.put("remarks", remarks);
@@ -606,7 +666,7 @@ public class CheckInActivity extends AppCompatActivity
                                 ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),
                                         android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
                                 adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                name.setAdapter(adaptername);
+                                vCodeSpinner.setAdapter(adaptername);
 //                                ArrayAdapter<String> adapterfname = new ArrayAdapter<>(getApplicationContext(),
 //                                        android.R.layout.simple_dropdown_item_1line, fatherNames);
 //                                adapterfname.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -639,7 +699,7 @@ public class CheckInActivity extends AppCompatActivity
         requestQueue.add(jsonObjectRequest);
     }
 
-    private void getVillageCode() {
+    private void getVillageName() {
         String url = "";
         villageNames = new ArrayList<>();
         if (!pk.equals("")) {

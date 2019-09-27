@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -72,6 +73,8 @@ public class DdaOngoingFragment extends Fragment {
         ddaongoingAdapter = new DdaongoingAdapter(getActivity(),Id,Name,Address);
         review.setAdapter(ddaongoingAdapter);
         layoutManager = new LinearLayoutManager(getActivity());
+        DividerItemDecoration divider = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
+        review.addItemDecoration(divider);
         review.setLayoutManager(layoutManager);
 
 

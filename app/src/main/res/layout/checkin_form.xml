@@ -467,6 +467,37 @@
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
+        <!-- <androidx.cardview.widget.CardView
+             android:id="@+id/cardview9"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginHorizontal="16dp"
+             android:layout_marginTop="16dp"
+             android:elevation="8dp"
+             app:cardCornerRadius="3dp">
+
+             <RelativeLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content">
+
+                 <EditText
+                     android:layout_toLeftOf="@id/tvvillagename9"
+                     android:background="@android:color/transparent"
+                     android:id="@+id/sname6"
+                     android:layout_width="match_parent"
+                     android:layout_height="60dp" />
+                 <TextView
+                     android:id="@+id/tvvillagename9"
+                     android:layout_alignParentEnd="true"
+                     android:layout_marginRight="16dp"
+                     android:layout_centerVertical="true"
+                     android:textColor="@color/colorPrimaryDark"
+                     android:text="EDIT TEXT"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"/>
+             </RelativeLayout>
+         </androidx.cardview.widget.CardView>-->
+
         <androidx.cardview.widget.CardView
             android:layout_below="@id/cardview3"
             android:id="@+id/cardview4"
@@ -493,7 +524,7 @@
                     android:layout_marginRight="16dp"
                     android:layout_centerVertical="true"
                     android:textColor="@color/colorPrimaryDark"
-                    android:text="EDIT TEXT"
+                    android:text="MURRABBA NO."
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>
@@ -526,7 +557,7 @@
                     android:layout_marginRight="16dp"
                     android:layout_centerVertical="true"
                     android:textColor="@color/colorPrimaryDark"
-                    android:text="EDIT TEXT"
+                    android:text="KILLA NO."
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>
@@ -550,6 +581,7 @@
                 <RadioGroup
                     android:layout_centerInParent="true"
                     android:orientation="horizontal"
+                    android:id="@+id/radio_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
@@ -600,7 +632,7 @@
                     android:layout_marginRight="16dp"
                     android:layout_centerVertical="true"
                     android:textColor="@color/colorPrimaryDark"
-                    android:text="EDIT TEXT"
+                    android:text="REMARKS"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>
@@ -633,50 +665,19 @@
                     android:layout_marginRight="16dp"
                     android:layout_centerVertical="true"
                     android:textColor="@color/colorPrimaryDark"
-                    android:text="EDIT TEXT"
+                    android:text="INCIDENT REASON"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
-
-        <androidx.cardview.widget.CardView
-            android:layout_below="@id/cardview8"
-            android:id="@+id/cardview9"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:elevation="8dp"
-            app:cardCornerRadius="3dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:layout_toLeftOf="@id/tvvillagename9"
-                    android:background="@android:color/transparent"
-                    android:id="@+id/sname6"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp" />
-                <TextView
-                    android:id="@+id/tvvillagename9"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="16dp"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:text="EDIT TEXT"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-        </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginTop="16dp"
-            android:layout_below="@id/cardview9"
+            android:layout_below="@id/cardview8"
             android:id="@+id/rvimages"
             android:layout_width="match_parent"
+            android:padding="16dp"
             android:layout_height="wrap_content"/>
 
         <Button
@@ -709,13 +710,6 @@
             android:padding="16dp"
             android:text="Submit Report"
             android:textColor="#ffffff" />
-
-
-
-
-
-
-
 
     </RelativeLayout>
 

@@ -33,7 +33,7 @@
                 android:textColor="@color/colorPrimaryDark"
                 android:textStyle="bold"
                 android:textSize="24sp"
-                android:text="Uplaod"
+                android:text="Upload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

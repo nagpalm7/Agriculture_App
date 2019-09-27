@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -72,6 +73,8 @@ public class ddo_fragment extends Fragment {
         Rview.setAdapter(recyclerViewAdater);
         layoutManager = new LinearLayoutManager(getActivity());
         Rview.setLayoutManager(layoutManager);
+        DividerItemDecoration divider = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
+        Rview.addItemDecoration(divider);
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
         Log.d(TAG, "onCreateView: " + token);

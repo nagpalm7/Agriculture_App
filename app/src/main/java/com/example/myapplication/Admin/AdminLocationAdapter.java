@@ -50,11 +50,9 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
             holder.tv1.setBackground(null);
             holder.tv2.setBackground(null);
             holder.tv3.setBackground(null);
-            holder.tv4.setBackground(null);
             holder.tv1.setText("DDA     : " + mtextview1.get(position));
             holder.tv2.setText("ADO     : " + mtextview2.get(position));
             holder.tv3.setText("ADDRESS : " + mtextview3.get(position));
-            holder.tv4.setText(String.valueOf(position + 1));
         }
     }
 
@@ -68,7 +66,6 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
         TextView tv1;
         TextView tv2;
         TextView tv3;
-        TextView tv4;
         RelativeLayout parentnotassigned;
         ShimmerFrameLayout shimmerFrameLayout;
 
@@ -78,7 +75,6 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
             tv1 = itemView.findViewById(R.id.dda_name);
             tv2 = itemView.findViewById(R.id.ada_name);
             tv3 = itemView.findViewById(R.id.address);
-            tv4 = itemView.findViewById(R.id.serial_no);
             shimmerFrameLayout = itemView.findViewById(R.id.locations_shimmer);
         }
 
