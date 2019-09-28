@@ -50,10 +50,10 @@ public class DdapendingassignedAdapter extends RecyclerView.Adapter<Ddapendingas
         else {
             holder.shimmerassigned.stopShimmer();
             holder.shimmerassigned.setShimmer(null);
-            holder.tv1.setBackground(null);
+
             holder.tv2.setBackground(null);
             holder.tv3.setBackground(null);
-            holder.tv1.setText(mtextview1.get(position));
+
             holder.tv2.setText(mtextview2.get(position));
             holder.tv3.setText(mtextview3.get(position));
         }
@@ -66,7 +66,6 @@ public class DdapendingassignedAdapter extends RecyclerView.Adapter<Ddapendingas
 
     public class ViewHolderAssignedDda extends RecyclerView.ViewHolder{
 
-        TextView tv1;
         TextView tv2;
         TextView tv3;
         RelativeLayout cardassigned;
@@ -76,7 +75,6 @@ public class DdapendingassignedAdapter extends RecyclerView.Adapter<Ddapendingas
             super(itemView);
             mcontext = itemView.getContext();
             cardassigned = itemView.findViewById(R.id.card_assigned);
-            tv1 = itemView.findViewById(R.id.adoassignedid);
             tv2 = itemView.findViewById(R.id.adoassignedname);
             tv3 = itemView.findViewById(R.id.adoassignedaddress);
             shimmerassigned = itemView.findViewById(R.id.shimmer_assigned);

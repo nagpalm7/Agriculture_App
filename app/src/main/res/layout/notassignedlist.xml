@@ -27,7 +27,7 @@
                     android:id="@+id/lid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textColor="@color/colorPrimaryDark"
                     android:background="@color/shimmer_bg" />
 
@@ -36,8 +36,8 @@
                     android:layout_marginBottom="8dp"
                     android:id="@+id/address"
                     android:layout_below="@+id/lid"
-                    android:layout_marginTop="8dp"
-                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:textSize="12sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/shimmer_bg"
