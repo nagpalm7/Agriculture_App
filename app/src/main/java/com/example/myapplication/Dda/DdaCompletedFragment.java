@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,21 +50,17 @@ public class DdaCompletedFragment extends Fragment {
     private int length_of_array;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public DdaCompletedFragment() {
-        // Required empty public constructor
-        Id = new ArrayList<String>();
-        Address = new ArrayList<String>();
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_ongoing,container,false);
-
+        Id = new ArrayList<String>();
+        Address = new ArrayList<String>();
         ddacompletedAdapter = new DdacompletedAdapter(getContext(),Id,Address);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddacompletedAdapter);
+
         swipeRefreshLayout = view.findViewById(R.id.refreshpull11);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -96,13 +93,13 @@ public class DdaCompletedFragment extends Fragment {
                     }
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
-                        dda = c.getString("dda");
-                        Id.add(c.getString("id"));
+                        JSONObject ob = c.getJSONObject("ado");
+                        String ado_name= ob.getString("name");
+                        Id.add(ado_name);
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
-                        state = c.getString("state");
-                        Address.add(villagename + ", " + blockname + ", " + district + ", " + state);
+                        Address.add(villagename + ", " + blockname + ", " + district);
                         Log.d(TAG, "onResponse: some error in if");
                     }
                     ddacompletedAdapter.showcomletedshimmer = false;
@@ -166,13 +163,16 @@ public class DdaCompletedFragment extends Fragment {
                     }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
+                        JSONObject ob = c.getJSONObject("ado");
+                        String ado_name= ob.getString("name");
                         dda = c.getString("dda");
-                        Id.add(c.getString("id"));
+                        Id.add(ado_name);
+
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        Address.add(villagename + "," + blockname + "," + district + "," + state);
+                        Address.add(villagename + "," + blockname + "," + district);
                         Log.d(TAG, "onResponse: some error in if");
                         isNextBusy = false;
                     }
