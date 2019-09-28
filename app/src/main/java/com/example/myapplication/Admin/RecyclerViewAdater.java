@@ -86,38 +86,42 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
         viewHolder.editImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mcontext, EditActivity.class);
-                int pos = viewHolder.getAdapterPosition();
-                intent.putExtra("id", mPkList.get(pos));
-                if (isDdoFragment)
-                    intent.putExtra("isDdo", true);
-                else
-                    intent.putExtra("isDdo", false);
-                intent.putExtra("place", mtextview2.get(pos));
-                mcontext.startActivity(intent);
+                if (!mShowShimmer) {
+                    Intent intent = new Intent(mcontext, EditActivity.class);
+                    int pos = viewHolder.getAdapterPosition();
+                    intent.putExtra("id", mPkList.get(pos));
+                    if (isDdoFragment)
+                        intent.putExtra("isDdo", true);
+                    else
+                        intent.putExtra("isDdo", false);
+                    intent.putExtra("place", mtextview2.get(pos));
+                    mcontext.startActivity(intent);
+                }
             }
         });
 
         viewHolder.deleteImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showdialogbox("Delete " + mtextview1.get(viewHolder.getAdapterPosition()),
-                        "Are you sure?", "Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Toast.makeText(mcontext, "Successfully Deleted!", Toast.LENGTH_SHORT).show();
-                                mtextview1.remove(0);
-                                mtextview2.remove(0);
-                                deleteRecord(viewHolder.getAdapterPosition());
-                                notifyDataSetChanged();
-                            }
-                        }, "No",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                if (!mShowShimmer) {
+                    showdialogbox("Delete " + mtextview1.get(viewHolder.getAdapterPosition()),
+                            "Are you sure?", "Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Toast.makeText(mcontext, "Successfully Deleted!", Toast.LENGTH_SHORT).show();
+                                    mtextview1.remove(0);
+                                    mtextview2.remove(0);
+                                    deleteRecord(viewHolder.getAdapterPosition());
+                                    notifyDataSetChanged();
+                                }
+                            }, "No",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
 
-                            }
-                        }, true);
+                                }
+                            }, true);
+                }
             }
         });
 

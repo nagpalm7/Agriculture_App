@@ -16,16 +16,16 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -100,7 +100,7 @@ public class CheckInActivity extends AppCompatActivity
     private ReportImageRecyAdapter adapter;
     private String reportSubmitUrl = "http://13.235.100.235:8000/api/report-ado/add/";
     private String imageUploadUrl = "http://13.235.100.235:8000/api/upload/images/";
-    private String villageListUrl = "http://13.235.100.235:8000/api/villages-list/";
+    private String villageListUrl = "http://13.235.100.235:8000/api/village/";
     private Intent intent;
     private int locationId;
     private String reportId;
@@ -130,13 +130,10 @@ public class CheckInActivity extends AppCompatActivity
     private String pk;
     private String actionTaken = "FIR";
     private ProgressBar nameProgressBar;
-    private ToggleButton ownerlease;
-    private ToggleButton action;
     private boolean isRequestFinished = false;
     private boolean isTextChanged = false;
     private boolean isBusy = false;
     private NotificationManagerCompat notificationManager;
-    private ImageView chalaanImageView;
     private File chalaanFile = null;
     private String imageFilePath;
     private LocationRequest mLocationRequest;
@@ -144,7 +141,11 @@ public class CheckInActivity extends AppCompatActivity
     private MarkerOptions Dlocation;
     private int photosUploadedCount = 0;
     private RecyclerView recyclerView;
-    private ArrayList<String> villageIds;
+    private ArrayList<String> villageCodes;
+    private String destVillageName;
+    private RelativeLayout villageNameOther;
+    private EditText farmerNameEditText;
+    private RelativeLayout farmerNameOther;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +157,7 @@ public class CheckInActivity extends AppCompatActivity
 
         String id = intent.getStringExtra("id");
         locationId = Integer.parseInt(id);
+        destVillageName = intent.getStringExtra("village_name");
         SharedPreferences prefs = getSharedPreferences("tokenFile", MODE_PRIVATE);
         pk = prefs.getString("pk", "");
         token = prefs.getString("token", "");
@@ -169,13 +171,16 @@ public class CheckInActivity extends AppCompatActivity
         remarksEditText = findViewById(R.id.sname4);
         reasonEditText = findViewById(R.id.sname5);
         recyclerView = findViewById(R.id.rvimages);
+        villageNameOther = findViewById(R.id.villageNameOther);
+        farmerEditText = findViewById(R.id.fname);
+        farmerNameOther = findViewById(R.id.farmerNameOther);
         Dlocation = new MarkerOptions().position(new LatLng(30.76338, 76.7689826)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         buildGoogleApiClient();
 
 
         // reference to spinners
         vCodeSpinner = findViewById(R.id.vCodeSpinner);
-        vCodeProgressBar = findViewById(R.id.vCodespinner_progressbar);
+        vCodeProgressBar = findViewById(R.id.vCodespinner_progressbar3);
         nameSpinner = findViewById(R.id.vCodeSpinner3);
         radioGroup = findViewById(R.id.radio_group);
         //fname = findViewById(R.id.sfname);
@@ -295,17 +300,64 @@ public class CheckInActivity extends AppCompatActivity
             }
         });
 
+        vCodeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (vCodeSpinner.getSelectedItem().toString().equals("Other")) {
+                    villageNameOther.setVisibility(View.VISIBLE);
+                } else
+                    villageNameOther.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        nameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (nameSpinner.getSelectedItem().toString().equals("Other")) {
+                    farmerNameOther.setVisibility(View.VISIBLE);
+                } else {
+                    farmerNameOther.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         nameSpinner.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (vCodeSpinner.getSelectedItemPosition() == 0) {
-                    Toast.makeText(CheckInActivity.this, "Please select valid Village Name",
-                            Toast.LENGTH_SHORT).show();
-                } else if (vCodeSpinner.getSelectedItem().toString().equals("Other")) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (vCodeSpinner.getSelectedItemPosition() == 0) {
+                        Toast.makeText(CheckInActivity.this, "Select a valid Village Name",
+                                Toast.LENGTH_SHORT).show();
+                    } else if (vCodeSpinner.getSelectedItem().toString().equals("Other")) {
+                        farmerNameOther.setVisibility(View.VISIBLE);
+                        farmerFatherNames = new ArrayList<>();
+                        farmerFatherNames.add("Other");
+                        ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),
+                                android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
+                        adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        vCodeSpinner.setAdapter(adaptername);
+                        vCodeSpinner.setSelection(0);
 
-                } else {
-                    getFarmerDetails(villageIds.get(vCodeSpinner.getSelectedItemPosition()));
+                    } else {
+                        if (!isBusy && !isRequestFinished) {
+                            vCodeProgressBar.setVisibility(View.VISIBLE);
+                            getFarmerDetails(villageCodes.get(vCodeSpinner.getSelectedItemPosition()));
+                        }
+                    }
+                    return true;
                 }
+
+
                 return false;
             }
         });
@@ -362,11 +414,11 @@ public class CheckInActivity extends AppCompatActivity
 
 
     private void fetchSpinnerData(String url) {
-        villageIds = new ArrayList<>();
+        villageCodes = new ArrayList<>();
         villageNames = new ArrayList<>();
         villageNames.add("Select Village Name");
-        villageIds.add("null");
-       /* int startIndex = place.indexOf(",");
+        villageCodes.add("null");
+       /*int startIndex = place.indexOf(",");
         int endIndex = place.length() - 1;
         String toBeReplaced = place.substring(startIndex, endIndex);
         final String extractedPlace = place.replace(toBeReplaced, "");*/
@@ -382,22 +434,19 @@ public class CheckInActivity extends AppCompatActivity
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 String village = singleObject.getString("village");
                                 String villageId = singleObject.getString("village_code");
-//                                    if (place.equals(village))
-//                                        pos = i;
+                                if (destVillageName.equals(village))
+                                    pos = i;
                                 villageNames.add(village);
-                                villageIds.add(villageId);
-
+                                villageCodes.add(villageId);
                             }
                             Log.d(TAG, "onResponse: ADO " + villageNames);
                             villageNames.add("Other");
-                            villageIds.add("null");
+                            villageCodes.add("null");
                             ArrayAdapter<String> villageAdapter = new ArrayAdapter<String>(getApplicationContext(),
                                     android.R.layout.simple_dropdown_item_1line, villageNames);
                             villageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             vCodeSpinner.setAdapter(villageAdapter);
-                            vCodeSpinner.setSelection(0);
-
-
+                            vCodeSpinner.setSelection(pos);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.d(TAG, "onResponse: JSON EXCEPTION " + e);
@@ -643,6 +692,8 @@ public class CheckInActivity extends AppCompatActivity
                             JSONArray dataArray = rootObject.getJSONArray("data");
                             Log.d(TAG, "onResponse: DATAARRAY " + dataArray.length());
                             farmerFatherNames.add("Farmer Name, Father Name");
+                            farmerNames.add("null");
+                            farmerFatherNames.add("null");
                             /*if (dataArray.length() == 0) {
                                 Toast toast = Toast.makeText(CheckInActivity.this, "No Data Found for Village Code "
                                         + villCode, Toast.LENGTH_SHORT);
@@ -666,13 +717,13 @@ public class CheckInActivity extends AppCompatActivity
                                 ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),
                                         android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
                                 adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                vCodeSpinner.setAdapter(adaptername);
+                                nameSpinner.setAdapter(adaptername);
 //                                ArrayAdapter<String> adapterfname = new ArrayAdapter<>(getApplicationContext(),
 //                                        android.R.layout.simple_dropdown_item_1line, fatherNames);
 //                                adapterfname.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 //fname.setAdapter(adapterfname);
                             }
-                            nameProgressBar.setVisibility(View.GONE);
+                            vCodeProgressBar.setVisibility(View.GONE);
                             isRequestFinished = true;
                             isBusy = false;
                             Log.d(TAG, "onResponse: FARMER" + farmerNames.size());

@@ -85,6 +85,7 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
                         intent.putExtra("latitude", latitude.get(position));
                         intent.putExtra("id", idList.get(position));
                         intent.putExtra("title", mtextview1.get(position));
+                        intent.putExtra("village_name", mtextview1.get(position));
                         mcontext.startActivity(intent);
                     }
 

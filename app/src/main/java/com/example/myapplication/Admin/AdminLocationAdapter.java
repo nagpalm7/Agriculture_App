@@ -53,7 +53,7 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
         viewHolderDda.parentnotassigned.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isComplete) {
+                if (isComplete && !mShowShimmer) {
                     Intent intent = new Intent(mcontext, ReviewReport.class);
                     int pos = viewHolderDda.getAdapterPosition();
                     intent.putExtra("id", mIds.get(pos));
