@@ -10,13 +10,13 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
@@ -59,7 +59,7 @@ public class ReviewReport extends AppCompatActivity {
     private static String TAG = "ReviewReport";
     private TextView chalaanLeft;
     private ProgressBar progressBar;
-    private TableLayout tableLayout;
+    //private TableLayout tableLayout;
     private String mUrl;
     private boolean isComplete;
     private boolean isAdmin;
@@ -67,6 +67,12 @@ public class ReviewReport extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ReviewPicsRecyclerviewAdapter adapter;
     private ArrayList<String> mImagesUrl;
+    private ArrayList<String> schemedata;
+    private ArrayList<String> programNamedata;
+    private ArrayList<String> financialYearNamedata;
+    private ArrayList<String> dateOfBenefitdata;
+    private TextView noSubsidiesTextView;
+
     private String farmerId;
     private String id;
     private boolean isDdo;
@@ -76,11 +82,13 @@ public class ReviewReport extends AppCompatActivity {
     private TextView districtright;
     private String urlfarmer = "https://agriharyana.org/api/farmer";
 
+    private RecyclerView tableRecyclerView;
+    private ReviewTableRecycleAdapter reviewTableRecycleAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_report);
-        tableLayout = findViewById(R.id.table);
+        //tableLayout = findViewById(R.id.table);
         getSupportActionBar().setTitle("Report Details");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         fatherNameRight = findViewById(R.id.fatherNameRight);
@@ -99,8 +107,32 @@ public class ReviewReport extends AppCompatActivity {
         remarksRight = findViewById(R.id.remarksRight);
         reasonLeft = findViewById(R.id.reasonLeft);
         reasonRight = findViewById(R.id.reasonRight);
-        progressBar = findViewById(R.id.progressBar);/*
-        actionLeft = findViewById(R.id.actionLeft);
+        progressBar = findViewById(R.id.progressBar);
+        noSubsidiesTextView = findViewById(R.id.noSubsidies_textview);
+        schemedata = new ArrayList<>();
+        programNamedata = new ArrayList<>();
+        financialYearNamedata = new ArrayList<>();
+        dateOfBenefitdata = new ArrayList<>();
+        schemedata.add("Scheme Name");
+        programNamedata.add("Program Name");
+        financialYearNamedata.add("Financial Year");
+        dateOfBenefitdata.add("Date Of Benefit");
+        schemedata.add("State Scheme for Promotion of Cotton Cultivation in Haryana ");
+        programNamedata.add("Pest Management Demonstration (IPM)");
+        financialYearNamedata.add("2018-2019");
+        dateOfBenefitdata.add("2018-11-05 11:51:53");
+
+        schemedata.add("State Scheme for Promotion of Cotton Cultivation in Haryana ");
+        programNamedata.add("Pest Management Demonstration (IPM)");
+        financialYearNamedata.add("2018-2019");
+        dateOfBenefitdata.add("2018-11-05 11:51:53");
+
+        schemedata.add("State Scheme for Promotion of Cotton Cultivation in Haryana ");
+        programNamedata.add("Pest Management Demonstration (IPM)");
+        financialYearNamedata.add("2018-2019");
+        dateOfBenefitdata.add("2018-11-05 11:51:53");
+
+        /*actionLeft = findViewById(R.id.actionLeft);
         actionRight = findViewById(R.id.actionRight);
         chalaanLeft = findViewById(R.id.chalaan_amount_left);
         chalaanRight = findViewById(R.id.chalaan_amount_right);*/
@@ -109,14 +141,20 @@ public class ReviewReport extends AppCompatActivity {
         villnameright = findViewById(R.id.villnameRight);
         districtleft = findViewById(R.id.districtLeft);
         districtright = findViewById(R.id.districtRight);
+        tableRecyclerView = findViewById(R.id.tableRecyclerView);
+        tableRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        reviewTableRecycleAdapter = new ReviewTableRecycleAdapter(this, schemedata, programNamedata, financialYearNamedata, dateOfBenefitdata);
+        tableRecyclerView.setAdapter(reviewTableRecycleAdapter);
         mImagesUrl = new ArrayList<>();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+
         adapter = new ReviewPicsRecyclerviewAdapter(this, mImagesUrl);
         recyclerView.setAdapter(adapter);
         Button forfeitButton = findViewById(R.id.forfeit);
         Button startButton = findViewById(R.id.start);
         Intent intent = getIntent();
         id = intent.getStringExtra("id");
+        isDdo = intent.getBooleanExtra("isDdo", false);
         Log.d(TAG, "onCreate: ID " + id);
         isComplete = intent.getBooleanExtra("isComplete", false);
         isAdmin = intent.getBooleanExtra("isAdmin", false);
@@ -221,7 +259,8 @@ public class ReviewReport extends AppCompatActivity {
                             progressBar.setVisibility(View.GONE);
                             if (isDdo || isAdmin) {
                                 showSubsidies();
-                                tableLayout.setVisibility(View.VISIBLE);
+                                //addRowtoTable("aaaaaaa aa aaa aaa aaa aaa aaaa aaa aaa aaa aaa aaa aaa aaa ","   ssssssssss ss","djksjsjmsl","Per umanesimo si intende quel movimento culturale, ispirato da Francesco Petrarca e in parte da Giovanni Boccaccio, volto alla riscoperta dei classici latini e greci nella loro storicità e non più nella loro",true);
+                                // tableLayout.setVisibility(View.VISIBLE);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -250,8 +289,8 @@ public class ReviewReport extends AppCompatActivity {
 
     private void addRowtoTable(String col1, String col2, String col3, String col4, boolean isDataRow) {
         TableRow tableRow1 = new TableRow(this);
-        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.3f);
-        TableRow.LayoutParams params2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.3f);
+        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1f);
+        TableRow.LayoutParams params2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1f);
         if (isDataRow) {
             params.setMargins(5, 0, 5, 5);
             params2.setMargins(0, 0, 5, 5);
@@ -259,10 +298,10 @@ public class ReviewReport extends AppCompatActivity {
             params.setMargins(30, 0, 30, 5);
             params2.setMargins(30, 0, 30, 5);
         }
-        tableRow1.setLayoutParams(params);
+        tableRow1.setLayoutParams(params2);
         TextView colName1 = new TextView(this);
         colName1.setText(col1);
-        colName1.setLayoutParams(params);
+        colName1.setLayoutParams(params2);
         colName1.setGravity(Gravity.CENTER);
         TextView colName2 = new TextView(this);
         colName2.setText(col2);
@@ -276,7 +315,7 @@ public class ReviewReport extends AppCompatActivity {
         colName4.setText(col4);
         colName4.setLayoutParams(params2);
         colName4.setGravity(Gravity.CENTER);
-        tableRow1.setWeightSum(5.4f);
+        tableRow1.setWeightSum(4f);
         if (isDataRow) {
             colName1.setBackgroundColor(Color.parseColor("#ffffff"));
             colName1.setTextSize(16f);
@@ -304,7 +343,7 @@ public class ReviewReport extends AppCompatActivity {
         tableRow1.addView(colName2);
         tableRow1.addView(colName3);
         tableRow1.addView(colName4);
-        tableLayout.addView(tableRow1);
+        //tableLayout.addView(tableRow1);
     }
 
     //flag = 1 for Add in BlockedList and 0 for remove from Blocked List
@@ -394,7 +433,8 @@ public class ReviewReport extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
-                            String status = rootObject.getString("status");
+                            String status = rootObject.getString("success");
+                            Log.d(TAG, "onResponse: hereshowsub");
                             if (status.equals("1")) {
                                 addRowtoTable("Scheme Name", "Program Name", "Financial Year Name",
                                         "Date Of Benefit", false);
@@ -405,12 +445,19 @@ public class ReviewReport extends AppCompatActivity {
                                     String col2 = singleObject.getString("programName");
                                     String col3 = singleObject.getString("financialYearName");
                                     String col4 = singleObject.getString("DateOfBenefit");
-                                    addRowtoTable(col1, col2, col3, col4, true);
+                                    schemedata.add(col1);
+                                    programNamedata.add(col2);
+                                    financialYearNamedata.add(col3);
+                                    dateOfBenefitdata.add(col4);
                                     Log.d(TAG, "onResponse: showSubsidies " + singleObject);
                                 }
+                                reviewTableRecycleAdapter.notifyDataSetChanged();
                             } else {
+                                tableRecyclerView.setVisibility(View.GONE);
+                                noSubsidiesTextView.setVisibility(View.VISIBLE);
                                 String message = rootObject.getString("message");
-                                Toast.makeText(ReviewReport.this, message, Toast.LENGTH_SHORT).show();
+                                noSubsidiesTextView.setText(message);
+                                //Toast.makeText(ReviewReport.this, message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

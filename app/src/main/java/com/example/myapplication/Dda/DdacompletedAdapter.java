@@ -21,14 +21,16 @@ public class DdacompletedAdapter extends RecyclerView.Adapter<DdacompletedAdapte
     private static final String TAG = "DdacompletedAdapter";
     ArrayList<String> mtextview1;
     ArrayList<String> mtextview2;
+    private ArrayList<String> mIdList;
     Context mcontext;
     public boolean showcomletedshimmer = true;
     private int shimmer_item_count = 6;
 
-    public DdacompletedAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2) {
+    public DdacompletedAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mIdList) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
+        this.mIdList = mIdList;
     }
 
     @NonNull
@@ -42,7 +44,7 @@ public class DdacompletedAdapter extends RecyclerView.Adapter<DdacompletedAdapte
                 if (!showcomletedshimmer) {
                     Intent intent = new Intent(mcontext, ReviewReport.class);
                     intent.putExtra("isDdo", true);
-                    intent.putExtra("id", mtextview1.get(viewHolderCompletedDda.getAdapterPosition()));
+                    intent.putExtra("id", mIdList.get(viewHolderCompletedDda.getAdapterPosition()));
                     intent.putExtra("isComplete", true);
                     mcontext.startActivity(intent);
                 }

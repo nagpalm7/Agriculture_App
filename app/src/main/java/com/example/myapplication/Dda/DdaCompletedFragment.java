@@ -34,8 +34,9 @@ import java.util.Map;
 
 public class DdaCompletedFragment extends Fragment {
     private static final String TAG = "DdaCompletedFragment";
-    private ArrayList<String> Id;
+    private ArrayList<String> mAdoNames;
     private ArrayList<String> Address;
+    private ArrayList<String> mIdLsit;
     private DdacompletedAdapter ddacompletedAdapter;
     private String urlget = "http://13.235.100.235:8000/api/locations/dda/completed";
     private String dda;
@@ -43,7 +44,6 @@ public class DdaCompletedFragment extends Fragment {
     private String villagename;
     private String blockname;
     private String district;
-    private String state;
     private String nextUrl;
     private boolean isNextBusy = false;
     private View view;
@@ -55,9 +55,10 @@ public class DdaCompletedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_ongoing,container,false);
-        Id = new ArrayList<String>();
+        mAdoNames = new ArrayList<String>();
         Address = new ArrayList<String>();
-        ddacompletedAdapter = new DdacompletedAdapter(getContext(),Id,Address);
+        mIdLsit = new ArrayList<>();
+        ddacompletedAdapter = new DdacompletedAdapter(getContext(), mAdoNames, Address, mIdLsit);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddacompletedAdapter);
 
@@ -97,11 +98,14 @@ public class DdaCompletedFragment extends Fragment {
                         JSONObject c = jsonArray.getJSONObject(i);
                         JSONObject ob = c.getJSONObject("ado");
                         String ado_name= ob.getString("name");
-                        Id.add(ado_name);
+                        mAdoNames.add(ado_name);
+                        String id = c.getString("id");
+                        mIdLsit.add(id);
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
-                        Address.add(villagename.toUpperCase() + ", " + blockname.toUpperCase() + ", " + district.toUpperCase());
+                        Address.add(villagename.toUpperCase() + ", " + blockname.toUpperCase() + ", " +
+                                district.toUpperCase());
                         Log.d(TAG, "onResponse: some error in if");
                     }
                     ddacompletedAdapter.showcomletedshimmer = false;
@@ -168,13 +172,14 @@ public class DdaCompletedFragment extends Fragment {
                         JSONObject ob = c.getJSONObject("ado");
                         String ado_name= ob.getString("name");
                         dda = c.getString("dda");
-                        Id.add(ado_name);
-
+                        mAdoNames.add(ado_name);
+                        String id = c.getString("id");
+                        mIdLsit.add(id);
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
-                        state = c.getString("state");
-                        Address.add(villagename.toUpperCase() + "," + blockname.toUpperCase() + "," + district.toUpperCase());
+                        Address.add(villagename.toUpperCase() + "," + blockname.toUpperCase() + "," +
+                                district.toUpperCase());
                         Log.d(TAG, "onResponse: some error in if");
                         isNextBusy = false;
                     }

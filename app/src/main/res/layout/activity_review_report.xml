@@ -1,51 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".Ado.ReviewReport">
+    android:layout_height="wrap_content">
 
-    <HorizontalScrollView
-
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/review_pics_recyclerview">
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        tools:context=".Ado.ReviewReport">
 
-        <TableLayout
-            android:id="@+id/table"
+        <!--
+                <TableLayout
+                    android:layout_marginHorizontal="8dp"
+                    android:shrinkColumns="0"
+                    android:layout_below="@id/review_pics_recyclerview"
+                    android:id="@+id/table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="#f1f1f1" />-->
+
+
+        <Button
+            android:id="@+id/forfeit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="18dp"
-            android:layout_marginTop="16dp"
-            android:background="#f1f1f1" />
-    </HorizontalScrollView>
+            android:layout_below="@id/hrv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="56dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/shape"
+            android:text="Forfeit"
+            android:textColor="#ffffff"
+            android:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/view4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/view1"
-        android:layout_marginTop="8dp"
-        android:weightSum="2">
-
-        <TextView
-            android:id="@+id/mobileLeft"
-            android:layout_width="0dp"
+        <Button
+            android:id="@+id/start"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:layout_below="@id/hrv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="56dp"
+            android:background="@drawable/shape"
+            android:text="Start"
+            android:textColor="#ffffff" />
 
-            />
-
-        <TextView
-            android:id="@+id/mobileRight"
-            android:layout_width="0dp"
+        <HorizontalScrollView
+            android:id="@+id/hrv"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_below="@id/review_pics_recyclerview">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tableRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="#f1f1f1"
+
+                />
+        </HorizontalScrollView>
+
+        <!-- <LinearLayout
+             android:id="@+id/view5"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_below="@id/view4"
+             android:layout_marginTop="8dp"
+             android:weightSum="2">
+
+             <TextView
+                 android:id="@+id/khasraLeft"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="1"
+                 android:gravity="start"
+                 android:textSize="18sp"
+                 android:textStyle="bold"
+
+                 />
+
+             <TextView
+                 android:id="@+id/khasraRight"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="1"
+
+                 android:textAlignment="viewStart"
+                 android:textSize="18sp" />
+         </LinearLayout>-->
             android:textAlignment="viewStart"
             android:textSize="18sp" />
     </LinearLayout>
@@ -161,34 +206,32 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <!-- <LinearLayout
-         android:id="@+id/view5"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_below="@id/view4"
-         android:layout_marginTop="8dp"
-         android:weightSum="2">
+        <!--<LinearLayout
+            android:id="@+id/view10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view7"
+            android:layout_marginTop="8dp"
+            android:weightSum="2">
 
-         <TextView
-             android:id="@+id/khasraLeft"
-             android:layout_width="0dp"
-             android:layout_height="wrap_content"
-             android:layout_weight="1"
-             android:gravity="start"
-             android:textSize="18sp"
-             android:textStyle="bold"
+            <TextView
+                android:id="@+id/chalaan_amount_left"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textSize="18sp"
 
-             />
+                />
 
-         <TextView
-             android:id="@+id/khasraRight"
-             android:layout_width="0dp"
-             android:layout_height="wrap_content"
-             android:layout_weight="1"
-
-             android:textAlignment="viewStart"
-             android:textSize="18sp" />
-     </LinearLayout>-->
+            <TextView
+                android:id="@+id/chalaan_amount_right"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="viewStart"
+                android:textSize="18sp" />
+        </LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/view6"
@@ -198,202 +241,190 @@
         android:layout_marginTop="8dp"
         android:weightSum="2">
 
-        <TextView
-            android:id="@+id/own_lease_Left"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:textSize="18sp"
-            android:textStyle="bold"
-
-            />
-
-        <TextView
-            android:id="@+id/own_lease_Right"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:textAlignment="viewStart"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <!--<LinearLayout
-        android:id="@+id/view7"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/view6"
-        android:layout_marginTop="8dp"
-        android:weightSum="2">
-
-        <TextView
-            android:id="@+id/actionLeft"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:textSize="18sp"
-
-            />
-
-        <TextView
-            android:id="@+id/actionRight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:textAlignment="viewStart"
-            android:textSize="18sp" />
-    </LinearLayout>-->
-
-    <!--<LinearLayout
-        android:id="@+id/view10"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/view7"
-        android:layout_marginTop="8dp"
-        android:weightSum="2">
-
-        <TextView
-            android:id="@+id/chalaan_amount_left"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:textSize="18sp"
-
-            />
-
-        <TextView
-            android:id="@+id/chalaan_amount_right"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="viewStart"
-            android:textSize="18sp" />
-    </LinearLayout>-->
-
-    <LinearLayout
-        android:id="@+id/view8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/view6"
-        android:layout_marginTop="8dp"
-        android:weightSum="2">
-
-        <TextView
-            android:id="@+id/remarksLeft"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:textStyle="bold"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/remarksRight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="viewStart"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/view9"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/view8"
-        android:layout_marginTop="8dp"
-        android:weightSum="2">
-
-        <TextView
-            android:id="@+id/reasonLeft"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:textStyle="bold"
-            android:textSize="18sp"
-
-            />
-
-        <TextView
-            android:id="@+id/reasonRight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:textAlignment="viewStart"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-            <Button
-                android:id="@+id/forfeit"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/nameLeft"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:background="@drawable/shape"
-                android:text="Forfeit"
-                android:textColor="#ffffff"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:visibility="gone" />
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textSize="18sp"
+                android:textStyle="bold"
 
-            <Button
-                android:id="@+id/start"
-                android:layout_width="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/nameRight"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/shape"
-                android:text="Start"
-                android:textColor="#ffffff"
-                android:visibility="gone"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true" />
+                android:layout_weight="1"
+
+                android:textAlignment="viewStart"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view2"
+            android:layout_marginTop="8dp"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/fatherNameLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textSize="18sp"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:id="@+id/fatherNameRight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="viewStart"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/view6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view3"
+            android:layout_marginTop="8dp"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/own_lease_Left"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textSize="18sp"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:id="@+id/own_lease_Right"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+
+                android:textAlignment="viewStart"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/view8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view6"
+            android:layout_marginTop="8dp"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/remarksLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/remarksRight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="viewStart"
+                android:textSize="18sp" />
+        </LinearLayout>
 
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:indeterminateDrawable="@drawable/progress" />
-    <LinearLayout
-        android:id="@+id/view1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:weightSum="2">
+        <LinearLayout
+            android:id="@+id/view9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view8"
+            android:layout_marginTop="8dp"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/reasonLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textSize="18sp"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:id="@+id/reasonRight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+
+                android:textAlignment="viewStart"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/villCodeLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textSize="18sp"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:id="@+id/villCodeRight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+
+                android:textAlignment="viewStart"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminateDrawable="@drawable/progress" />
 
         <TextView
-            android:id="@+id/villCodeLeft"
-            android:layout_width="0dp"
+            android:id="@+id/noSubsidies_textview"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:textStyle="bold"
-            android:textSize="18sp"
-
-            />
-
-        <TextView
-            android:id="@+id/villCodeRight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:textAlignment="viewStart"
+            android:layout_below="@id/review_pics_recyclerview"
+            android:layout_marginTop="16dp"
+            android:textColor="#e57373"
             android:textSize="18sp" />
-    </LinearLayout>
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/review_pics_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/view9"
-        android:layout_marginTop="8dp"
-        android:overScrollMode="never" />
-</RelativeLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/review_pics_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view9"
+            android:layout_marginTop="8dp"
+            android:overScrollMode="never" />
+    </RelativeLayout>
+</ScrollView>
