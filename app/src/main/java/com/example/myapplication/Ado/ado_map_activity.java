@@ -61,6 +61,7 @@ public class ado_map_activity extends AppCompatActivity
     private double longitude;
     private double latitude;
     private String id;
+    private String villageName;
     private Boolean showmap;
 
     private final int RESULT_CODE = 786;
@@ -82,6 +83,7 @@ public class ado_map_activity extends AppCompatActivity
         longitude = Double.parseDouble(intent.getStringExtra("longitude"));
         latitude = Double.parseDouble(intent.getStringExtra("latitude"));
         id = intent.getStringExtra("id");
+        villageName = intent.getStringExtra("village_name");
         String title = intent.getStringExtra("title");
         getSupportActionBar().setTitle(title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -418,11 +420,12 @@ public class ado_map_activity extends AppCompatActivity
     public void onClickCheckIn(View view) {
         Log.d(TAG, "onClickCheckIn: is "+isEntered);
 
-        if (isEntered) {
-            Intent intent = new Intent(this, CheckInActivity.class);
+        if (true) {
+            Intent intent = new Intent(this, CheckInActivity2.class);
             intent.putExtra("id", id);
             intent.putExtra("lat",latitude);
             intent.putExtra("long",longitude);
+            intent.putExtra("village_name", villageName);
             Log.d(TAG, "onClickCheckIn: " + id);
             startActivity(intent);
         }

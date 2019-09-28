@@ -142,8 +142,6 @@ public class ado_pending_fragment extends Fragment {
                             e.printStackTrace();
                             Fragment fragment = getFragmentManager().findFragmentById(R.id.rootView);
                             fragment.getView().setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
-
-
                         }
 
                     }

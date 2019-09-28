@@ -1,0 +1,822 @@
+package com.example.myapplication.Ado;
+
+import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Location;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.androidnetworking.interfaces.UploadProgressListener;
+import com.example.myapplication.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import dmax.dialog.SpotsDialog;
+
+import static com.example.myapplication.AppNotificationChannels.CHANNEL_1_ID;
+
+public class CheckInActivity2 extends AppCompatActivity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener,
+        ResultCallback<Status> {
+    public static boolean isEntered = false;
+    private static String TAG = "CheckInActivity2";
+    private static int IMAGE_CAPTURE_RC = 123;
+    GoogleApiClient mGoogleApiClient;
+    GeofencingRequest geofencingRequest;
+    PendingIntent geofencePendingIntent;
+    private Spinner villageNameSpinner;
+    private EditText villageNameEditText;
+    private RelativeLayout villageNameOther;
+    private Spinner farmerfatherSpinner;
+    private EditText farmerfatherEditText;
+    private EditText fatherNameEditText;
+    private RelativeLayout farmerNameOther;
+    private RelativeLayout fatherNameOther;
+    private ProgressBar nameProgressBar;
+    private EditText murrabbaEditText;
+    private EditText killaEditText;
+    private RadioGroup radioGroup;
+    private EditText remarksEditText;
+    private EditText reasonEditText;
+    private RecyclerView recyclerView;
+    private ReportImageRecyAdapter adapter;
+    private Button pickPhotoButton;
+    private Button submitReportButton;
+    private String reportSubmitUrl = "http://13.235.100.235:8000/api/report-ado/add/";
+    private String imageUploadUrl = "http://13.235.100.235:8000/api/upload/images/";
+    private String villageListUrl = "http://13.235.100.235:8000/api/user/";
+    private String farmerDetailsUrl = "http://117.240.196.238:8080/api/CRM/getFarmerDetail";
+    private ArrayList<String> mImagesPath;
+    private ArrayList<File> mImages;
+    private ArrayList<String> villageCodes;
+    private ArrayList<String> villageNames;
+    private ArrayList<String> farmerNames;
+    private ArrayList<String> farmerIds;
+    private ArrayList<String> fatherNames;
+    private ArrayList<String> farmerFatherNames;
+    private LocationRequest mLocationRequest;
+    private MarkerOptions Dlocation;
+    private String locationId;
+    private String destVillageName;
+    private String pk;
+    private String token;
+    private Double latitude;
+    private Double longitude;
+    private boolean isBusy = false;
+    private boolean isRequestFinished = false;
+    private AlertDialog reportSubmitLoading;
+    private String imageFilePath;
+    private String reportId;
+    private boolean isReportSubmitted = false;
+    private int photosUploadedCount = 0;
+    private NotificationManagerCompat notificationManager;
+
+    public static void getStatus(Boolean status) {
+        Log.d("getStatus2", "getStatus: comehere" + status);
+        isEntered = status;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.checkin_form);
+        villageNameSpinner = findViewById(R.id.vCodeSpinner);
+        villageNameEditText = findViewById(R.id.sname);
+        villageNameOther = findViewById(R.id.villageNameOther);
+        farmerfatherSpinner = findViewById(R.id.vCodeSpinner3);
+        farmerfatherEditText = findViewById(R.id.fname);
+        fatherNameEditText = findViewById(R.id.fathername);
+        farmerNameOther = findViewById(R.id.farmerNameOther);
+        fatherNameOther = findViewById(R.id.fatherNameOther);
+        nameProgressBar = findViewById(R.id.vCodespinner_progressbar3);
+        murrabbaEditText = findViewById(R.id.sname2);
+        killaEditText = findViewById(R.id.sname3);
+        radioGroup = findViewById(R.id.radio_group);
+        remarksEditText = findViewById(R.id.sname4);
+        reasonEditText = findViewById(R.id.sname5);
+        recyclerView = findViewById(R.id.rvimages);
+        pickPhotoButton = findViewById(R.id.pick_photo);
+        submitReportButton = findViewById(R.id.submit_report_ado);
+        notificationManager = NotificationManagerCompat.from(this);
+        Dlocation = new MarkerOptions().position(new LatLng(30.76338, 76.7689826)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        buildGoogleApiClient();
+        Intent intent = getIntent();
+        latitude = intent.getDoubleExtra("lat", 0);
+        longitude = intent.getDoubleExtra("long", 0);
+        String id = intent.getStringExtra("id");
+        locationId = id;
+        destVillageName = intent.getStringExtra("village_name");
+        SharedPreferences prefs = getSharedPreferences("tokenFile", MODE_PRIVATE);
+        pk = prefs.getString("pk", "");
+        token = prefs.getString("token", "");
+        getSupportActionBar().setTitle("Report Filing");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mImagesPath = new ArrayList<>();
+        mImages = new ArrayList<>();
+        villageCodes = new ArrayList<>();
+        villageNames = new ArrayList<>();
+        adapter = new ReportImageRecyAdapter(this, mImagesPath);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerView.setAdapter(adapter);
+        villageListUrl = villageListUrl + pk;
+        Log.d(TAG, "onCreate: VILLAGE LIST URL " + villageListUrl);
+        fetchVillageNames(villageListUrl);
+        villageNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (villageNameSpinner.getSelectedItem().toString().equals("Other"))
+                    villageNameOther.setVisibility(View.VISIBLE);
+                else
+                    villageNameOther.setVisibility(View.GONE);
+                isRequestFinished = false;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        farmerfatherSpinner.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (villageNameSpinner.getSelectedItemPosition() == 0 && villageNameSpinner.getCount() == 2) {
+                        Toast.makeText(CheckInActivity2.this, "Select a valid Village Name",
+                                Toast.LENGTH_SHORT).show();
+                    } else if (villageNameSpinner.getSelectedItem().toString().equals("Other")) {
+                        farmerNameOther.setVisibility(View.VISIBLE);
+                        fatherNameOther.setVisibility(View.VISIBLE);
+                        farmerFatherNames = new ArrayList<>();
+                        farmerFatherNames.add("Other");
+                        ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),
+                                android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
+                        adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        farmerfatherSpinner.setAdapter(adaptername);
+                        farmerfatherSpinner.setSelection(0);
+                    } else {
+                        if (!isBusy && !isRequestFinished) {
+                            nameProgressBar.setVisibility(View.VISIBLE);
+                            if (!villageNameSpinner.getSelectedItem().toString().equals("Other"))
+                                getFarmerDetails(villageCodes.get(villageNameSpinner.getSelectedItemPosition()));
+                            else {
+                                farmerFatherNames = new ArrayList<>();
+                                farmerFatherNames.add("Other");
+                                ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),
+                                        android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
+                                adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                farmerfatherSpinner.setAdapter(adaptername);
+                                farmerfatherSpinner.setSelection(0);
+
+                            }
+                        }
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        pickPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openCameraIntent();
+            }
+        });
+
+        submitReportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (true) {
+                    Log.d(TAG, "onClick: inside it damn!");
+
+//                    if (actionTaken.equals("Chalaan")) {
+//                        if (chalaanFile == null)
+//                            Toast.makeText(CheckInActivity2.this, "Please add a photo of" +
+//                                    " Chalaan", Toast.LENGTH_SHORT).show();
+                    if (mImages.isEmpty())
+                        Toast.makeText(CheckInActivity2.this, "Please add atleast one picture of incident!",
+                                Toast.LENGTH_SHORT).show();
+                    else {
+                        showdialogbox("Sumbit Report", "Are you sure?", "Yes",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        if (villageNameSpinner.getSelectedItemPosition() == 0 && villageNames.size() == 2)
+                                            Toast.makeText(CheckInActivity2.this, "Please select a Valid Village Name",
+                                                    Toast.LENGTH_SHORT).show();
+                                        else if (farmerfatherSpinner.getSelectedItemPosition() == 0 || farmerNames == null)
+                                            Toast.makeText(CheckInActivity2.this, "Please select a farmer name and" +
+                                                    " father name", Toast.LENGTH_LONG).show();
+                                        else if (remarksEditText.getText().toString().isEmpty())
+                                            Toast.makeText(CheckInActivity2.this, "Please fill Remarks",
+                                                    Toast.LENGTH_SHORT).show();
+                                        else if (reasonEditText.getText().toString().isEmpty())
+                                            Toast.makeText(CheckInActivity2.this, "Please fill Incident " +
+                                                    "Reason", Toast.LENGTH_SHORT).show();
+                                        else
+                                            submitReport();
+                                    }
+                                }, "No",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                }, true);
+                    }
+//                    } else if (mImages.isEmpty())
+//                        Toast.makeText(CheckInActivity.this, "Please add atleast one picture of incident!",
+//                                Toast.LENGTH_SHORT).show();
+                    /*else {
+                        showdialogbox("Sumbit Report", "Are you sure?", "Yes",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        if (villageEditText.getText().toString().isEmpty())
+                                            Toast.makeText(CheckInActivity.this, "Please enter Village Code",
+                                                    Toast.LENGTH_SHORT).show();
+                                        else if (vCodeSpinner.getSelectedItemPosition() == 0 || farmerNames == null)
+                                            Toast.makeText(CheckInActivity.this, "Please select a farmer name and" +
+                                                    " father name", Toast.LENGTH_LONG).show();
+                                        else if (remarksEditText.getText().toString().isEmpty())
+                                            Toast.makeText(CheckInActivity.this, "Please fill Remarks",
+                                                    Toast.LENGTH_SHORT).show();
+                                        else if (reasonEditText.getText().toString().isEmpty())
+                                            Toast.makeText(CheckInActivity.this, "Please fill Incident " +
+                                                    "Reason", Toast.LENGTH_SHORT).show();
+                                        else
+                                            submitReport();
+                                    }
+                                }, "No",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                }, true);
+                    }*/
+                } else {
+                    Toast.makeText(getApplicationContext(), "enter the location to submit the report", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
+    private void openCameraIntent() {
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (pictureIntent.resolveActivity(getPackageManager()) != null) {
+
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                Log.d(TAG, "openCameraIntent: IOEXCEPTION PHOTOFILE: " + e.getMessage());
+                e.printStackTrace();
+                return;
+            }
+            Uri photoUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", photoFile);
+            pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            pictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivityForResult(pictureIntent, IMAGE_CAPTURE_RC);
+        }
+    }
+
+    private File createImageFile() throws IOException {
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        imageFilePath = image.getAbsolutePath();
+        return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == IMAGE_CAPTURE_RC) {
+            if (resultCode == RESULT_OK) {
+                mImagesPath.add(imageFilePath);
+                File file = new File(imageFilePath);
+                mImages.add(file);
+                adapter.notifyDataSetChanged();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void fetchVillageNames(String url) {
+        villageCodes = new ArrayList<>();
+        villageNames = new ArrayList<>();
+        villageNames.add("Select Village Name");
+        villageCodes.add("null");
+       /*int startIndex = place.indexOf(",");
+        int endIndex = place.length() - 1;
+        String toBeReplaced = place.substring(startIndex, endIndex);
+        final String extractedPlace = place.replace(toBeReplaced, "");*/
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject rootObject = new JSONObject(String.valueOf(response));
+                            JSONArray resultsArray = rootObject.getJSONArray("village");
+                            int pos = 0;
+                            boolean isEqual = false;
+                            for (int i = 0; i < resultsArray.length(); i++) {
+                                JSONObject singleObject = resultsArray.getJSONObject(i);
+                                String village = singleObject.getString("village");
+                                String villageId = singleObject.getString("village_code");
+                                Log.d(TAG, "onResponse: current " + village + "     " + destVillageName);
+                                if (destVillageName.equals(village)) {
+                                    pos = i;
+                                    isEqual = true;
+                                }
+                                villageNames.add(village);
+                                villageCodes.add(villageId);
+                            }
+                            Log.d(TAG, "onResponse: fetchVillageNames " + villageNames);
+                            villageNames.add("Other");
+                            villageCodes.add("null");
+                            ArrayAdapter<String> villageAdapter = new ArrayAdapter<String>(getApplicationContext(),
+                                    android.R.layout.simple_dropdown_item_1line, villageNames);
+                            villageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            villageNameSpinner.setAdapter(villageAdapter);
+                            if (isEqual)
+                                villageNameSpinner.setSelection(pos + 1);
+                            else
+                                villageNameSpinner.setSelection(pos);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "onResponse: fetchVillageNames JSON EXCEPTION " + e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(CheckInActivity2.this, "Please Check your Internet Connection",
+                                    Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(CheckInActivity2.this, "Something went wrong, please try again!",
+                                    Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "onErrorResponse: fetchVillageNames " + error);
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Authorization", "Token " + token);
+                return map;
+            }
+        };
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private void getFarmerDetails(final String villCode) {
+        isBusy = true;
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        farmerNames = new ArrayList<>();
+        fatherNames = new ArrayList<>();
+        farmerIds = new ArrayList<>();
+        farmerFatherNames = new ArrayList<>();
+        String finalUrl = farmerDetailsUrl + "?key=agriHr@CRM&vCode=" + villCode;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, finalUrl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject rootObject = new JSONObject(String.valueOf(response));
+                            JSONArray dataArray = rootObject.getJSONArray("data");
+                            Log.d(TAG, "onResponse: DATAARRAY " + dataArray.length());
+                            farmerFatherNames.add("Farmer Name, Father Name");
+                            farmerNames.add("null");
+                            fatherNames.add("null");
+                            farmerIds.add("null");
+                            /*if (dataArray.length() == 0) {
+                                Toast toast = Toast.makeText(CheckInActivity.this, "No Data Found for Village Code "
+                                        + villCode, Toast.LENGTH_SHORT);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
+                                isBusy = false;
+                            }*/
+                            for (int i = 0; i < dataArray.length(); i++) {
+                                JSONObject singleObject = dataArray.getJSONObject(i);
+                                String farmerId = singleObject.getString("idFarmer");
+                                farmerIds.add(farmerId);
+                                String farmerName = singleObject.getString("FarmerName");
+                                farmerNames.add(farmerName);
+                                String fatherName = singleObject.getString("father_name");
+                                fatherNames.add(fatherName);
+                                farmerFatherNames.add(farmerName + ", " + fatherName);
+                            }
+                            String message = rootObject.getString("message");
+                            if (farmerNames.size() == 1) {
+                                Toast.makeText(CheckInActivity2.this, message, Toast.LENGTH_SHORT).show();
+                                farmerFatherNames.add("Other");
+                                ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),
+                                        android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
+                                adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                farmerfatherSpinner.setAdapter(adaptername);
+                                farmerfatherSpinner.setSelection(1);
+                                farmerNameOther.setVisibility(View.VISIBLE);
+                                fatherNameOther.setVisibility(View.VISIBLE);
+                            } else {
+                                ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),
+                                        android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
+                                adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                farmerfatherSpinner.setAdapter(adaptername);
+                            }
+//                                ArrayAdapter<String> adapterfname = new ArrayAdapter<>(getApplicationContext(),
+//                                        android.R.layout.simple_dropdown_item_1line, fatherNames);
+//                                adapterfname.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            //fname.setAdapter(adapterfname);
+                            nameProgressBar.setVisibility(View.GONE);
+                            isRequestFinished = true;
+                            isBusy = false;
+                            Log.d(TAG, "onResponse: FARMER getFarmerDetails " + farmerNames.size());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "onResponse: getFarmerDetails " + e);
+                            nameProgressBar.setVisibility(View.GONE);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "onErrorResponse: FARMER " + error.networkResponse + "  " + error);
+                        isBusy = false;
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(CheckInActivity2.this, "Please Check your Internet Connection",
+                                    Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(CheckInActivity2.this, "Something went wrong, please try again!",
+                                    Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "onErrorResponse: getFarmerDetails " + error);
+                        nameProgressBar.setVisibility(View.GONE);
+                    }
+                }) {
+        };
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private void submitReport() {
+        reportSubmitLoading = new SpotsDialog.Builder().setContext(this).setMessage("Submitting Report").setCancelable(false)
+                .build();
+        reportSubmitLoading.show();
+        int radioButtonId = radioGroup.getCheckedRadioButtonId();
+        RadioButton radioButton = findViewById(radioButtonId);
+        String ownLease = radioButton.getText().toString().toLowerCase();
+        if (!isReportSubmitted) {
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+            JSONObject postParams = new JSONObject();
+            try {
+                String remarks = remarksEditText.getText().toString();
+                String incidentReason = reasonEditText.getText().toString();
+                String villageCode, farmerName, fatherName;
+                if (villageNameSpinner.getSelectedItem().toString().equals("Other")) {
+                    villageCode = villageNameEditText.getText().toString();
+
+                } else {
+                    villageCode = villageCodes.get(villageNameSpinner.getSelectedItemPosition());
+                }
+
+                if (farmerfatherSpinner.getSelectedItem().toString().equals("Other")) {
+                    farmerName = farmerfatherEditText.getText().toString();
+                    fatherName = fatherNameEditText.getText().toString();
+                    postParams.put("farmer_code", "No Village Code");
+                } else {
+                    farmerName = farmerNames.get(villageNameSpinner.getSelectedItemPosition());
+                    fatherName = fatherNames.get(villageNameSpinner.getSelectedItemPosition());
+                    postParams.put("farmer_code", farmerIds.get(farmerfatherSpinner.getSelectedItemPosition()));
+                }
+                //String mobile = mobileEditText.getText().toString();
+                String kilaNum = killaEditText.getText().toString();
+                String murrabbbaNum = murrabbaEditText.getText().toString();
+                postParams.put("farmer_name", farmerName);
+                postParams.put("father_name", fatherName);
+                postParams.put("village_code", villageCode);
+                postParams.put("ownership", ownLease);
+                //postParams.put("action", actionTaken);
+                postParams.put("location", String.valueOf(locationId));
+                postParams.put("remarks", remarks);
+                postParams.put("incident_reason", incidentReason);
+                postParams.put("kila_num", kilaNum);
+                postParams.put("murrabba_num", murrabbbaNum);
+                postParams.put("longitude", longitude);
+                postParams.put("latitude", latitude);
+                //postParams.put("action", "chalaan");
+                //postParams.put("number", mobile);
+
+            } catch (JSONException e) {
+                Toast.makeText(this, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
+                reportSubmitLoading.dismiss();
+                Log.d(TAG, "submitReport: " + e);
+            }
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, reportSubmitUrl, postParams,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONObject singleObject = new JSONObject(String.valueOf(response));
+                                reportId = singleObject.getString("id");
+                                Log.d(TAG, "onResponse: " + singleObject);
+                                isReportSubmitted = true;
+                                uploadPhotos();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                reportSubmitLoading.dismiss();
+                                Log.d(TAG, "jsonexception: reportSubmitRequest " + e);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if (error instanceof NoConnectionError)
+                                Toast.makeText(CheckInActivity2.this, "Check your internet connection!", Toast.LENGTH_LONG).show();
+                            else {
+                                Toast.makeText(CheckInActivity2.this, "Something went wrong, Please try again!", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "onErrorResponse: reportSubmitRequest " + error);
+                            }
+                            reportSubmitLoading.dismiss();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("Authorization", "Token " + token);
+                    return map;
+                }
+            };
+            requestQueue.add(jsonObjectRequest);
+        } else
+            uploadPhotos();
+    }
+
+    private void uploadPhotos() {
+//        if (actionTaken.equals("chalaan"))
+//            mImages.add(chalaanFile);
+        final int progressMax = mImages.size() - photosUploadedCount;
+        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.ic_upload)
+                .setContentTitle("Uploading Photos")
+                .setContentText("0/" + progressMax)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setProgress((int) mImages.get(photosUploadedCount).length(), 0, false);
+        notificationManager.notify(1, notificationBuilder.build());
+        for (int pos = photosUploadedCount; pos < mImages.size(); pos++) {
+            final int finalPos = pos;
+            AndroidNetworking.upload(imageUploadUrl)
+                    .addHeaders("Authorization", "Token " + token)
+                    .addMultipartParameter("report", reportId)
+                    .addMultipartFile("image", mImages.get(pos))
+                    .setTag("Upload Images")
+                    .setPriority(Priority.HIGH)
+                    .build()
+                    .setUploadProgressListener(new UploadProgressListener() {
+                        @Override
+                        public void onProgress(long bytesUploaded, long totalBytes) {
+                            Log.d(TAG, "onProgress: " + bytesUploaded + "files uploaded: " + finalPos);
+                            if (bytesUploaded == totalBytes) {
+                                notificationBuilder.setProgress(0, 0, false)
+                                        .setContentText((finalPos + 1) + "/" + mImages.size());
+                                notificationManager.notify(1, notificationBuilder.build());
+                            } else {
+                                notificationBuilder.setProgress((int) totalBytes, (int) (bytesUploaded / totalBytes), false);
+                                notificationManager.notify(1, notificationBuilder.build());
+                            }
+                        }
+                    })
+                    .getAsJSONObject(new JSONObjectRequestListener() {
+                                         @Override
+                                         public void onResponse(JSONObject response) {
+                                             Log.d(TAG, "onResponse: " + response);
+                                             photosUploadedCount++;
+                                             if (finalPos == mImages.size() - 1) {
+                                                 Toast.makeText(CheckInActivity2.this, "Photos Uploaded", Toast.LENGTH_SHORT).show();
+                                                 notificationBuilder.setContentText("Upload Successful!")
+                                                         .setProgress(0, 0, false)
+                                                         .setOngoing(false);
+                                                 notificationManager.notify(1, notificationBuilder.build());
+                                                 Toast.makeText(CheckInActivity2.this, "Report Submitted Successfully", Toast.LENGTH_SHORT).show();
+                                                 reportSubmitLoading.dismiss();
+                                                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                                 Intent intent = new Intent(CheckInActivity2.this, com.example.myapplication.login_activity.class);
+                                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                 startActivity(intent);
+                                                 finish();
+                                             } else {
+                                                 notificationBuilder.setProgress(0, 0, false)
+                                                         .setContentText((finalPos + 1) + "/" + (int) mImages.get(finalPos + 1).length());
+                                                 notificationManager.notify(1, notificationBuilder.build());
+                                             }
+                                         }
+
+                                         @Override
+                                         public void onError(ANError anError) {
+                                             Log.d(TAG, "onError: " + anError.getErrorBody());
+                                             notificationBuilder.setContentText("Upload Failed!")
+                                                     .setProgress(0, 0, false)
+                                                     .setOngoing(false);
+                                             notificationManager.notify(1, notificationBuilder.build());
+                                             reportSubmitLoading.dismiss();
+                                             Toast.makeText(CheckInActivity2.this, "Photos Upload failed, please try again", Toast.LENGTH_SHORT).show();
+                                         }
+
+                                     }
+                    );
+
+        }
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        startgeofence(Dlocation);
+
+
+    }
+
+    private void startgeofence(MarkerOptions dlocation) {
+        if (dlocation != null) {
+            Geofence geofence = creategeofence(dlocation.getPosition(), 400f);
+            geofencingRequest = creategeofencerequest(geofence);
+            addgeofence(geofence);
+        }
+    }
+
+    private Geofence creategeofence(LatLng position, float v) {
+        return new Geofence.Builder().setRequestId("My Request")
+                .setCircularRegion(position.latitude, position.longitude, v)
+                .setExpirationDuration(60 * 60 * 1000)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                .build();
+
+    }
+
+    private GeofencingRequest creategeofencerequest(Geofence geofence) {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        builder.addGeofence(geofence);
+        return builder.build();
+    }
+
+    private void addgeofence(Geofence geofence) {
+        LocationServices.GeofencingApi.addGeofences(mGoogleApiClient, geofencingRequest, creategeofencePendingIntent())
+                .setResultCallback(this);
+    }
+
+    private PendingIntent creategeofencePendingIntent() {
+
+        if (geofencePendingIntent != null) {
+            return geofencePendingIntent;
+        }
+
+        Intent intent = new Intent(this, GeofenceTransitionService2.class);
+
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        //stop location updates when Activity is no longer active
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+    }
+
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onResult(@NonNull Status status) {
+        Log.d(TAG, "onResult: " + status);
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    private AlertDialog showdialogbox(String title, String msg, String positiveLabel, DialogInterface.OnClickListener positiveOnclick,
+                                      String negativeLabel, DialogInterface.OnClickListener negativeOnclick,
+                                      boolean isCancelable) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setPositiveButton(positiveLabel, positiveOnclick);
+        builder.setNegativeButton(negativeLabel, negativeOnclick);
+        builder.setCancelable(isCancelable);
+        AlertDialog alert = builder.create();
+        alert.show();
+        return alert;
+    }
+
+}

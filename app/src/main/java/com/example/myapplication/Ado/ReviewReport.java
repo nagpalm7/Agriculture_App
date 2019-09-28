@@ -126,18 +126,19 @@ public class ReviewReport extends AppCompatActivity {
             startButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    actionOnFarmerSub(0);
                 }
             });
 
             forfeitButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-
+                    actionOnFarmerSub(1);
                 }
             });
+            if (isAdmin) {
 
+            }
         }
     }
 
