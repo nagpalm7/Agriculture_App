@@ -12,13 +12,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Dda.ListOfVillages"></activity>
-        <activity android:name=".Ado.CheckInActivity2" />
-        <activity android:name=".RegistrationActivity" />
-        <activity android:name=".Dda.villagenameActivity" />
-        <activity android:name=".Ado.ReviewReport" />
-        <activity android:name=".Admin.EditActivity" />
-        <activity android:name=".Ado.CheckInActivity" />
+        <activity
+            android:name=".Dda.ListOfVillages"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Ado.CheckInActivity2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RegistrationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Dda.villagenameActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Ado.ReviewReport"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Admin.EditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Ado.CheckInActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Ado.ado_map_activity"
             android:screenOrientation="portrait">
@@ -124,7 +138,6 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
 </manifest>

@@ -252,8 +252,6 @@ public class login_activity extends AppCompatActivity {
                         Toast.makeText(login_activity.this, "Please try again", Toast.LENGTH_SHORT).show();
                         btnLogin.setEnabled(true);
                         dialog.dismiss();
-                        editEmail.setText("");
-                        editPassword.setText("");
                         Log.d(TAG, "onErrorResponse: some error in get: " + error.getLocalizedMessage());
                     }
                 }) {
