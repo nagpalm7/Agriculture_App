@@ -69,6 +69,11 @@ public class ReviewReport extends AppCompatActivity {
     private ReviewPicsRecyclerviewAdapter adapter;
     private ArrayList<String> mImagesUrl;
     private String farmerId;
+    private TextView villnameleft;
+    private TextView villnameright;
+    private TextView districtleft;
+    private TextView districtright;
+    private String urlfarmer = "https://agriharyana.org/api/farmer";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +104,10 @@ public class ReviewReport extends AppCompatActivity {
         chalaanLeft = findViewById(R.id.chalaan_amount_left);
         chalaanRight = findViewById(R.id.chalaan_amount_right);
         recyclerView = findViewById(R.id.review_pics_recyclerview);
+        villnameleft = findViewById(R.id.villnameLeft);
+        villnameright = findViewById(R.id.villnameRight);
+        districtleft = findViewById(R.id.districtLeft);
+        districtright = findViewById(R.id.districtRight);
         mImagesUrl = new ArrayList<>();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         adapter = new ReviewPicsRecyclerviewAdapter(this, mImagesUrl);
@@ -157,12 +166,16 @@ public class ReviewReport extends AppCompatActivity {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             String villCode = rootObject.getString("village_code");
                             farmerId = rootObject.getString("farmer_code");
+                            Log.d(TAG, "onResponse: farmerid"+farmerId);
                             String name = rootObject.getString("farmer_name");
                             String fatherName = rootObject.getString("father_name");
                             String ownership = rootObject.getString("ownership");
                             String action = rootObject.getString("action");
                             String remarks = rootObject.getString("remarks");
                             String reason = rootObject.getString("incident_reason");
+                            JSONObject location = rootObject.getJSONObject("location");
+                            String village_name = location.getString("village_name");
+                            String district = location.getString("district");
                             //String number = rootObject.getString("number");
                             JSONArray imagesArray = rootObject.getJSONArray("images");
                             for (int i = 0; i < imagesArray.length(); i++) {
@@ -174,6 +187,10 @@ public class ReviewReport extends AppCompatActivity {
                             Log.d(TAG, "onResponse: ACTION " + action);
                             villCodeLeft.setText("Village Code");
                             villCodeRight.setText(villCode);
+                            villnameleft.setText("Village name");
+                            villnameright.setText(village_name);
+                            districtleft.setText("District");
+                            districtright.setText(district);
                             nameLeft.setText("Farmer Name");
                             nameRight.setText(name);
                             //khasraLeft.setText("Khasra Number");
@@ -255,6 +272,39 @@ public class ReviewReport extends AppCompatActivity {
         tableRow1.addView(colName1);
         tableRow1.addView(colName2);
         tableLayout.addView(tableRow1);
+    }
+
+    private void getDetailssub(){
+        JSONObject params = new JSONObject();
+        try {
+            params.put("idFarmer",farmerId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlfarmer, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject rootobject = new JSONObject(String.valueOf(response));
+                    JSONArray jsonArray = rootobject.getJSONArray("data");
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+
+
+
     }
 
     //flag = 1 for Add in BlockedList and 0 for remove from Blocked List

@@ -32,12 +32,66 @@
             android:textAlignment="viewStart"
             android:textSize="18sp" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/view1"
+        android:id="@+id/view11"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/villnameLeft"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:textSize="18sp"
+
+            />
+
+        <TextView
+            android:id="@+id/villnameRight"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:textAlignment="viewStart"
+            android:textSize="18sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/view11"
+        android:id="@+id/view12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/districtLeft"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:textSize="18sp"
+
+            />
+
+        <TextView
+            android:id="@+id/districtRight"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:textAlignment="viewStart"
+            android:textSize="18sp" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/view2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/view1"
+        android:layout_below="@id/view12"
         android:layout_marginTop="8dp"
         android:weightSum="2">
 
