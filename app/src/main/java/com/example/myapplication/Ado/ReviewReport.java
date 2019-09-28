@@ -97,8 +97,8 @@ public class ReviewReport extends AppCompatActivity {
         nameRight = findViewById(R.id.nameRight);
         villCodeRight = findViewById(R.id.villCodeRight);
         villCodeLeft = findViewById(R.id.villCodeLeft);
-        mobileLeft = findViewById(R.id.mobileLeft);
-        mobileRight = findViewById(R.id.mobileRight);
+       // mobileLeft = findViewById(R.id.mobileLeft);
+        //mobileRight = findViewById(R.id.mobileRight);
 //        khasraLeft = findViewById(R.id.khasraLeft);
 //        khasraRight = findViewById(R.id.khasraRight);
         ownLeaseLeft = findViewById(R.id.own_lease_Left);
@@ -252,8 +252,8 @@ public class ReviewReport extends AppCompatActivity {
                             remarksRight.setText(remarks);
                             //mobileLeft.setText("Mobile No");
                             //mobileRight.setText(number);
-                            mobileLeft.setVisibility(View.GONE);
-                            mobileRight.setVisibility(View.GONE);
+                            //mobileLeft.setVisibility(View.GONE);
+                            //mobileRight.setVisibility(View.GONE);
                             reasonLeft.setText("Incident Reason");
                             reasonRight.setText(reason);
                             progressBar.setVisibility(View.GONE);
