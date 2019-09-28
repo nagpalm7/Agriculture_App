@@ -70,7 +70,7 @@ public class DdaOngoingFragment extends Fragment {
         isRefresh = false;
 
         view = inflater.inflate(R.layout.fragment_ongoing,container,false);
-        swipeRefreshLayout = view.findViewById(R.id.refreshpull11);
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull_dda);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -136,8 +136,7 @@ public class DdaOngoingFragment extends Fragment {
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
-                        state = c.getString("state");
-                        Address.add(villagename+", "+blockname+", "+district+", "+state);
+                        Address.add(villagename.toUpperCase() + ", " + blockname.toUpperCase() + ", " + district.toUpperCase());
                     }
                     Log.d(TAG, "onResponse:ongoing ");
                     ddaongoingAdapter.showongoingshimmer = false;
@@ -188,8 +187,9 @@ public class DdaOngoingFragment extends Fragment {
                                     JSONObject a = singleObject.getJSONObject("ado");
                                     Name.add(a.getString("name"));
                                     Id.add(singleObject.getString("id"));
-                                    String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
-                                            + singleObject.getString("district") + ", " + singleObject.getString("state");
+                                    String location = singleObject.getString("village_name").toUpperCase()
+                                            + ", " + singleObject.getString("block_name").toUpperCase() + ", "
+                                            + singleObject.getString("district").toUpperCase();
                                     Address.add(location);
                                     isNextBusy = false;
                                     Log.d(TAG, "onResponse: in next url");

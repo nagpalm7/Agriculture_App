@@ -58,6 +58,7 @@
             android:layout_toRightOf="@id/img"
             android:background="@color/shimmer_bg"
             android:textSize="12sp"
+            android:textStyle="italic"
             android:visibility="gone" />
 
     </RelativeLayout>

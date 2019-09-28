@@ -52,6 +52,7 @@ public class login_activity extends AppCompatActivity {
     private String Name;
     private static final String TAG = "login_activity";
     private EditText editEmail, editPassword;
+    private TextView signUpAdo, signUpDda;
 
     private String urlget = "http://13.235.100.235:8000/api/get-user/";
     //    private String urlpost = getString(R.string.rooturl)+ "api-token-auth/";
@@ -94,7 +95,8 @@ public class login_activity extends AppCompatActivity {
         editPassword = findViewById(R.id.editPassword);
         btnLogin = findViewById(R.id.login_button);
         checkBox = findViewById(R.id.eyeIcon);
-
+        signUpAdo = findViewById(R.id.signup_ado);
+        signUpDda = findViewById(R.id.signup_dda);
 
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -154,6 +156,20 @@ public class login_activity extends AppCompatActivity {
                     editPassword.setError("Please insert password");
                     Toast.makeText(login_activity.this, "Please insert email and password", Toast.LENGTH_SHORT);
                 }
+            }
+        });
+
+        signUpAdo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickregister("http://theagriculture.tk/adoregister.html", true);
+            }
+        });
+
+        signUpDda.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickregister("http://theagriculture.tk/ddaregister.html", false);
             }
         });
     }
@@ -285,14 +301,15 @@ public class login_activity extends AppCompatActivity {
                     }
                 });
 
-
         MyRequestQueue.add(jsonObjectRequest);
 
     }
 
-    public void onClickregister(View view) {
+    public void onClickregister(String url, boolean isAdo) {
 
         Intent intent = new Intent(login_activity.this,RegistrationActivity.class);
+        intent.putExtra("url", url);
+        intent.putExtra("isAdo", isAdo);
         startActivity(intent);
     }
 }

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -35,7 +36,7 @@ import java.util.Map;
 public class notassignedfragment extends Fragment {
 
     private static final String TAG = "notassignedfragment";
-    private ArrayList<String>Id;
+    private ArrayList<String> mHeading;
     private ArrayList<String> Address;
     private DdapendingUnassignedAdapter ddapendingUnassignedAdapter;
     private String urlget = "http://13.235.100.235:8000/api/locations/dda/unassigned";
@@ -62,20 +63,23 @@ public class notassignedfragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_notassignedfragment, container, false);
         isRefresh = false;
-        Id = new ArrayList<String>();
+        mHeading = new ArrayList<String>();
         Address = new ArrayList<String>();
-        swipeRefreshLayout = view.findViewById(R.id.refreshpull10);
+        swipeRefreshLayout = view.findViewById(R.id.refreshpullDda);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getFragmentManager().beginTransaction().detach(notassignedfragment.this).attach(notassignedfragment.this).commit();
             }
         });
-        ddapendingUnassignedAdapter = new DdapendingUnassignedAdapter(getActivity(),Id, Address);
+        ddapendingUnassignedAdapter = new DdapendingUnassignedAdapter(getActivity(), mHeading, Address);
         RecyclerView notassignedreview = view.findViewById(R.id.recyclerViewnotassigned);
         notassignedreview.setAdapter(ddapendingUnassignedAdapter);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         notassignedreview.setLayoutManager(layoutManager);
+        DividerItemDecoration divider = new DividerItemDecoration(notassignedreview.getContext(),
+                layoutManager.getOrientation());
+        notassignedreview.addItemDecoration(divider);
 
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token","");
@@ -105,8 +109,8 @@ public class notassignedfragment extends Fragment {
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        Id.add(c.getString("id"));
-                        Address.add(villagename + ", " + blockname + ", " + district + ", " + state);
+                        mHeading.add(villagename + ", " + blockname);
+                        Address.add(district + ", " + state);
                     }
                     ddapendingUnassignedAdapter.showunassignedshimmer = false;
                     ddapendingUnassignedAdapter.notifyDataSetChanged();
@@ -203,8 +207,8 @@ public class notassignedfragment extends Fragment {
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        Id.add(c.getString("id"));
-                        Address.add(villagename + "," + blockname + "," + district + "," + state);
+                        mHeading.add(villagename + ", " + blockname);
+                        Address.add(district + ", " + state);
                         isNextBusy = false;
                         Log.d(TAG, "onResponse: error in this notassignedfragment" + response);
                     }

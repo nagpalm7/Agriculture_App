@@ -127,8 +127,9 @@ public class completed_fragment extends Fragment {
                                     mAdoNames.add("Not Assigned");
                                 else
                                     mAdoNames.add(adoName);
-                                String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
-                                        + singleObject.getString("district");
+                                String location = singleObject.getString("village_name").toUpperCase()
+                                        + ", " + singleObject.getString("block_name").toUpperCase() + ", "
+                                        + singleObject.getString("district").toUpperCase();
                                 mAddresses.add(location);
 
                             }
@@ -179,8 +180,9 @@ public class completed_fragment extends Fragment {
                                     mAdoNames.add("Not Assigned");
                                 else
                                     mAdoNames.add(adoName);
-                                String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
-                                        + singleObject.getString("district");
+                                String location = singleObject.getString("village_name").toUpperCase()
+                                        + ", " + singleObject.getString("block_name").toUpperCase() + ", "
+                                        + singleObject.getString("district").toUpperCase();
                                 mAddresses.add(location);
                             }
                             adapter.notifyDataSetChanged();

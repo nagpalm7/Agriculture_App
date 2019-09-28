@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/adolistlayout">
+    android:id="@+id/adolistlayout"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="4dp"
         android:elevation="8dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginHorizontal="16dp"
         >
 
@@ -30,20 +33,21 @@
                 android:layout_marginTop="8dp"
                 android:text="Assign" />
 
-            <TextView
-                android:id="@+id/nameofvillage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/nameofado"
-                android:layout_marginTop="2dp"
-                android:text="VillageName"
-                android:textSize="16dp" />
+            <!-- <TextView
+                 android:id="@+id/nameofvillage"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_below="@+id/nameofado"
+                 android:layout_marginTop="2dp"
+                 android:text="VillageName"
+                 android:textSize="16dp" />-->
 
             <TextView
                 android:textStyle="bold"
                 android:id="@+id/nameofado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:text="AdoName"
                 android:textColor="@color/colorPrimary"
                 android:textSize="20dp" />

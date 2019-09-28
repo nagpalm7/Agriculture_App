@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -111,8 +110,8 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     Toast.makeText(mcontext, "Successfully Deleted!", Toast.LENGTH_SHORT).show();
-                                    mtextview1.remove(0);
-                                    mtextview2.remove(0);
+                                    mtextview1.remove(viewHolder.getAdapterPosition());
+                                    mtextview2.remove(viewHolder.getAdapterPosition());
                                     deleteRecord(viewHolder.getAdapterPosition());
                                     notifyDataSetChanged();
                                 }
@@ -167,7 +166,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
     }
 
     private void deleteRecord(int pos) {
-        String id = mUserId.get(pos);
+        String id = mPkList.get(pos);
         final String url = "http://13.235.100.235:8000/api/user/" + id + "/";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE, url, null,
                 new Response.Listener<JSONObject>() {

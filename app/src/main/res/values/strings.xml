@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Agriculture</string>
+    <string name="app_name">AFL Monitoring</string>
     <string name="splash_title">GOVERMENT OF HARYANA</string>
     <string name="splash_subtitle">DEPARTMENT OF AGRICULTURE \n AND \nFARMER AND WELFARE</string>
     <string name="login">Login</string>
@@ -41,4 +41,6 @@
     <string name="menu_refresh">menu_refresh</string>
     <string name="no_data_available">No data available</string>
     <string name="location">LOCATION</string>
+    <string name="signup_ado"><u>Sign Up as ADO</u></string>
+    <string name="signup_dda"><u>Sign Up as DDA</u></string>
 </resources>

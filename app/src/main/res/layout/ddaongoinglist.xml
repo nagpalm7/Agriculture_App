@@ -9,14 +9,12 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:layout_marginHorizontal="8dp"
     android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
     android:focusable="true">
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_ongoing"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_marginHorizontal="8dp"

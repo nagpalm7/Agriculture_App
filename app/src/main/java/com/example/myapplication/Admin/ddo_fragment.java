@@ -109,8 +109,12 @@ public class ddo_fragment extends Fragment {
                     for (int i = 0; i < resultsArray.length(); i++) {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));
-                        JSONObject districtObject = singleObject.getJSONObject("district");
-                        userinfo.add(districtObject.getString("district"));
+                        try {
+                            JSONObject districtObject = singleObject.getJSONObject("district");
+                            userinfo.add(districtObject.getString("district"));
+                        } catch (JSONException e) {
+                            userinfo.add("Not Assigned");
+                        }
                         JSONObject authObject = singleObject.getJSONObject("auth_user");
                         String pk = authObject.getString("pk");
                         mPkList.add(pk);
@@ -180,8 +184,12 @@ public class ddo_fragment extends Fragment {
                     for (int i = 0; i < resultsArray.length(); i++) {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
                         username.add(singleObject.getString("name"));
-                        JSONObject districtObject = singleObject.getJSONObject("district");
-                        userinfo.add(districtObject.getString("district"));
+                        try {
+                            JSONObject districtObject = singleObject.getJSONObject("district");
+                            userinfo.add(districtObject.getString("district"));
+                        } catch (JSONException e) {
+                            userinfo.add("Not Assigned");
+                        }
                         JSONObject authObject = singleObject.getJSONObject("auth_user");
                         String pk = authObject.getString("pk");
                         mPkList.add(pk);
