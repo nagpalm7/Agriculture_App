@@ -170,7 +170,7 @@ public class AdoDdoPending extends Fragment {
                                 }
                                 String locName = singleObject.getString("village_name");
                                 String locAdd = singleObject.getString("block_name") +
-                                        ", " + singleObject.getString("state");
+                                        ", " + singleObject.getString("district");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
                             }
@@ -236,7 +236,7 @@ public class AdoDdoPending extends Fragment {
                                 }
                                 String locName = singleObject.getString("village_name");
                                 String locAdd = singleObject.getString("block_name") +
-                                        ", " + singleObject.getString("state");
+                                        ", " + singleObject.getString("district");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
                             }

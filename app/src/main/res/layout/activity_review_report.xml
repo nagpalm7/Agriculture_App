@@ -6,25 +6,41 @@
     android:padding="16dp"
     tools:context=".Ado.ReviewReport">
 
-    <LinearLayout
-        android:id="@+id/view1"
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/review_pics_recyclerview">
+
+        <TableLayout
+            android:id="@+id/table"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="16dp"
+            android:background="#f1f1f1" />
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/view4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view1"
+        android:layout_marginTop="8dp"
         android:weightSum="2">
 
         <TextView
-            android:id="@+id/villCodeLeft"
+            android:id="@+id/mobileLeft"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
             android:textSize="18sp"
+            android:textStyle="bold"
 
             />
 
         <TextView
-            android:id="@+id/villCodeRight"
+            android:id="@+id/mobileRight"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -37,7 +53,7 @@
         android:id="@+id/view2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/view1"
+        android:layout_below="@id/view4"
         android:layout_marginTop="8dp"
         android:weightSum="2">
 
@@ -48,6 +64,7 @@
             android:layout_weight="1"
             android:gravity="start"
             android:textSize="18sp"
+            android:textStyle="bold"
 
             />
 
@@ -76,6 +93,7 @@
             android:layout_weight="1"
             android:gravity="start"
             android:textSize="18sp"
+            android:textStyle="bold"
 
             />
 
@@ -88,67 +106,40 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/view4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/view3"
-        android:layout_marginTop="8dp"
-        android:weightSum="2">
+    <!-- <LinearLayout
+         android:id="@+id/view5"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/view4"
+         android:layout_marginTop="8dp"
+         android:weightSum="2">
 
-        <TextView
-            android:id="@+id/mobileLeft"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:textSize="18sp"
+         <TextView
+             android:id="@+id/khasraLeft"
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_weight="1"
+             android:gravity="start"
+             android:textSize="18sp"
+             android:textStyle="bold"
 
-            />
+             />
 
-        <TextView
-            android:id="@+id/mobileRight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+         <TextView
+             android:id="@+id/khasraRight"
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_weight="1"
 
-            android:textAlignment="viewStart"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/view5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/view4"
-        android:layout_marginTop="8dp"
-        android:weightSum="2">
-
-        <TextView
-            android:id="@+id/khasraLeft"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:textSize="18sp"
-
-            />
-
-        <TextView
-            android:id="@+id/khasraRight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:textAlignment="viewStart"
-            android:textSize="18sp" />
-    </LinearLayout>
+             android:textAlignment="viewStart"
+             android:textSize="18sp" />
+     </LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/view6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/view5"
+        android:layout_below="@id/view3"
         android:layout_marginTop="8dp"
         android:weightSum="2">
 
@@ -159,6 +150,7 @@
             android:layout_weight="1"
             android:gravity="start"
             android:textSize="18sp"
+            android:textStyle="bold"
 
             />
 
@@ -172,7 +164,7 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/view7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -198,9 +190,9 @@
 
             android:textAlignment="viewStart"
             android:textSize="18sp" />
-    </LinearLayout>
+    </LinearLayout>-->
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/view10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -225,13 +217,13 @@
             android:layout_weight="1"
             android:textAlignment="viewStart"
             android:textSize="18sp" />
-    </LinearLayout>
+    </LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/view8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/view10"
+        android:layout_below="@id/view6"
         android:layout_marginTop="8dp"
         android:weightSum="2">
 
@@ -241,6 +233,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
+            android:textStyle="bold"
             android:textSize="18sp" />
 
         <TextView
@@ -266,6 +259,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
+            android:textStyle="bold"
             android:textSize="18sp"
 
             />
@@ -312,15 +306,33 @@
         android:layout_centerInParent="true"
         android:indeterminateDrawable="@drawable/progress" />
 
-    <TableLayout
-        android:id="@+id/table"
+    <LinearLayout
+        android:id="@+id/view1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/review_pics_recyclerview"
-        android:layout_marginHorizontal="18dp"
-        android:layout_marginTop="16dp"
-        android:background="#f1f1f1"
-        android:visibility="gone" />
+        android:layout_alignParentTop="true"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/villCodeLeft"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:textStyle="bold"
+            android:textSize="18sp"
+
+            />
+
+        <TextView
+            android:id="@+id/villCodeRight"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:textAlignment="viewStart"
+            android:textSize="18sp" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/review_pics_recyclerview"

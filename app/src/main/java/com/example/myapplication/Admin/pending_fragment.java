@@ -114,10 +114,13 @@ public class pending_fragment extends Fragment {
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
-                        JSONObject mDdaObject = c.getJSONObject("dda");
-                        String ddaName = mDdaObject.getString("name");
-                        mDdaName.add(ddaName);
-                        Log.d(TAG, "onResponse: DDA NAME " + ddaName);
+                        try {
+                            JSONObject mDdaObject = c.getJSONObject("dda");
+                            String ddaName = mDdaObject.getString("name");
+                            mDdaName.add(ddaName);
+                        } catch (JSONException e) {
+                            mDdaName.add("Not Assigned");
+                        }
                         try {
                             JSONObject mAdoObject = c.getJSONObject("ado");
                             Log.d(TAG, "onResponse: try block");
@@ -128,7 +131,7 @@ public class pending_fragment extends Fragment {
                             mAdaName.add("Not Assigned");
                             Log.d(TAG, "exception: ");
                         }
-                        mAddress.add(villagename + "," + blockname + "," + district);
+                        mAddress.add(villagename.toUpperCase() + "," + blockname.toUpperCase() + "," + district.toUpperCase());
                         Log.d(TAG, "onResponse: next");
                     }
                     recyclerViewAdater.mShowShimmer = false;
@@ -167,10 +170,14 @@ public class pending_fragment extends Fragment {
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
-                        JSONObject mDdaObject = c.getJSONObject("dda");
-                        String ddaName = mDdaObject.getString("name");
-                        mDdaName.add(ddaName);
-                        Log.d(TAG, "onResponse: DDA NAME " + ddaName);
+                        try {
+                            JSONObject mDdaObject = c.getJSONObject("dda");
+                            String ddaName = mDdaObject.getString("name");
+                            mDdaName.add(ddaName);
+                        } catch (JSONException e) {
+                            mDdaName.add("Not Assigned");
+                        }
+
                         try {
                             JSONObject mAdoObject = c.getJSONObject("ado");
                             String adoName = mAdoObject.getString("name");
@@ -178,7 +185,7 @@ public class pending_fragment extends Fragment {
                         } catch (JSONException e) {
                             mAdaName.add("Not Assigned");
                         }
-                        mAddress.add(villagename + "," + blockname + "," + district);
+                        mAddress.add(villagename.toUpperCase() + "," + blockname.toUpperCase() + "," + district.toUpperCase());
                     }
                     requestQueue.add(jsonObjectRequest2);
                 } catch (JSONException e) {
@@ -270,7 +277,7 @@ public class pending_fragment extends Fragment {
                             } catch (JSONException e) {
                                 mAdaName.add("Not Assigned");
                             }
-                            mAddress.add(villagename + "," + blockname + "," + district);
+                            mAddress.add(villagename.toUpperCase() + "," + blockname.toUpperCase() + "," + district.toUpperCase());
                             recyclerViewAdater.notifyDataSetChanged();
                             isNextBusy = false;
                         }
@@ -324,7 +331,7 @@ public class pending_fragment extends Fragment {
                             } catch (JSONException e) {
                                 mAdaName.add("Not Assigned");
                             }
-                            mAddress.add(villagename + "," + blockname + "," + district);
+                            mAddress.add(villagename.toUpperCase() + "," + blockname.toUpperCase() + "," + district.toUpperCase());
                             recyclerViewAdater.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {

@@ -63,8 +63,8 @@ public class DdacompletedAdapter extends RecyclerView.Adapter<DdacompletedAdapte
             holder.shimmercomleted.setShimmer(null);
             holder.tv1.setBackground(null);
             holder.tv2.setBackground(null);
-            holder.tv1.setText(mtextview1.get(position));
-            holder.tv2.setText(mtextview2.get(position));
+            holder.tv1.setText(mtextview2.get(position));
+            holder.tv2.setText(mtextview1.get(position));
         }
     }
 

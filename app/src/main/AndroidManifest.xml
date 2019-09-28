@@ -12,9 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Ado.CheckInActivity2"></activity>
+        <activity android:name=".Dda.ListOfVillages"></activity>
+        <activity android:name=".Ado.CheckInActivity2" />
         <activity android:name=".RegistrationActivity" />
-        <activity android:name=".Dda.villagenameActivity"></activity>
+        <activity android:name=".Dda.villagenameActivity" />
         <activity android:name=".Ado.ReviewReport" />
         <activity android:name=".Admin.EditActivity" />
         <activity android:name=".Ado.CheckInActivity" />
@@ -90,6 +91,7 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

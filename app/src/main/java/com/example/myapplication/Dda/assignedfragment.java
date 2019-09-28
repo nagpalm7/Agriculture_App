@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -62,7 +63,7 @@ public class assignedfragment extends Fragment {
         Name = new ArrayList<String>();
         Address = new ArrayList<String>();
         isReferesh = false;
-        swipeRefreshLayout = view.findViewById(R.id.refreshpull11);
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull_dda);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -74,7 +75,8 @@ public class assignedfragment extends Fragment {
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddaassignedAdapter);
         review.setLayoutManager(layoutManager);
-
+        DividerItemDecoration divider = new DividerItemDecoration(review.getContext(), layoutManager.getOrientation());
+        review.addItemDecoration(divider);
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token","");
         Log.d(TAG, "onCreateView: "+token);
@@ -105,7 +107,7 @@ public class assignedfragment extends Fragment {
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        Address.add(villagename + ", " + blockname + ", " + district + ", " + state);
+                        Address.add(villagename.toUpperCase() + ", " + blockname.toUpperCase() + ", " + district.toUpperCase());
                     }
                     ddaassignedAdapter.showassignedshimmer = false;
                     ddaassignedAdapter.notifyDataSetChanged();
@@ -203,7 +205,7 @@ public class assignedfragment extends Fragment {
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        Address.add(villagename + "," + blockname + "," + district + "," + state);
+                        Address.add(villagename.toUpperCase() + "," + blockname.toUpperCase() + "," + district.toUpperCase());
                         isNextBusy = false;
                     }
                     ddaassignedAdapter.showassignedshimmer = false;

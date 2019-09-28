@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -22,7 +23,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,7 +61,7 @@ public class DdaCompletedFragment extends Fragment {
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddacompletedAdapter);
 
-        swipeRefreshLayout = view.findViewById(R.id.refreshpull11);
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull_dda);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -70,6 +70,8 @@ public class DdaCompletedFragment extends Fragment {
         });
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         review.setLayoutManager(layoutManager);
+        DividerItemDecoration divider = new DividerItemDecoration(review.getContext(), layoutManager.getOrientation());
+        review.addItemDecoration(divider);
 
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token","");
@@ -99,7 +101,7 @@ public class DdaCompletedFragment extends Fragment {
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
-                        Address.add(villagename + ", " + blockname + ", " + district);
+                        Address.add(villagename.toUpperCase() + ", " + blockname.toUpperCase() + ", " + district.toUpperCase());
                         Log.d(TAG, "onResponse: some error in if");
                     }
                     ddacompletedAdapter.showcomletedshimmer = false;
@@ -172,7 +174,7 @@ public class DdaCompletedFragment extends Fragment {
                         blockname = c.getString("block_name");
                         district = c.getString("district");
                         state = c.getString("state");
-                        Address.add(villagename + "," + blockname + "," + district);
+                        Address.add(villagename.toUpperCase() + "," + blockname.toUpperCase() + "," + district.toUpperCase());
                         Log.d(TAG, "onResponse: some error in if");
                         isNextBusy = false;
                     }

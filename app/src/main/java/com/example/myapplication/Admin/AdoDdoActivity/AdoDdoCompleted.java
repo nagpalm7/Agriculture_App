@@ -43,6 +43,7 @@ public class AdoDdoCompleted extends Fragment {
     private String mDdoId;
     private ArrayList<String> locationNames;
     private ArrayList<String> locationAddresses;
+    private ArrayList<String> mAdoNames;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private LinearLayoutManager layoutManager;
@@ -91,7 +92,11 @@ public class AdoDdoCompleted extends Fragment {
         token = prefs.getString("token", "");
         locationNames = new ArrayList<>();
         locationAddresses = new ArrayList<>();
-        adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses);
+        mAdoNames = new ArrayList<>();
+        if (isDdo)
+            adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses, mAdoNames, true);
+        else
+            adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses, mAdoNames, false);
         recyclerView.setAdapter(adapter);
         getData(mUrl);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -132,9 +137,18 @@ public class AdoDdoCompleted extends Fragment {
                             }
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
+                                if (isDdo) {
+                                    try {
+                                        JSONObject adoObject = singleObject.getJSONObject("ado");
+                                        String adoName = adoObject.getString("name");
+                                        mAdoNames.add(adoName);
+                                    } catch (JSONException e) {
+                                        mAdoNames.add("Not Assigned");
+                                    }
+                                }
                                 String locName = singleObject.getString("village_name");
                                 String locAdd = singleObject.getString("block_name") +
-                                        ", " + singleObject.getString("state");
+                                        ", " + singleObject.getString("district");
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
                             }
@@ -183,9 +197,18 @@ public class AdoDdoCompleted extends Fragment {
                                 }
                                 for (int i = 0; i < resultsArray.length(); i++) {
                                     JSONObject singleObject = resultsArray.getJSONObject(i);
+                                    if (isDdo) {
+                                        try {
+                                            JSONObject adoObject = singleObject.getJSONObject("ado");
+                                            String adoName = adoObject.getString("name");
+                                            mAdoNames.add(adoName);
+                                        } catch (JSONException e) {
+                                            mAdoNames.add("Not Assigned");
+                                        }
+                                    }
                                     String locName = singleObject.getString("village_name");
                                     String locAdd = singleObject.getString("block_name") +
-                                            ", " + singleObject.getString("state");
+                                            ", " + singleObject.getString("district");
                                     locationNames.add(locName);
                                     locationAddresses.add(locAdd);
                                     adapter.notifyDataSetChanged();

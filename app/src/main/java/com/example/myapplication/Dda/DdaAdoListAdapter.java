@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,7 +55,7 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
     @Override
     public AdoListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view  = LayoutInflater.from(mcontext).inflate(R.layout.ddaselectadolist,parent,false);
-        AdoListViewHolder adoListViewHolder = new AdoListViewHolder(view);
+        final AdoListViewHolder adoListViewHolder = new AdoListViewHolder(view);
         Log.d(TAG, "onCreateViewHolder:");
 
 
@@ -114,13 +115,23 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
                 },false);
             }
         });
+
+        adoListViewHolder.adolistlayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mcontext, ListOfVillages.class);
+                intent.putExtra("listArray", mtextview2);
+                intent.putExtra("adoName", mtextview1.get(adoListViewHolder.getAdapterPosition()));
+                mcontext.startActivity(intent);
+            }
+        });
         return adoListViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull AdoListViewHolder holder, int position) {
         holder.tv1.setText(mtextview1.get(position));
-        holder.tv2.setVisibility(View.GONE);
+//        holder.tv2.setVisibility(View.GONE);
         //holder.tv2.setText(mtextview2.get(position));
     }
 
@@ -131,7 +142,7 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
 
     public class AdoListViewHolder extends RecyclerView.ViewHolder{
         TextView tv1;
-        TextView tv2;
+        //        TextView tv2;
         RelativeLayout adolistlayout;
         Button btnassign;
 
@@ -140,7 +151,7 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
             mcontext = itemView.getContext();
             adolistlayout = (RelativeLayout) itemView.findViewById(R.id.adolistlayout);
             tv1 = itemView.findViewById(R.id.nameofado);
-            tv2 = itemView.findViewById(R.id.nameofvillage);
+//            tv2 = itemView.findViewById(R.id.nameofvillage);
             btnassign = itemView.findViewById(R.id.btnAssign);
         }
 

@@ -8,7 +8,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
@@ -54,8 +53,8 @@ public class DdapendingassignedAdapter extends RecyclerView.Adapter<Ddapendingas
             holder.tv2.setBackground(null);
             holder.tv3.setBackground(null);
 
-            holder.tv2.setText(mtextview2.get(position));
-            holder.tv3.setText(mtextview3.get(position));
+            holder.tv2.setText(mtextview3.get(position));
+            holder.tv3.setText(mtextview2.get(position));
         }
     }
 

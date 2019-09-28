@@ -134,8 +134,9 @@ public class OnGoingFragment extends Fragment {
                                 } catch (JSONException e) {
                                     mAdoNames.add("Not Assigned");
                                 }
-                                String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
-                                        + singleObject.getString("district") + ", " + singleObject.getString("state");
+                                String location = singleObject.getString("village_name").toUpperCase() +
+                                        ", " + singleObject.getString("block_name").toUpperCase() + ", "
+                                        + singleObject.getString("district").toUpperCase();
                                 mAddresses.add(location);
                             }
                             adapter.mShowShimmer = false;
@@ -186,8 +187,9 @@ public class OnGoingFragment extends Fragment {
                                 } catch (JSONException e) {
                                     mAdoNames.add("Not Assigned");
                                 }
-                                String location = singleObject.getString("village_name") + ", " + singleObject.getString("block_name") + ", "
-                                        + singleObject.getString("district") + ", " + singleObject.getString("state");
+                                String location = singleObject.getString("village_name").toUpperCase() + ", " +
+                                        singleObject.getString("block_name").toUpperCase() + ", "
+                                        + singleObject.getString("district").toUpperCase();
                                 mAddresses.add(location);
                                 isNextBusy = false;
                             }

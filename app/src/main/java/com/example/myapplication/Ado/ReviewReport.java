@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
@@ -47,8 +46,8 @@ public class ReviewReport extends AppCompatActivity {
     private TextView villCodeLeft;
     private TextView mobileLeft;
     private TextView mobileRight;
-    private TextView khasraLeft;
-    private TextView khasraRight;
+    //    private TextView khasraLeft;
+//    private TextView khasraRight;
     private TextView ownLeaseLeft;
     private TextView ownLeaseRight;
     private TextView remarksLeft;
@@ -69,6 +68,8 @@ public class ReviewReport extends AppCompatActivity {
     private ReviewPicsRecyclerviewAdapter adapter;
     private ArrayList<String> mImagesUrl;
     private String farmerId;
+    private String id;
+    private boolean isDdo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,19 +86,19 @@ public class ReviewReport extends AppCompatActivity {
         villCodeLeft = findViewById(R.id.villCodeLeft);
         mobileLeft = findViewById(R.id.mobileLeft);
         mobileRight = findViewById(R.id.mobileRight);
-        khasraLeft = findViewById(R.id.khasraLeft);
-        khasraRight = findViewById(R.id.khasraRight);
+//        khasraLeft = findViewById(R.id.khasraLeft);
+//        khasraRight = findViewById(R.id.khasraRight);
         ownLeaseLeft = findViewById(R.id.own_lease_Left);
         ownLeaseRight = findViewById(R.id.own_lease_Right);
         remarksLeft = findViewById(R.id.remarksLeft);
         remarksRight = findViewById(R.id.remarksRight);
         reasonLeft = findViewById(R.id.reasonLeft);
         reasonRight = findViewById(R.id.reasonRight);
-        progressBar = findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBar);/*
         actionLeft = findViewById(R.id.actionLeft);
         actionRight = findViewById(R.id.actionRight);
         chalaanLeft = findViewById(R.id.chalaan_amount_left);
-        chalaanRight = findViewById(R.id.chalaan_amount_right);
+        chalaanRight = findViewById(R.id.chalaan_amount_right);*/
         recyclerView = findViewById(R.id.review_pics_recyclerview);
         mImagesUrl = new ArrayList<>();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
@@ -106,19 +107,17 @@ public class ReviewReport extends AppCompatActivity {
         Button forfeitButton = findViewById(R.id.forfeit);
         Button startButton = findViewById(R.id.start);
         Intent intent = getIntent();
-        String id = intent.getStringExtra("id");
+        id = intent.getStringExtra("id");
         Log.d(TAG, "onCreate: ID " + id);
         isComplete = intent.getBooleanExtra("isComplete", false);
         isAdmin = intent.getBooleanExtra("isAdmin", false);
-        boolean isDdo = intent.getBooleanExtra("isDdo", false);
         mUrl = "http://13.235.100.235:8000/api/report-ado/" + id + "/";
+//        addRowtoTable("scheme1", "program1", "financial1", "benefit1", true);
+//        addRowtoTable("scheme1", "program1", "financial1", "benefit1", true);
+//        addRowtoTable("scheme1", "program1", "financial1", "benefit1", true);
+//        addRowtoTable("scheme1", "program1", "financial1", "benefit1", true);
         getDetails();
         if (isDdo) {
-            addRowtoTable("Column1", "Column2", false);
-            addRowtoTable("Data1", "Data2", true);
-            addRowtoTable("Data3", "Data4", true);
-            addRowtoTable("Data5", "Data6", true);
-            tableLayout.setVisibility(View.VISIBLE);
             if (isComplete)
                 startButton.setVisibility(View.VISIBLE);
             else
@@ -160,7 +159,7 @@ public class ReviewReport extends AppCompatActivity {
                             String name = rootObject.getString("farmer_name");
                             String fatherName = rootObject.getString("father_name");
                             String ownership = rootObject.getString("ownership");
-                            String action = rootObject.getString("action");
+                            //String action = rootObject.getString("action");
                             String remarks = rootObject.getString("remarks");
                             String reason = rootObject.getString("incident_reason");
                             //String number = rootObject.getString("number");
@@ -171,20 +170,20 @@ public class ReviewReport extends AppCompatActivity {
                                 mImagesUrl.add(imageUrl);
                                 adapter.notifyDataSetChanged();
                             }
-                            Log.d(TAG, "onResponse: ACTION " + action);
+                            //Log.d(TAG, "onResponse: ACTION " + action);
                             villCodeLeft.setText("Village Code");
                             villCodeRight.setText(villCode);
                             nameLeft.setText("Farmer Name");
                             nameRight.setText(name);
                             //khasraLeft.setText("Khasra Number");
                             //khasraRight.setText(khasraNo);
-                            khasraLeft.setVisibility(View.GONE);
-                            khasraRight.setVisibility(View.GONE);
+//                            khasraLeft.setVisibility(View.GONE);
+//                            khasraRight.setVisibility(View.GONE);
                             fatherNameLeft.setText("Father Name");
                             fatherNameRight.setText(fatherName);
                             ownLeaseLeft.setText("Ownership/Lease");
                             ownLeaseRight.setText(ownership);
-                            actionLeft.setText("Action Taken");
+                            /*actionLeft.setText("Action Taken");
                             actionRight.setText(action);
                             if (action.equals("chalaan")) {
                                 chalaanLeft.setText("Chalaan Amount");
@@ -193,7 +192,7 @@ public class ReviewReport extends AppCompatActivity {
                             } else {
                                 chalaanLeft.setVisibility(View.GONE);
                                 chalaanRight.setVisibility(View.GONE);
-                            }
+                            }*/
                             remarksLeft.setText("Remarks");
                             remarksRight.setText(remarks);
                             //mobileLeft.setText("Mobile No");
@@ -203,6 +202,10 @@ public class ReviewReport extends AppCompatActivity {
                             reasonLeft.setText("Incident Reason");
                             reasonRight.setText(reason);
                             progressBar.setVisibility(View.GONE);
+                            if (isDdo || isAdmin) {
+                                showSubsidies();
+                                tableLayout.setVisibility(View.VISIBLE);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.d(TAG, "onResponse: JSON EXCEPTION " + e);
@@ -228,12 +231,18 @@ public class ReviewReport extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
-    private void addRowtoTable(String col1, String col2, boolean isDataRow) {
+    private void addRowtoTable(String col1, String col2, String col3, String col4, boolean isDataRow) {
         TableRow tableRow1 = new TableRow(this);
-        TableRow.LayoutParams params = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-        TableRow.LayoutParams params2 = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-        params.setMargins(5, 0, 5, 5);
-        params2.setMargins(0, 0, 5, 5);
+        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.3f);
+        TableRow.LayoutParams params2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.3f);
+        if (isDataRow) {
+            params.setMargins(5, 0, 5, 5);
+            params2.setMargins(0, 0, 5, 5);
+        } else {
+            params.setMargins(30, 0, 30, 5);
+            params2.setMargins(30, 0, 30, 5);
+        }
+        tableRow1.setLayoutParams(params);
         TextView colName1 = new TextView(this);
         colName1.setText(col1);
         colName1.setLayoutParams(params);
@@ -242,23 +251,47 @@ public class ReviewReport extends AppCompatActivity {
         colName2.setText(col2);
         colName2.setLayoutParams(params2);
         colName2.setGravity(Gravity.CENTER);
-        tableRow1.setWeightSum(2f);
+        TextView colName3 = new TextView(this);
+        colName3.setText(col3);
+        colName3.setLayoutParams(params2);
+        colName3.setGravity(Gravity.CENTER);
+        TextView colName4 = new TextView(this);
+        colName4.setText(col4);
+        colName4.setLayoutParams(params2);
+        colName4.setGravity(Gravity.CENTER);
+        tableRow1.setWeightSum(5.4f);
         if (isDataRow) {
             colName1.setBackgroundColor(Color.parseColor("#ffffff"));
+            colName1.setTextSize(16f);
             colName2.setBackgroundColor(Color.parseColor("#ffffff"));
             colName2.setTextSize(16f);
-            colName1.setTextSize(16f);
+            colName3.setBackgroundColor(Color.parseColor("#ffffff"));
+            colName3.setTextSize(16f);
+            colName4.setBackgroundColor(Color.parseColor("#ffffff"));
+            colName4.setTextSize(16f);
         } else {
             colName2.setTextSize(18f);
             colName1.setTextSize(18f);
+            colName3.setTextSize(18f);
+            colName4.setTextSize(18f);
+            colName1.setTextColor(Color.parseColor("#000000"));
+            colName2.setTextColor(Color.parseColor("#000000"));
+            colName3.setTextColor(Color.parseColor("#000000"));
+            colName4.setTextColor(Color.parseColor("#000000"));
+//            colName1.setTypeface(Typeface.DEFAULT_BOLD);
+//            colName2.setTypeface(Typeface.DEFAULT_BOLD);
+//            colName3.setTypeface(Typeface.DEFAULT_BOLD);
+//            colName4.setTypeface(Typeface.DEFAULT_BOLD);
         }
         tableRow1.addView(colName1);
         tableRow1.addView(colName2);
+        tableRow1.addView(colName3);
+        tableRow1.addView(colName4);
         tableLayout.addView(tableRow1);
     }
 
     //flag = 1 for Add in BlockedList and 0 for remove from Blocked List
-    private void actionOnFarmerSub(int flag) {
+    private void actionOnFarmerSub(final int flag) {
         String url = "http://117.240.196.238:8080/api/CRM/setFarmerID?key=agriHr@CRM&fID="
                 + farmerId + "&flag=" + flag;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -268,6 +301,8 @@ public class ReviewReport extends AppCompatActivity {
                         try {
                             JSONObject singleObject = new JSONObject(String.valueOf(response));
                             String message = singleObject.getString("message");
+                            if (flag == 1)
+                                changeStatus();
                             Toast.makeText(ReviewReport.this, message, Toast.LENGTH_SHORT).show();
                             finish();
                         } catch (JSONException e) {
@@ -292,4 +327,86 @@ public class ReviewReport extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
+    private void changeStatus() {
+        final JSONObject postbody = new JSONObject();
+        try {
+            postbody.put("status", "completed");
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        }
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String urlpatch = "http://13.235.100.235:8000/api/location/" + id + "/";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, urlpatch, postbody, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Toast.makeText(ReviewReport.this, "Location assigned", Toast.LENGTH_SHORT).show();
+                finish();
+                try {
+                    JSONObject c = new JSONObject(String.valueOf(response));
+                    Log.d(TAG, "onResponse: " + c);
+                } catch (JSONException e) {
+                    Log.d(TAG, "onResponse: " + e);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: " + error);
+                Toast.makeText(ReviewReport.this, "Ado not assigned.Please try again", Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
+                String token = preferences.getString("token", "");
+                headers.put("Authorization", "Token " + token);
+                return headers;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private void showSubsidies() {
+        String url = "https://agriharyana.org/api/farmer?idFarmer=" + farmerId;
+        Log.d(TAG, "showSubsidies: " + url);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject rootObject = new JSONObject(String.valueOf(response));
+                            String status = rootObject.getString("status");
+                            if (status.equals("1")) {
+                                addRowtoTable("Scheme Name", "Program Name", "Financial Year Name",
+                                        "Date Of Benefit", false);
+                                JSONArray dataArray = rootObject.getJSONArray("data");
+                                for (int i = 0; i < dataArray.length(); i++) {
+                                    JSONObject singleObject = dataArray.getJSONObject(i);
+                                    String col1 = singleObject.getString("schemeName");
+                                    String col2 = singleObject.getString("programName");
+                                    String col3 = singleObject.getString("financialYearName");
+                                    String col4 = singleObject.getString("DateOfBenefit");
+                                    addRowtoTable(col1, col2, col3, col4, true);
+                                    Log.d(TAG, "onResponse: showSubsidies " + singleObject);
+                                }
+                            } else {
+                                String message = rootObject.getString("message");
+                                Toast.makeText(ReviewReport.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "onErrorResponse: " + error);
+                    }
+                });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonObjectRequest);
+    }
 }

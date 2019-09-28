@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,7 +64,8 @@ public class DdaselectAdo extends AppCompatActivity {
         review.setAdapter(ddaAdoListAdapter);
         layoutManager = new LinearLayoutManager(this);
         review.setLayoutManager(layoutManager);
-
+        DividerItemDecoration divider = new DividerItemDecoration(review.getContext(), layoutManager.getOrientation());
+        review.addItemDecoration(divider);
         //getting location id coming from unassigned fragment to this activity
         Bundle extras = getIntent().getExtras();
         idtopass = extras.getString("Id_I_Need");

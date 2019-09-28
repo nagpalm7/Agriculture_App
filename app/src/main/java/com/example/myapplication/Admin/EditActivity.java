@@ -52,14 +52,13 @@ public class EditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
-        setContentView(R.layout.activity_edit);
         getSupportActionBar().setTitle("Editing");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         nameEditText = findViewById(R.id.edit_name);
         mobileEditText = findViewById(R.id.edit_number);
         emailEditText = findViewById(R.id.edit_email);
         saveButton = findViewById(R.id.save_changes_button);
-        spinner = findViewById(R.id.edit_district);
+        //spinner = findViewById(R.id.edit_district);
         SharedPreferences prefs = getSharedPreferences("tokenFile", MODE_PRIVATE);
         token = prefs.getString("token", "");
         Intent intent = getIntent();
@@ -72,6 +71,7 @@ public class EditActivity extends AppCompatActivity {
         } else {
             spinnerUrl = "http://13.235.100.235:8000/api/villages-list/";
         }
+        Log.d(TAG, "onCreate: SPINNER URL " + spinnerUrl);
         //id = "2";
         final String url = "http://13.235.100.235:8000/api/user/" + id + "/";
         getDetails(url);
@@ -80,7 +80,7 @@ public class EditActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String mobile = mobileEditText.getText().toString();
                 String email = emailEditText.getText().toString();
-                if (spinner.getSelectedItemPosition() == 0) {
+                /*if (spinner.getSelectedItemPosition() == 0) {
                     String message;
                     if (isDdo)
                         message = "District";
@@ -88,7 +88,8 @@ public class EditActivity extends AppCompatActivity {
                         message = "Village";
                     Toast.makeText(EditActivity.this, "Please Select a valid " + message,
                             Toast.LENGTH_SHORT).show();
-                } else if(mobile.length() != 10){
+                } else*/
+                if (mobile.length() != 10) {
                     Toast.makeText(EditActivity.this,"enter the valid mobile number",Toast.LENGTH_LONG).show();
                 }else if(!isValidEmail(email)){
                     Toast.makeText(EditActivity.this,"enter the valid email address",Toast.LENGTH_LONG).show();
@@ -123,7 +124,7 @@ public class EditActivity extends AppCompatActivity {
                             nameEditText.setText(name);
                             mobileEditText.setText(number);
                             emailEditText.setText(email);
-                            fetchSpinnerData(spinnerUrl);
+                            //fetchSpinnerData(spinnerUrl);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.d(TAG, "onResponse: JSON EXCEPTION: getDetails " + e);
@@ -159,14 +160,14 @@ public class EditActivity extends AppCompatActivity {
             params.put("name", name);
             params.put("number", number);
             params.put("email", email);
-            int pos = spinner.getSelectedItemPosition();
-            Log.d(TAG, "saveChanges: "+villageIds.get(pos));
+//            int pos = spinner.getSelectedItemPosition();
+            /*Log.d(TAG, "saveChanges: "+villageIds.get(pos));
 
             if (isDdo)
                 params.put("district", districtIds.get(pos));
 
             else
-                params.put("village", villageIds.get(pos));
+                params.put("village", villageIds.get(pos));*/
         } catch (JSONException e) {
             e.printStackTrace();
             Log.d(TAG, "saveChanges: PARAMS EXCEPTION saveChanges " + e);
