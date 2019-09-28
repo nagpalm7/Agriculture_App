@@ -31,7 +31,7 @@
     <string name="menu_ddo">DDA</string>
     <string name="menu_ado">ADO</string>
     <string name="menu_location">LOCATIONS</string>
-    <string name="ongoing">AWAITING ACTION</string>
+    <string name="ongoing">ONGOING</string>
     <string name="completed">COMPLETED</string>
     <string name="pending">PENDING</string>
     <string name="rooturl">http://13.235.100.235:8000/api-token-auth/</string>

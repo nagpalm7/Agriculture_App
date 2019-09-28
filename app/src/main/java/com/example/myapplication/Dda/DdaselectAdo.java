@@ -116,8 +116,14 @@ public class DdaselectAdo extends AppCompatActivity {
                         adoid = c.getString("id");
                         ddaAdoListAdapter.getadoid(adoid);
                         nameofado.add(c.getString("name"));
-                        JSONObject villageObject = c.getJSONObject("village");
-                        villagename.add(villageObject.getString("village"));
+                        JSONArray villageArray = c.getJSONArray("village");
+                        for (int j = 0; j < villageArray.length(); j++)
+                        {
+                            JSONObject singleObject = villageArray.getJSONObject(j);
+                            String village = singleObject.getString("village");
+                            villagename.add(singleObject.getString("village"));
+                        }
+
                     }
                     isNextBusy = false;
                     ddaAdoListAdapter.notifyDataSetChanged();

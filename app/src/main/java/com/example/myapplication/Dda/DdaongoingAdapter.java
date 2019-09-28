@@ -40,11 +40,13 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
         viewHolderOngoingDda.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mcontext, ReviewReport.class);
-                int pos = viewHolderOngoingDda.getAdapterPosition();
-                intent.putExtra("id", mtextview1.get(pos));
-                intent.putExtra("isDdo", true);
-                mcontext.startActivity(intent);
+                if (!showongoingshimmer) {
+                    Intent intent = new Intent(mcontext, ReviewReport.class);
+                    int pos = viewHolderOngoingDda.getAdapterPosition();
+                    intent.putExtra("id", mtextview1.get(pos));
+                    intent.putExtra("isDdo", true);
+                    mcontext.startActivity(intent);
+                }
             }
         });
         return viewHolderOngoingDda;
