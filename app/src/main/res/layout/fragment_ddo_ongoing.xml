@@ -3,18 +3,26 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-    <ProgressBar
-        android:id="@+id/Ddo_ongoing_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:indeterminateDrawable="@drawable/progress"
-        android:visibility="gone" />
-
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshpull6"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/Ddo_ongoing_recyclerview" />
+        android:layout_height="match_parent">
+
+
+        <ProgressBar
+            android:id="@+id/Ddo_ongoing_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:indeterminateDrawable="@drawable/progress"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/Ddo_ongoing_recyclerview" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

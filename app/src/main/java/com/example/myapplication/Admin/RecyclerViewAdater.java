@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -83,6 +84,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
                 }
             }
             });
+
         viewHolder.editImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

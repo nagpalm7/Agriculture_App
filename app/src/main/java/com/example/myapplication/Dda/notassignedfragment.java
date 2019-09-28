@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -50,6 +51,7 @@ public class notassignedfragment extends Fragment {
 
     private String nextUrl;
     private boolean isNextBusy = false;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public notassignedfragment(){
     }
@@ -62,6 +64,13 @@ public class notassignedfragment extends Fragment {
         isRefresh = false;
         Id = new ArrayList<String>();
         Address = new ArrayList<String>();
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull10);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFragmentManager().beginTransaction().detach(notassignedfragment.this).attach(notassignedfragment.this).commit();
+            }
+        });
         ddapendingUnassignedAdapter = new DdapendingUnassignedAdapter(getActivity(),Id, Address);
         RecyclerView notassignedreview = view.findViewById(R.id.recyclerViewnotassigned);
         notassignedreview.setAdapter(ddapendingUnassignedAdapter);

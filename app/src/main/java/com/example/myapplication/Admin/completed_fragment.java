@@ -12,8 +12,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
@@ -47,6 +49,7 @@ public class completed_fragment extends Fragment {
     private ProgressBar progressBar;
     private boolean isNextBusy;
     private View view;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
@@ -54,8 +57,17 @@ public class completed_fragment extends Fragment {
         view= inflater.inflate(R.layout.completed_fragment,container,false);
         recyclerView = view.findViewById(R.id.completed_recyclerview);
         progressBar = view.findViewById(R.id.locations_loading_completed);
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull1);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFragmentManager().beginTransaction().detach(completed_fragment.this).attach(completed_fragment.this).commit();
+            }
+        });
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration divider = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
+        recyclerView.addItemDecoration(divider);
         mDdaNames = new ArrayList<>();
         mAdoNames = new ArrayList<>();
         mAddresses = new ArrayList<>();

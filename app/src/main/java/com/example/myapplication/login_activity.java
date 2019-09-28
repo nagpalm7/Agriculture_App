@@ -63,6 +63,7 @@ public class login_activity extends AppCompatActivity {
     private Button btnLogin;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -287,5 +288,11 @@ public class login_activity extends AppCompatActivity {
 
         MyRequestQueue.add(jsonObjectRequest);
 
+    }
+
+    public void onClickregister(View view) {
+
+        Intent intent = new Intent(login_activity.this,RegistrationActivity.class);
+        startActivity(intent);
     }
 }

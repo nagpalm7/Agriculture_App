@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -59,6 +60,7 @@ public class AdoDdoPending extends Fragment {
     private boolean flag= false;
     private ArrayList<String> mAdoNames;
     private boolean isNextBusy = false;
+    private SwipeRefreshLayout swipeRefreshLayout;
     public AdoDdoPending() {
         // Required empty public constructor
     }
@@ -75,6 +77,13 @@ public class AdoDdoPending extends Fragment {
         progressBar = view.findViewById(R.id.Ddo_pending_loading);
         recyclerView = view.findViewById(R.id.Ddo_pending_recyclerview);
         layoutManager = new LinearLayoutManager(getActivity());
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull7);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFragmentManager().beginTransaction().detach(AdoDdoPending.this).attach(AdoDdoPending.this).commit();
+            }
+        });
         recyclerView.setLayoutManager(layoutManager);
 //        DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
 //        recyclerView.addItemDecoration(divider);

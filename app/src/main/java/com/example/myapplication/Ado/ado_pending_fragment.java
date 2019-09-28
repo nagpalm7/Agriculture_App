@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
@@ -49,6 +50,7 @@ public class ado_pending_fragment extends Fragment {
     private boolean isNextBusy = false;
     View view;
     private boolean isRefresh;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
@@ -60,6 +62,14 @@ public class ado_pending_fragment extends Fragment {
         latitude = new ArrayList<>();
         idList = new ArrayList<>();
         isRefresh = false;
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull9);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFragmentManager().beginTransaction().detach(ado_pending_fragment.this).attach(ado_pending_fragment.this).commit();
+            }
+        });
+
         Log.d("pending", "onCreateView: ");
         //add data in the array with load data
         getData(url);

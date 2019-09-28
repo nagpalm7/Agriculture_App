@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
@@ -46,6 +47,7 @@ public class ado_complete_fragment extends Fragment {
     private boolean isNextBusy = false;
     private View view;
     private ArrayList<String> mId;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     //tag
     private final String TAG = "ado_complete_fragmnt";
@@ -67,6 +69,13 @@ public class ado_complete_fragment extends Fragment {
         recyclerView = view.findViewById(R.id.ado_completed_rv);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull8);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFragmentManager().beginTransaction().detach(ado_complete_fragment.this).attach(ado_complete_fragment.this).commit();
+            }
+        });
         adoListAdapter = new AdoListAdapter(getContext(), mtextview1, mtextview2, true, mId);
         recyclerView.setAdapter(adoListAdapter);
         recyclerView.setLayoutManager(linearLayoutManager);

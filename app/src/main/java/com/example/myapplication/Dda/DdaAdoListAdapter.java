@@ -120,7 +120,8 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
     @Override
     public void onBindViewHolder(@NonNull AdoListViewHolder holder, int position) {
         holder.tv1.setText(mtextview1.get(position));
-        holder.tv2.setText(mtextview2.get(position));
+        holder.tv2.setVisibility(View.GONE);
+        //holder.tv2.setText(mtextview2.get(position));
     }
 
     @Override
