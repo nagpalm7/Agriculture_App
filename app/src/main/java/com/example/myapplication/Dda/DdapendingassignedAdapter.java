@@ -69,7 +69,7 @@ public class DdapendingassignedAdapter extends RecyclerView.Adapter<Ddapendingas
         TextView tv1;
         TextView tv2;
         TextView tv3;
-        CardView cardassigned;
+        RelativeLayout cardassigned;
         ShimmerFrameLayout shimmerassigned;
 
         public ViewHolderAssignedDda(@NonNull View itemView) {

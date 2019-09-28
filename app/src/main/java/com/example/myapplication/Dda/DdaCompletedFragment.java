@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -46,6 +47,7 @@ public class DdaCompletedFragment extends Fragment {
     private boolean isNextBusy = false;
     private View view;
     private int length_of_array;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public DdaCompletedFragment() {
         // Required empty public constructor
@@ -58,9 +60,17 @@ public class DdaCompletedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_ongoing,container,false);
+
         ddacompletedAdapter = new DdacompletedAdapter(getContext(),Id,Address);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddacompletedAdapter);
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull11);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFragmentManager().beginTransaction().detach(DdaCompletedFragment.this).attach(DdaCompletedFragment.this).commit();
+            }
+        });
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         review.setLayoutManager(layoutManager);
 

@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -49,6 +50,7 @@ public class assignedfragment extends Fragment {
     private boolean isReferesh;
     private View view;
     private int length_of_arrray;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public assignedfragment() {
     }
@@ -60,6 +62,13 @@ public class assignedfragment extends Fragment {
         Name = new ArrayList<String>();
         Address = new ArrayList<String>();
         isReferesh = false;
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull11);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFragmentManager().beginTransaction().detach(assignedfragment.this).attach(assignedfragment.this).commit();
+            }
+        });
         ddaassignedAdapter = new DdapendingassignedAdapter(getActivity(),Id,Name,Address);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);

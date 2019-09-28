@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -53,6 +54,7 @@ public class DdaOngoingFragment extends Fragment {
     private View view;
     private boolean isRefresh;
 //    private Toolbar toolbar;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public DdaOngoingFragment() {
 
@@ -68,6 +70,14 @@ public class DdaOngoingFragment extends Fragment {
         isRefresh = false;
 
         view = inflater.inflate(R.layout.fragment_ongoing,container,false);
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull11);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFragmentManager().beginTransaction().detach(DdaOngoingFragment.this).attach(DdaOngoingFragment.this).commit();
+            }
+        });
+
         review = view.findViewById(R.id.recyclerViewongoing);
 
         ddaongoingAdapter = new DdaongoingAdapter(getActivity(),Id,Name,Address);

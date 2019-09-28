@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
@@ -59,6 +60,7 @@ public class pending_fragment extends Fragment {
     private int NEXT_LOCATION_COUNT = 1;
     private boolean isNextBusy;
     private View view;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public pending_fragment() {
         // Required empty public constructor
@@ -70,6 +72,13 @@ public class pending_fragment extends Fragment {
         view= inflater.inflate(R.layout.pending_fragment, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewpending);
         progressBar = view.findViewById(R.id.locations_loading);
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull4);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFragmentManager().beginTransaction().detach(pending_fragment.this).attach(pending_fragment.this).commit();
+            }
+        });
         mDdaName = new ArrayList<>();
         mAdaName = new ArrayList<>();
         mAddress = new ArrayList<>();

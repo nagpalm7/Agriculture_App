@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
@@ -51,6 +52,7 @@ public class ddo_fragment extends Fragment {
     private boolean isNextBusy = false;
     private View view;
     private boolean isRefresh;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public ddo_fragment() {
 
@@ -63,6 +65,13 @@ public class ddo_fragment extends Fragment {
         Log.d(TAG, "onCreateView: check1check");
         view = inflater.inflate(R.layout.ddo_fragment, container, false);
         isRefresh = false;
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull2);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFragmentManager().beginTransaction().detach(ddo_fragment.this).attach(ddo_fragment.this).commit();
+            }
+        });
         username = new ArrayList<>();
         userinfo = new ArrayList<>();
         mUserId = new ArrayList<>();

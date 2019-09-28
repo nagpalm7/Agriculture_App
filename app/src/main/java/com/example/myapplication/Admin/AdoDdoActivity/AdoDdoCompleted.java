@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -50,6 +51,7 @@ public class AdoDdoCompleted extends Fragment {
     private boolean isDdo;
     private String token;
     private View view;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     public AdoDdoCompleted() {
@@ -65,6 +67,13 @@ public class AdoDdoCompleted extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_ddo_completed, container, false);
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull5);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFragmentManager().beginTransaction().detach(AdoDdoCompleted.this).attach(AdoDdoCompleted.this).commit();
+            }
+        });
         String role;
         if (isDdo)
             role = "dda";

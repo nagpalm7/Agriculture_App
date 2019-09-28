@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
@@ -53,6 +54,7 @@ public class AdoDdoOngoing extends Fragment {
     private String token;
     private View view;
     private String TAG = "adoddoongoing";
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public AdoDdoOngoing() {
         // Required empty public constructor
@@ -67,6 +69,13 @@ public class AdoDdoOngoing extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_ddo_ongoing, container, false);
+        swipeRefreshLayout = view.findViewById(R.id.refreshpull6);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFragmentManager().beginTransaction().detach(AdoDdoOngoing.this).attach(AdoDdoOngoing.this).commit();
+            }
+        });
         Log.d(TAG, "onCreateView: yoyo" + view);
         String role;
         if (isDdo)
