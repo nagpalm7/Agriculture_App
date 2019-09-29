@@ -129,6 +129,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
     private Double longitude;
     private boolean isBusy = false;
     private boolean isRequestFinished = false;
+    private boolean isNameAdapterSet = false;
     private AlertDialog reportSubmitLoading;
     private String imageFilePath;
     private String reportId;
@@ -194,6 +195,25 @@ public class CheckInActivity2 extends AppCompatActivity implements
                 else
                     villageNameOther.setVisibility(View.GONE);
                 isRequestFinished = false;
+                isNameAdapterSet = false;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        farmerfatherSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (farmerfatherSpinner.getSelectedItem().toString().equals("Other")) {
+                    farmerNameOther.setVisibility(View.VISIBLE);
+                    fatherNameOther.setVisibility(View.VISIBLE);
+                } else {
+                    farmerNameOther.setVisibility(View.GONE);
+                    fatherNameOther.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -204,38 +224,52 @@ public class CheckInActivity2 extends AppCompatActivity implements
         farmerfatherSpinner.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     if (villageNameSpinner.getSelectedItemPosition() == 0 && villageNameSpinner.getCount() == 2) {
                         Toast.makeText(CheckInActivity2.this, "Select a valid Village Name",
                                 Toast.LENGTH_SHORT).show();
-                    } else if (villageNameSpinner.getSelectedItem().toString().equals("Other")) {
+                        return true;
+                    } else if (villageNameSpinner.getSelectedItem().toString().equals("Other") && !isNameAdapterSet) {
+                        nameProgressBar.setVisibility(View.VISIBLE);
+                        Log.d(TAG, "onTouch: 2ND CONDITION ");
                         farmerNameOther.setVisibility(View.VISIBLE);
                         fatherNameOther.setVisibility(View.VISIBLE);
                         farmerFatherNames = new ArrayList<>();
+                        farmerNames = new ArrayList<>();
+                        farmerFatherNames.add("Farmer Name, Father Name");
                         farmerFatherNames.add("Other");
                         ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),
                                 android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
                         adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         farmerfatherSpinner.setAdapter(adaptername);
-                        farmerfatherSpinner.setSelection(0);
+                        farmerfatherSpinner.setSelection(1);
+                        isNameAdapterSet = true;
+                        nameProgressBar.setVisibility(View.GONE);
+                        return true;
                     } else {
                         if (!isBusy && !isRequestFinished) {
-                            nameProgressBar.setVisibility(View.VISIBLE);
-                            if (!villageNameSpinner.getSelectedItem().toString().equals("Other"))
+                            if (!villageNameSpinner.getSelectedItem().toString().equals("Other")) {
+                                nameProgressBar.setVisibility(View.VISIBLE);
                                 getFarmerDetails(villageCodes.get(villageNameSpinner.getSelectedItemPosition()));
-                            else {
+                            } else {
+                                isRequestFinished = true;
+                            }
+                            /*else {
                                 farmerFatherNames = new ArrayList<>();
+
                                 farmerFatherNames.add("Other");
                                 ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),
                                         android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
                                 adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 farmerfatherSpinner.setAdapter(adaptername);
                                 farmerfatherSpinner.setSelection(0);
+                                nameProgressBar.setVisibility(View.GONE);
 
-                            }
+                            }*/
+                            return true;
                         }
                     }
-                    return true;
                 }
                 return false;
             }
@@ -266,18 +300,45 @@ public class CheckInActivity2 extends AppCompatActivity implements
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
+                                        Log.d(TAG, "onClick: YES " + farmerfatherSpinner.getSelectedItemPosition()
+                                                + "     " + farmerfatherSpinner.getSelectedItem().toString() + "    "
+                                                + (farmerNames == null) + "     " + farmerFatherNames.size());
                                         if (villageNameSpinner.getSelectedItemPosition() == 0 && villageNames.size() == 2)
                                             Toast.makeText(CheckInActivity2.this, "Please select a Valid Village Name",
                                                     Toast.LENGTH_SHORT).show();
-                                        else if (farmerfatherSpinner.getSelectedItemPosition() == 0 || farmerNames == null)
-                                            Toast.makeText(CheckInActivity2.this, "Please select a farmer name and" +
-                                                    " father name", Toast.LENGTH_LONG).show();
+                                        else if (farmerfatherSpinner.getSelectedItemPosition() == 0
+                                                || farmerNames == null)
+                                            Toast.makeText(CheckInActivity2.this, "Please select a farmer and father name",
+                                                    Toast.LENGTH_SHORT).show();
+                                        else if (farmerfatherSpinner.getSelectedItem().toString().equals("Other")) {
+                                            if (farmerfatherEditText.getText().toString().trim().isEmpty()
+                                                    || fatherNameEditText.getText().toString().trim().isEmpty())
+                                                Toast.makeText(CheckInActivity2.this, "Please select a farmer name",
+                                                        Toast.LENGTH_LONG).show();
+                                            if (fatherNameEditText.getText().toString().trim().isEmpty())
+                                                Toast.makeText(CheckInActivity2.this, "Please select a father name",
+                                                        Toast.LENGTH_SHORT).show();
+                                            if (remarksEditText.getText().toString().isEmpty())
+                                                Toast.makeText(CheckInActivity2.this, "Please fill Remarks",
+                                                        Toast.LENGTH_SHORT).show();
+                                            else if (reasonEditText.getText().toString().isEmpty())
+                                                Toast.makeText(CheckInActivity2.this, "Please fill Incident " +
+                                                        "Reason", Toast.LENGTH_SHORT).show();
+                                            else if (murrabbaEditText.getText().toString().trim().isEmpty())
+                                                Toast.makeText(CheckInActivity2.this, "Please fill Murrabba Number",
+                                                        Toast.LENGTH_SHORT).show();
+                                            else
+                                                submitReport();
+                                        }
                                         else if (remarksEditText.getText().toString().isEmpty())
                                             Toast.makeText(CheckInActivity2.this, "Please fill Remarks",
                                                     Toast.LENGTH_SHORT).show();
                                         else if (reasonEditText.getText().toString().isEmpty())
                                             Toast.makeText(CheckInActivity2.this, "Please fill Incident " +
                                                     "Reason", Toast.LENGTH_SHORT).show();
+                                        else if (murrabbaEditText.getText().toString().trim().isEmpty())
+                                            Toast.makeText(CheckInActivity2.this, "Please fill Murrabba Number",
+                                                    Toast.LENGTH_SHORT).show();
                                         else
                                             submitReport();
                                     }
@@ -398,7 +459,9 @@ public class CheckInActivity2 extends AppCompatActivity implements
                                 String village = singleObject.getString("village");
                                 String villageId = singleObject.getString("village_code");
                                 Log.d(TAG, "onResponse: current " + village + "     " + destVillageName);
-                                if (destVillageName.equals(village)) {
+                                String tempDest = destVillageName.toUpperCase();
+                                String tempVillageName = village.toUpperCase();
+                                if (tempDest.equals(tempVillageName)) {
                                     pos = i;
                                     isEqual = true;
                                 }
@@ -455,6 +518,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
         farmerIds = new ArrayList<>();
         farmerFatherNames = new ArrayList<>();
         String finalUrl = farmerDetailsUrl + "?key=agriHr@CRM&vCode=" + villCode;
+        Log.d(TAG, "getFarmerDetails: finalUrl " + finalUrl);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, finalUrl, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -486,7 +550,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
                             }
                             String message = rootObject.getString("message");
                             if (farmerNames.size() == 1) {
-                                Toast.makeText(CheckInActivity2.this, message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CheckInActivity2.this, message, Toast.LENGTH_LONG).show();
                                 farmerFatherNames.add("Other");
                                 ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),
                                         android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
@@ -496,6 +560,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
                                 farmerNameOther.setVisibility(View.VISIBLE);
                                 fatherNameOther.setVisibility(View.VISIBLE);
                             } else {
+                                farmerFatherNames.add("Other");
                                 ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),
                                         android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
                                 adaptername.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -560,7 +625,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
                 if (farmerfatherSpinner.getSelectedItem().toString().equals("Other")) {
                     farmerName = farmerfatherEditText.getText().toString();
                     fatherName = fatherNameEditText.getText().toString();
-                    postParams.put("farmer_code", "No Village Code");
+                    postParams.put("farmer_code", "No Village Code was available");
                 } else {
                     farmerName = farmerNames.get(villageNameSpinner.getSelectedItemPosition());
                     fatherName = fatherNames.get(villageNameSpinner.getSelectedItemPosition());

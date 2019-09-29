@@ -47,7 +47,7 @@ public class AdoActivity extends AppCompatActivity {
         TextView user_name = headerView.findViewById(R.id.nameOfUserLoggedIn);
         SharedPreferences pref = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         String username = pref.getString("Name", "");
-        user_name.setText(username);
+        user_name.setText(username.toUpperCase());
 
         drawer = findViewById(R.id.drawer_layout1);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {

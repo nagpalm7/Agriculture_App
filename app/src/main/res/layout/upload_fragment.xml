@@ -40,7 +40,6 @@
             <TextView
                 android:paddingBottom="16dp"
                 android:layout_below="@id/username"
-                android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 android:text="csv file from the drive"
                 android:layout_width="wrap_content"

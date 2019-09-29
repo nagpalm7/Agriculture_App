@@ -108,12 +108,12 @@ public class ddo_fragment extends Fragment {
                     }
                     for (int i = 0; i < resultsArray.length(); i++) {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
-                        username.add(singleObject.getString("name"));
+                        username.add(singleObject.getString("name").toUpperCase());
                         try {
                             JSONObject districtObject = singleObject.getJSONObject("district");
-                            userinfo.add(districtObject.getString("district"));
+                            userinfo.add(districtObject.getString("district").toUpperCase());
                         } catch (JSONException e) {
-                            userinfo.add("Not Assigned");
+                            userinfo.add("NOT ASSIGNED");
                         }
                         JSONObject authObject = singleObject.getJSONObject("auth_user");
                         String pk = authObject.getString("pk");
@@ -183,12 +183,12 @@ public class ddo_fragment extends Fragment {
                     JSONArray resultsArray = rootObject.getJSONArray("results");
                     for (int i = 0; i < resultsArray.length(); i++) {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
-                        username.add(singleObject.getString("name"));
+                        username.add(singleObject.getString("name").toUpperCase());
                         try {
                             JSONObject districtObject = singleObject.getJSONObject("district");
-                            userinfo.add(districtObject.getString("district"));
+                            userinfo.add(districtObject.getString("district").toUpperCase());
                         } catch (JSONException e) {
-                            userinfo.add("Not Assigned");
+                            userinfo.add("NOT ASSIGNED");
                         }
                         JSONObject authObject = singleObject.getJSONObject("auth_user");
                         String pk = authObject.getString("pk");

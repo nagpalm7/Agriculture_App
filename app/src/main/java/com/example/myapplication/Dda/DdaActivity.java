@@ -56,7 +56,7 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
 
         final SharedPreferences preferences = getSharedPreferences("tokenFile",Context.MODE_PRIVATE);
         final String nameOfUser = preferences.getString("Name","");
-        textView.setText(nameOfUser);
+        textView.setText(nameOfUser.toUpperCase());
         //close
 
         if(savedInstanceState==null){

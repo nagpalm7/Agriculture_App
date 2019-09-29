@@ -126,11 +126,11 @@ public class ado_pending_fragment extends Fragment {
                                 idList.add(id);
                                 String location_name = singleObject.getString("village_name");
                                 String location_address = singleObject.getString("block_name") + ", " +
-                                        singleObject.getString("district") + ", " + singleObject.getString("state");
+                                        singleObject.getString("district");
                                 String slongitude = singleObject.getString("longitude");
                                 String slatitude = singleObject.getString("latitude");
-                                mtextview1.add(location_name);
-                                mtextview2.add(location_address);
+                                mtextview1.add(location_name.toUpperCase());
+                                mtextview2.add(location_address.toUpperCase());
                                 longitude.add(slongitude);
                                 latitude.add(slatitude);
                                 adoListAdapter.sendPostion(longitude,latitude);
