@@ -25,15 +25,18 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
     ArrayList<String> mtextview3;
     private ArrayList<String> mIds;
     private boolean isComplete = false;
+    private boolean isOngoing = false;
     boolean mShowShimmer = true;
     private int SHIMMER_ITEM_NO = 5;
     Context mcontext;
 
-    public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3) {
+    public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3, ArrayList<String> mIds, boolean isOngoing) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         this.mtextview3 = mtextview3;
+        this.isOngoing = isOngoing;
+        this.mIds = mIds;
     }
 
     public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3, boolean isComplete, ArrayList<String> mIds) {
@@ -53,13 +56,18 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
         viewHolderDda.parentnotassigned.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isComplete && !mShowShimmer) {
-                    Intent intent = new Intent(mcontext, ReviewReport.class);
-                    int pos = viewHolderDda.getAdapterPosition();
-                    intent.putExtra("id", mIds.get(pos));
-                    intent.putExtra("isDdo", true);
-                    intent.putExtra("isAdmin", true);
-                    mcontext.startActivity(intent);
+                if (!mShowShimmer) {
+                    if (isComplete || isOngoing) {
+                        Intent intent = new Intent(mcontext, ReviewReport.class);
+                        int pos = viewHolderDda.getAdapterPosition();
+                        intent.putExtra("id", mIds.get(pos));
+                        intent.putExtra("isDdo", true);
+                        intent.putExtra("isAdmin", true);
+                        if (isOngoing) {
+                            intent.putExtra("isOngoing", true);
+                        }
+                        mcontext.startActivity(intent);
+                    }
                 }
             }
         });
@@ -76,8 +84,8 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
             holder.tv1.setBackground(null);
             holder.tv2.setBackground(null);
             holder.tv3.setBackground(null);
-            holder.tv1.setText("DDA     : " + mtextview1.get(position));
-            holder.tv2.setText("ADO     : " + mtextview2.get(position));
+            holder.tv1.setText("DDA     : " + mtextview1.get(position).toUpperCase());
+            holder.tv2.setText("ADO     : " + mtextview2.get(position).toUpperCase());
             holder.tv3.setText(mtextview3.get(position));
         }
     }

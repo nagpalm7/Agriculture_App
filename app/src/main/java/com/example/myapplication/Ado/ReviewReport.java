@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -54,8 +55,9 @@ public class ReviewReport extends AppCompatActivity {
     private TextView remarksRight;
     private TextView reasonLeft;
     private TextView reasonRight;
-    private TextView actionLeft;
-    private TextView actionRight;
+    private LinearLayout statusRow;
+    private TextView statusLeft;
+    private TextView statusRight;
     private static String TAG = "ReviewReport";
     private TextView chalaanLeft;
     private ProgressBar progressBar;
@@ -63,6 +65,7 @@ public class ReviewReport extends AppCompatActivity {
     private String mUrl;
     private boolean isComplete;
     private boolean isAdmin;
+    private boolean isOngoing;
     private TextView chalaanRight;
     private RecyclerView recyclerView;
     private ReviewPicsRecyclerviewAdapter adapter;
@@ -107,12 +110,23 @@ public class ReviewReport extends AppCompatActivity {
         remarksRight = findViewById(R.id.remarksRight);
         reasonLeft = findViewById(R.id.reasonLeft);
         reasonRight = findViewById(R.id.reasonRight);
+        statusRow = findViewById(R.id.statusRow);
+        statusLeft = findViewById(R.id.statusLeft);
+        statusRight = findViewById(R.id.statusRight);
         progressBar = findViewById(R.id.progressBar);
         noSubsidiesTextView = findViewById(R.id.noSubsidies_textview);
         schemedata = new ArrayList<>();
         programNamedata = new ArrayList<>();
         financialYearNamedata = new ArrayList<>();
         dateOfBenefitdata = new ArrayList<>();
+        Intent intent = getIntent();
+        id = intent.getStringExtra("id");
+        isDdo = intent.getBooleanExtra("isDdo", false);
+        isComplete = intent.getBooleanExtra("isComplete", false);
+        isAdmin = intent.getBooleanExtra("isAdmin", false);
+        isOngoing = intent.getBooleanExtra("isOngoing", false);
+        mUrl = "http://13.235.100.235:8000/api/report-ado/" + id + "/";
+        Log.d(TAG, "onCreate: URL " + mUrl);
         schemedata.add("Scheme Name");
         programNamedata.add("Program Name");
         financialYearNamedata.add("Financial Year");
@@ -143,8 +157,11 @@ public class ReviewReport extends AppCompatActivity {
         districtright = findViewById(R.id.districtRight);
         tableRecyclerView = findViewById(R.id.tableRecyclerView);
         tableRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        reviewTableRecycleAdapter = new ReviewTableRecycleAdapter(this, schemedata, programNamedata, financialYearNamedata, dateOfBenefitdata);
-        tableRecyclerView.setAdapter(reviewTableRecycleAdapter);
+        if (isAdmin || isDdo) {
+            reviewTableRecycleAdapter = new ReviewTableRecycleAdapter(this, schemedata, programNamedata, financialYearNamedata, dateOfBenefitdata);
+            tableRecyclerView.setAdapter(reviewTableRecycleAdapter);
+        } else
+            tableRecyclerView.setVisibility(View.GONE);
         mImagesUrl = new ArrayList<>();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
@@ -152,13 +169,6 @@ public class ReviewReport extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         Button forfeitButton = findViewById(R.id.forfeit);
         Button startButton = findViewById(R.id.start);
-        Intent intent = getIntent();
-        id = intent.getStringExtra("id");
-        isDdo = intent.getBooleanExtra("isDdo", false);
-        Log.d(TAG, "onCreate: ID " + id);
-        isComplete = intent.getBooleanExtra("isComplete", false);
-        isAdmin = intent.getBooleanExtra("isAdmin", false);
-        mUrl = "http://13.235.100.235:8000/api/report-ado/" + id + "/";
 //        addRowtoTable("scheme1", "program1", "financial1", "benefit1", true);
 //        addRowtoTable("scheme1", "program1", "financial1", "benefit1", true);
 //        addRowtoTable("scheme1", "program1", "financial1", "benefit1", true);
@@ -182,9 +192,6 @@ public class ReviewReport extends AppCompatActivity {
                     actionOnFarmerSub(1);
                 }
             });
-            if (isAdmin) {
-
-            }
         }
     }
 
@@ -256,6 +263,13 @@ public class ReviewReport extends AppCompatActivity {
                             //mobileRight.setVisibility(View.GONE);
                             reasonLeft.setText("Incident Reason");
                             reasonRight.setText(reason);
+                            if (isAdmin) {
+                                statusRow.setVisibility(View.VISIBLE);
+                                JSONObject locationObject = rootObject.getJSONObject("location");
+                                String status = locationObject.getString("status");
+                                statusLeft.setText("ADO Status");
+                                statusRight.setText(status);
+                            }
                             progressBar.setVisibility(View.GONE);
                             if (isDdo || isAdmin) {
                                 showSubsidies();

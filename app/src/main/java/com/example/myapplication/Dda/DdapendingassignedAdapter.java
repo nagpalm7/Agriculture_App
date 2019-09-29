@@ -53,8 +53,8 @@ public class DdapendingassignedAdapter extends RecyclerView.Adapter<Ddapendingas
             holder.tv2.setBackground(null);
             holder.tv3.setBackground(null);
 
-            holder.tv2.setText(mtextview3.get(position));
-            holder.tv3.setText(mtextview2.get(position));
+            holder.tv2.setText(mtextview3.get(position).toUpperCase());
+            holder.tv3.setText(mtextview2.get(position).toUpperCase());
         }
     }
 

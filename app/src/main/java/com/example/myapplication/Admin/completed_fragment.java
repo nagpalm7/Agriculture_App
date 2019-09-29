@@ -118,9 +118,9 @@ public class completed_fragment extends Fragment {
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 JSONObject ddaObject = singleObject.getJSONObject("dda");
+                                mDdaNames.add(ddaObject.getString("name"));
                                 String id = singleObject.getString("id");
                                 mIds.add(id);
-                                mDdaNames.add(ddaObject.getString("name"));
                                 JSONObject adoObject = singleObject.getJSONObject("ado");
                                 String adoName = adoObject.getString("name");
                                 if (adoName.equals("null"))

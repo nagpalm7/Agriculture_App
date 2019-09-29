@@ -26,7 +26,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.myapplication.Dda.notassignedfragment;
 import com.example.myapplication.R;
 
 import org.json.JSONArray;
@@ -106,22 +105,22 @@ public class ado_fragment extends Fragment {
                     }
                     for (int i = 0; i < resultsArray.length(); i++) {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
-                        username.add(singleObject.getString("name"));
+                        username.add(singleObject.getString("name").toUpperCase());
                         JSONArray villageArray = singleObject.getJSONArray("village");
                         Log.d(TAG, "onResponse: LENGTH " + villageArray.length());
                         boolean flag = true;
                         for (int j = 0; j < villageArray.length(); j++) {
                             try {
                                 JSONObject villageObject = villageArray.getJSONObject(i);
-                                userinfo.add(villageObject.getString("village"));
+                                userinfo.add(villageObject.getString("village").toUpperCase());
                                 flag = false;
                             } catch (JSONException e) {
-                                userinfo.add("No data found");
+                                userinfo.add("NOT ASSIGNED");
                                 flag = false;
                             }
                         }
                         if (flag)
-                            userinfo.add("No data found");
+                            userinfo.add("NOT ASSIGNED");
                         JSONObject authObject = singleObject.getJSONObject("auth_user");
                         String pk = authObject.getString("pk");
                         mPkList.add(pk);
@@ -189,10 +188,22 @@ public class ado_fragment extends Fragment {
                     JSONArray resultsArray = rootObject.getJSONArray("results");
                     for (int i = 0; i < resultsArray.length(); i++) {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
-                        username.add(singleObject.getString("name"));
-                        JSONObject villageObject = singleObject.getJSONObject("village");
-                        userinfo.add(villageObject.getString("village") + ", "
-                                + villageObject.getString("village_code"));
+                        username.add(singleObject.getString("name").toUpperCase());
+                        JSONArray villageArray = singleObject.getJSONArray("village");
+                        Log.d(TAG, "onResponse: LENGTH " + villageArray.length());
+                        boolean flag = true;
+                        for (int j = 0; j < villageArray.length(); j++) {
+                            try {
+                                JSONObject villageObject = villageArray.getJSONObject(i);
+                                userinfo.add(villageObject.getString("village").toUpperCase());
+                                flag = false;
+                            } catch (JSONException e) {
+                                userinfo.add("NOT ASSIGNED");
+                                flag = false;
+                            }
+                        }
+                        if (flag)
+                            userinfo.add("NOT ASSIGNED");
                         String pk = singleObject.getString("id");
                         mPkList.add(pk);
                         String id = singleObject.getString("id");

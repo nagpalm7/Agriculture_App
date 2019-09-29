@@ -43,6 +43,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
     private boolean isDdoFragment;
     ArrayList<String> mUserId;
     private ArrayList<String> mPkList;
+    private boolean isBusy = false;
     private int SHIMMER_ITEM_COUNT = 6;
     private String TAG = "RecyclerViewAdapter";
 
@@ -72,14 +73,18 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
             @Override
             public void onClick(View view) {
                 if (!mShowShimmer) {
-                    Intent intent = new Intent(mcontext, AdoDdoActivity.class);
-                    intent.putExtra("Id", mUserId.get(viewHolder.getAdapterPosition()));
-                    if (isDdoFragment)
-                        intent.putExtra("isDdo", true);
-                    else
-                        intent.putExtra("isDdo", false);
-                    intent.putExtra("name", mtextview1.get(viewHolder.getAdapterPosition()));
-                    mcontext.startActivity(intent);
+                    if (!isBusy) {
+                        isBusy = true;
+                        Intent intent = new Intent(mcontext, AdoDdoActivity.class);
+                        intent.putExtra("Id", mUserId.get(viewHolder.getAdapterPosition()));
+                        if (isDdoFragment)
+                            intent.putExtra("isDdo", true);
+                        else
+                            intent.putExtra("isDdo", false);
+                        intent.putExtra("name", mtextview1.get(viewHolder.getAdapterPosition()));
+                        mcontext.startActivity(intent);
+                        isBusy = false;
+                    }
                 }
             }
             });

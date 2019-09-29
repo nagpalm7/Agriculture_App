@@ -95,8 +95,6 @@ public class login_activity extends AppCompatActivity {
         editPassword = findViewById(R.id.editPassword);
         btnLogin = findViewById(R.id.login_button);
         checkBox = findViewById(R.id.eyeIcon);
-        signUpAdo = findViewById(R.id.signup_ado);
-        signUpDda = findViewById(R.id.signup_dda);
 
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -156,20 +154,6 @@ public class login_activity extends AppCompatActivity {
                     editPassword.setError("Please insert password");
                     Toast.makeText(login_activity.this, "Please insert email and password", Toast.LENGTH_SHORT);
                 }
-            }
-        });
-
-        signUpAdo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickregister("http://theagriculture.tk/adoregister.html", true);
-            }
-        });
-
-        signUpDda.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickregister("http://theagriculture.tk/ddaregister.html", false);
             }
         });
     }

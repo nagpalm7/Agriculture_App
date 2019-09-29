@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,6 +74,7 @@ public class pending_fragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewpending);
         progressBar = view.findViewById(R.id.locations_loading);
         swipeRefreshLayout = view.findViewById(R.id.refreshpull4);
+        FloatingActionButton notificationButton = view.findViewById(R.id.notifications_button);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -82,7 +84,7 @@ public class pending_fragment extends Fragment {
         mDdaName = new ArrayList<>();
         mAdaName = new ArrayList<>();
         mAddress = new ArrayList<>();
-        recyclerViewAdater = new AdminLocationAdapter(getActivity(), mDdaName, mAdaName, mAddress);
+        recyclerViewAdater = new AdminLocationAdapter(getActivity(), mDdaName, mAdaName, mAddress, null, false);
         recyclerView.setAdapter(recyclerViewAdater);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -106,7 +108,6 @@ public class pending_fragment extends Fragment {
                     if (jsonArray.length() == 0 && mDdaName.isEmpty()) {
                         recyclerViewAdater.mShowShimmer = false;
                         recyclerViewAdater.notifyDataSetChanged();
-
                         view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
                     }
                     for (int i = 0; i < jsonArray.length(); i++) {
@@ -131,7 +132,8 @@ public class pending_fragment extends Fragment {
                             mAdaName.add("Not Assigned");
                             Log.d(TAG, "exception: ");
                         }
-                        mAddress.add(villagename.toUpperCase() + "," + blockname.toUpperCase() + "," + district.toUpperCase());
+                        mAddress.add(villagename.toUpperCase() + ", " + blockname.toUpperCase() +
+                                ", " + district.toUpperCase());
                         Log.d(TAG, "onResponse: next");
                     }
                     recyclerViewAdater.mShowShimmer = false;
@@ -185,7 +187,8 @@ public class pending_fragment extends Fragment {
                         } catch (JSONException e) {
                             mAdaName.add("Not Assigned");
                         }
-                        mAddress.add(villagename.toUpperCase() + "," + blockname.toUpperCase() + "," + district.toUpperCase());
+                        mAddress.add(villagename.toUpperCase() + ", " +
+                                blockname.toUpperCase() + ", " + district.toUpperCase());
                     }
                     requestQueue.add(jsonObjectRequest2);
                 } catch (JSONException e) {
@@ -231,7 +234,12 @@ public class pending_fragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
-
+        notificationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendNotifications();
+            }
+        });
         return view;
     }
 
@@ -277,7 +285,8 @@ public class pending_fragment extends Fragment {
                             } catch (JSONException e) {
                                 mAdaName.add("Not Assigned");
                             }
-                            mAddress.add(villagename.toUpperCase() + "," + blockname.toUpperCase() + "," + district.toUpperCase());
+                            mAddress.add(villagename.toUpperCase() + ", "
+                                    + blockname.toUpperCase() + ", " + district.toUpperCase());
                             recyclerViewAdater.notifyDataSetChanged();
                             isNextBusy = false;
                         }
@@ -331,7 +340,8 @@ public class pending_fragment extends Fragment {
                             } catch (JSONException e) {
                                 mAdaName.add("Not Assigned");
                             }
-                            mAddress.add(villagename.toUpperCase() + "," + blockname.toUpperCase() + "," + district.toUpperCase());
+                            mAddress.add(villagename.toUpperCase() + ", " +
+                                    blockname.toUpperCase() + ", " + district.toUpperCase());
                             recyclerViewAdater.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {
@@ -343,7 +353,8 @@ public class pending_fragment extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     if (error instanceof NoConnectionError)
-                        Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Check Your Internt Connection Please!",
+                                Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "onErrorResponse: " + error);
                 }
             }) {
@@ -369,6 +380,36 @@ public class pending_fragment extends Fragment {
             }
         });
 
+    }
+
+    private void sendNotifications() {
+        String url = "http://13.235.100.235:8000/api/trigger/sms/pending";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "onResponse: sendNotifications " + response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(getActivity(), "Check Your Internt Connection Please!",
+                                    Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(getActivity(), "Something went wrong, please try again!",
+                                    Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "onErrorResponse: sendNotifications " + error);
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Authorization", "Token " + token);
+                return map;
+            }
+        };
     }
 }
 

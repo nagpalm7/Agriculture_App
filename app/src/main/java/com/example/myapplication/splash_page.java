@@ -17,6 +17,7 @@ public class splash_page extends AppCompatActivity {
     ImageView imageView=null;
     TextView textView1=null;
     TextView textView2=null;
+    private TextView tv4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +32,11 @@ public class splash_page extends AppCompatActivity {
         imageView = findViewById(R.id.iv);
         textView1 = findViewById(R.id.tv1);
         textView2 = findViewById(R.id.tv2);
-
+        tv4 = findViewById(R.id.tv4);
         imageView.setAnimation(myanim);
         textView1.setAnimation(myanim);
         textView2.setAnimation(myanim);
+        tv4.setAnimation(myanim);
         final Intent intent = new Intent(this, login_activity.class);
 
         new Thread() {

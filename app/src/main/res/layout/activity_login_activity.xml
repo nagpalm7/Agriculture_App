@@ -135,7 +135,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginHorizontal="100dp"
+            android:layout_marginHorizontal="80dp"
             android:layout_marginTop="40dp"
             android:background="@drawable/shape"
             android:text="@string/login"
@@ -152,29 +152,6 @@
               android:background="@drawable/shape"
               android:text="REGISTRATION"
               android:textColor="#ffffff" />-->
-
-        <TextView
-            android:id="@+id/signup_ado"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:text="@string/signup_ado" />
-
-        <TextView
-            android:id="@+id/signup_dda"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:text="@string/signup_dda" />
-
 
     </LinearLayout>
 

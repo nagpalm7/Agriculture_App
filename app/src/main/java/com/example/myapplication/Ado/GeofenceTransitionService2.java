@@ -39,7 +39,7 @@ public class GeofenceTransitionService2 extends IntentService {
         if (geofencingTransition == Geofence.GEOFENCE_TRANSITION_ENTER){
             Log.d("intentservice", "onHandleIntent: heretooo2");
 
-            CheckInActivity.getStatus(true);
+            CheckInActivity2.getStatus(true);
 
         }
 

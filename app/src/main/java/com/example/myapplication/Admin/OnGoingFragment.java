@@ -46,6 +46,7 @@ public class OnGoingFragment extends Fragment {
     private ArrayList<String> mDDaNames;
     private ArrayList<String> mAdoNames;
     private ArrayList<String> mAddresses;
+    private ArrayList<String> mIds;
     private AdminLocationAdapter adapter;
     private LinearLayoutManager layoutManager;
     private String token;
@@ -80,7 +81,8 @@ public class OnGoingFragment extends Fragment {
         mDDaNames = new ArrayList<>();
         mAdoNames = new ArrayList<>();
         mAddresses = new ArrayList<>();
-        adapter = new AdminLocationAdapter(getActivity(), mDDaNames, mAdoNames, mAddresses);
+        mIds = new ArrayList<>();
+        adapter = new AdminLocationAdapter(getActivity(), mDDaNames, mAdoNames, mAddresses, mIds, true);
         recyclerView.setAdapter(adapter);
         final SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
@@ -127,6 +129,8 @@ public class OnGoingFragment extends Fragment {
                                 JSONObject mDdaObject = singleObject.getJSONObject("dda");
                                 String ddaName = mDdaObject.getString("name");
                                 mDDaNames.add(ddaName);
+                                String id = singleObject.getString("id");
+                                mIds.add(id);
                                 try {
                                     JSONObject mAdoObject = singleObject.getJSONObject("ado");
                                     String adoName = mAdoObject.getString("name");
@@ -180,6 +184,8 @@ public class OnGoingFragment extends Fragment {
                                 JSONObject mDdaObject = singleObject.getJSONObject("dda");
                                 String ddaName = mDdaObject.getString("name");
                                 mDDaNames.add(ddaName);
+                                String id = singleObject.getString("id");
+                                mIds.add(id);
                                 try {
                                     JSONObject mAdoObject = singleObject.getJSONObject("ado");
                                     String adoName = mAdoObject.getString("name");

@@ -45,7 +45,8 @@
             android:layout_marginTop="56dp"
             android:background="@drawable/shape"
             android:text="Start"
-            android:textColor="#ffffff" />
+            android:textColor="#ffffff"
+            android:visibility="gone" />
 
         <HorizontalScrollView
             android:id="@+id/hrv"
@@ -91,120 +92,117 @@
                  android:textAlignment="viewStart"
                  android:textSize="18sp" />
          </LinearLayout>-->
-            <!--android:textAlignment="viewStart"
-            android:textSize="18sp" />
-    </LinearLayout>-->
-    <LinearLayout
-        android:layout_marginTop="8dp"
-        android:layout_below="@id/view1"
-        android:id="@+id/view11"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2">
-
-        <TextView
-            android:id="@+id/villnameLeft"
-            android:layout_width="0dp"
+        <!--android:textAlignment="viewStart"
+        android:textSize="18sp" />
+</LinearLayout>-->
+        <LinearLayout
+            android:id="@+id/view11"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:textSize="18sp"
+            android:layout_below="@id/view1"
+            android:layout_marginTop="8dp"
+            android:weightSum="2">
 
-            />
+            <TextView
+                android:id="@+id/villnameLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/villnameRight"
-            android:layout_width="0dp"
+            <TextView
+                android:id="@+id/villnameRight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="viewStart"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/view12"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_below="@id/view11"
+            android:layout_marginTop="8dp"
+            android:weightSum="2">
 
-            android:textAlignment="viewStart"
-            android:textSize="18sp" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_marginTop="8dp"
-        android:layout_below="@id/view11"
-        android:id="@+id/view12"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2">
+            <TextView
+                android:id="@+id/districtLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/districtLeft"
-            android:layout_width="0dp"
+            <TextView
+                android:id="@+id/districtRight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="viewStart"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:textSize="18sp"
+            android:layout_below="@id/view12"
+            android:layout_marginTop="8dp"
+            android:weightSum="2">
 
-            />
+            <TextView
+                android:id="@+id/nameLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textSize="18sp"
+                android:textStyle="bold"
 
-        <TextView
-            android:id="@+id/districtRight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+                />
 
-            android:textAlignment="viewStart"
-            android:textSize="18sp" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/nameRight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
 
-    <LinearLayout
-        android:id="@+id/view2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/view12"
-        android:layout_marginTop="8dp"
-        android:weightSum="2">
+                android:textAlignment="viewStart"
+                android:textSize="18sp" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/nameLeft"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:textSize="18sp"
-            android:textStyle="bold"
+        <!--  <LinearLayout
+              android:id="@+id/view3"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/view2"
+              android:layout_marginTop="8dp"
+              android:weightSum="2">
 
-            />
+              <TextView
+                  android:id="@+id/fatherNameLeft"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:gravity="start"
+                  android:textSize="18sp"
+                  android:textStyle="bold"
 
-        <TextView
-            android:id="@+id/nameRight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+                  />
 
-            android:textAlignment="viewStart"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-  <!--  <LinearLayout
-        android:id="@+id/view3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/view2"
-        android:layout_marginTop="8dp"
-        android:weightSum="2">
-
-        <TextView
-            android:id="@+id/fatherNameLeft"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:textSize="18sp"
-            android:textStyle="bold"
-
-            />
-
-        <TextView
-            android:id="@+id/fatherNameRight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="viewStart"
-            android:textSize="18sp" />
-    </LinearLayout>-->
+              <TextView
+                  android:id="@+id/fatherNameRight"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:textAlignment="viewStart"
+                  android:textSize="18sp" />
+          </LinearLayout>-->
 
         <!--<LinearLayout
             android:id="@+id/view10"
@@ -233,35 +231,35 @@
                 android:textSize="18sp" />
         </LinearLayout>-->
 
-  <!--  <LinearLayout
-        android:id="@+id/view6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/view3"
-        android:layout_marginTop="8dp"
-        android:weightSum="2">
+        <!--  <LinearLayout
+              android:id="@+id/view6"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/view3"
+              android:layout_marginTop="8dp"
+              android:weightSum="2">
 
-            <TextView
-                android:id="@+id/nameLeft"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:textSize="18sp"
-                android:textStyle="bold"
+                  <TextView
+                      android:id="@+id/nameLeft"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:gravity="start"
+                      android:textSize="18sp"
+                      android:textStyle="bold"
 
-                />
+                      />
 
-            <TextView
-                android:id="@+id/nameRight"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                  <TextView
+                      android:id="@+id/nameRight"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
 
-                android:textAlignment="viewStart"
-                android:textSize="18sp" />
-        </LinearLayout>
--->
+                      android:textAlignment="viewStart"
+                      android:textSize="18sp" />
+              </LinearLayout>
+      -->
         <LinearLayout
             android:id="@+id/view3"
             android:layout_width="match_parent"
@@ -306,7 +304,6 @@
                 android:gravity="start"
                 android:textSize="18sp"
                 android:textStyle="bold"
-
                 />
 
             <TextView
@@ -314,7 +311,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-
+                android:textAllCaps="true"
                 android:textAlignment="viewStart"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -376,6 +373,33 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/statusRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view9"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/statusLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/statusRight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="viewStart"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/view1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -390,7 +414,6 @@
                 android:gravity="start"
                 android:textSize="18sp"
                 android:textStyle="bold"
-
                 />
 
             <TextView
@@ -417,13 +440,15 @@
             android:layout_below="@id/review_pics_recyclerview"
             android:layout_marginTop="16dp"
             android:textColor="#e57373"
-            android:textSize="18sp" />
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="italic" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/review_pics_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/view9"
+            android:layout_below="@id/statusRow"
             android:layout_marginTop="8dp"
             android:overScrollMode="never" />
     </RelativeLayout>
