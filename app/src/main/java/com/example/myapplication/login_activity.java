@@ -54,10 +54,10 @@ public class login_activity extends AppCompatActivity {
     private EditText editEmail, editPassword;
     private TextView signUpAdo, signUpDda;
 
-    private String urlget = "http://13.235.100.235:8000/api/get-user/";
+    private String urlget = "http://13.235.100.235/api/get-user/";
     //    private String urlpost = getString(R.string.rooturl)+ "api-token-auth/";
 //    private String urlpost = getString(R.string.rooturl);
-    private String urlpost = "http://13.235.100.235:8000/api-token-auth/";
+    private String urlpost = "http://13.235.100.235/api-token-auth/";
 
     private AlertDialog dialog;
     private CheckBox checkBox;
@@ -233,7 +233,12 @@ public class login_activity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(login_activity.this, "Please try again", Toast.LENGTH_SHORT).show();
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(login_activity.this, "Check your internet connection", Toast.LENGTH_LONG).show();
+                        else if (error instanceof ClientError)
+                            Toast.makeText(login_activity.this, "Invalid User!", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(login_activity.this, "Something went wrong, please try again!", Toast.LENGTH_LONG).show();
                         btnLogin.setEnabled(true);
                         dialog.dismiss();
                         Log.d(TAG, "onErrorResponse: some error in get: " + error.getLocalizedMessage());
