@@ -38,7 +38,7 @@ public class DdaCompletedFragment extends Fragment {
     private ArrayList<String> Address;
     private ArrayList<String> mIdLsit;
     private DdacompletedAdapter ddacompletedAdapter;
-    private String urlget = "http://13.235.100.235:8000/api/locations/dda/completed";
+    private String urlget = "http://13.235.100.235/api/locations/dda/completed";
     private String dda;
     private String token;
     private String villagename;
@@ -194,6 +194,7 @@ public class DdaCompletedFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "onErrorResponse: " + error);
+                isNextBusy = false;
             }
         }) {
 

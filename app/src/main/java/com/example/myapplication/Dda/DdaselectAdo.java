@@ -39,7 +39,7 @@ public class DdaselectAdo extends AppCompatActivity {
     private ArrayList<String> nameofado;
     private ArrayList<String> villagename;
 
-    private String urlget = "http://13.235.100.235:8000/api/ado/";
+    private String urlget = "http://13.235.100.235/api/ado/";
     private String token;
     private DdaAdoListAdapter ddaAdoListAdapter;
     private String idtopass;
@@ -125,7 +125,6 @@ public class DdaselectAdo extends AppCompatActivity {
                             String village = singleObject.getString("village");
                             villagename.add(singleObject.getString("village"));
                         }
-
                     }
                     isNextBusy = false;
                     ddaAdoListAdapter.notifyDataSetChanged();

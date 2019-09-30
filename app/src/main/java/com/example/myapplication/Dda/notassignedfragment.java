@@ -39,7 +39,7 @@ public class notassignedfragment extends Fragment {
     private ArrayList<String> mHeading;
     private ArrayList<String> Address;
     private DdapendingUnassignedAdapter ddapendingUnassignedAdapter;
-    private String urlget = "http://13.235.100.235:8000/api/locations/dda/unassigned";
+    private String urlget = "http://13.235.100.235/api/locations/dda/unassigned";
     private String villagename;
     private String blockname;
     private String district;
@@ -222,6 +222,7 @@ public class notassignedfragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "onErrorResponse: " + error);
+                isNextBusy = false;
             }
         }) {
 

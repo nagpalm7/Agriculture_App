@@ -73,7 +73,7 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
                             final JSONObject postbody = new JSONObject();
                             postbody.put("ado", adoid);
                             final RequestQueue requestQueue = Volley.newRequestQueue(mcontext);
-                            urlpatch = "http://13.235.100.235:8000/api/location/"+locationid+"/";
+                            urlpatch = "http://13.235.100.235/api/location/" + locationid + "/";
                             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, urlpatch, postbody, new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {

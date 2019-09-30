@@ -40,7 +40,7 @@ public class DdaOngoingFragment extends Fragment {
     private ArrayList<String> Name;
     private ArrayList<String> Address;
     private DdaongoingAdapter ddaongoingAdapter;
-    private String url_get_ongoing = "http://13.235.100.235:8000/api/locations/dda/ongoing";
+    private String url_get_ongoing = "http://13.235.100.235/api/locations/dda/ongoing";
     private String next_url_get_ongoing;
     private String token;
     private String villagename;
@@ -207,6 +207,7 @@ public class DdaOngoingFragment extends Fragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            isNextBusy = false;
 
                         }
                     }) {

@@ -41,7 +41,8 @@ public class ado_fragment extends Fragment {
     private ArrayList<String> userinfo;
     private ArrayList<String> mUserId;
     private ArrayList<String> mPkList;
-    private String mUrl = "http://13.235.100.235:8000/api/users-list/ado/";
+    private ArrayList<String> mDdoNames;
+    private String mUrl = "http://13.235.100.235/api/users-list/ado/";
     private RecyclerViewAdater recyclerViewAdater;
     private String token;
     private String nextUrl;
@@ -66,6 +67,7 @@ public class ado_fragment extends Fragment {
         userinfo = new ArrayList<>();
         mUserId = new ArrayList<>();
         mPkList = new ArrayList<>();
+        mDdoNames = new ArrayList<>();
         swipeRefreshLayout = view.findViewById(R.id.refreshpull);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -75,7 +77,8 @@ public class ado_fragment extends Fragment {
             }
         });
         progressBar = view.findViewById(R.id.ado_list_progressbar);
-        recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, mUserId, false, mPkList);
+        recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, mUserId, false,
+                mPkList, mDdoNames);
         RecyclerView Rview = view.findViewById(R.id.recyclerViewado);
         Rview.setAdapter(recyclerViewAdater);
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
@@ -108,24 +111,28 @@ public class ado_fragment extends Fragment {
                         username.add(singleObject.getString("name").toUpperCase());
                         JSONArray villageArray = singleObject.getJSONArray("village");
                         Log.d(TAG, "onResponse: LENGTH " + villageArray.length());
-                        boolean flag = true;
-                        for (int j = 0; j < villageArray.length(); j++) {
+                        if (villageArray.length() == 0)
+                            userinfo.add("NOT ASSIGNED");
+                        for (int j = 0; j < 1; j++) {
                             try {
                                 JSONObject villageObject = villageArray.getJSONObject(i);
                                 userinfo.add(villageObject.getString("village").toUpperCase());
-                                flag = false;
                             } catch (JSONException e) {
                                 userinfo.add("NOT ASSIGNED");
-                                flag = false;
                             }
                         }
-                        if (flag)
-                            userinfo.add("NOT ASSIGNED");
                         JSONObject authObject = singleObject.getJSONObject("auth_user");
                         String pk = authObject.getString("pk");
                         mPkList.add(pk);
                         String id = singleObject.getString("id");
                         mUserId.add(id);
+                        try {
+                            JSONObject ddaObject = singleObject.getJSONObject("dda");
+                            String ddaName = ddaObject.getString("name");
+                            mDdoNames.add(ddaName);
+                        } catch (JSONException e) {
+                            mDdoNames.add("Not Assigned");
+                        }
                     }
                     recyclerViewAdater.mShowShimmer = false;
                     recyclerViewAdater.notifyDataSetChanged();
@@ -191,23 +198,27 @@ public class ado_fragment extends Fragment {
                         username.add(singleObject.getString("name").toUpperCase());
                         JSONArray villageArray = singleObject.getJSONArray("village");
                         Log.d(TAG, "onResponse: LENGTH " + villageArray.length());
-                        boolean flag = true;
-                        for (int j = 0; j < villageArray.length(); j++) {
+                        if (villageArray.length() == 0)
+                            userinfo.add("NOT ASSIGNED");
+                        for (int j = 0; j < 1; j++) {
                             try {
                                 JSONObject villageObject = villageArray.getJSONObject(i);
                                 userinfo.add(villageObject.getString("village").toUpperCase());
-                                flag = false;
                             } catch (JSONException e) {
                                 userinfo.add("NOT ASSIGNED");
-                                flag = false;
                             }
                         }
-                        if (flag)
-                            userinfo.add("NOT ASSIGNED");
                         String pk = singleObject.getString("id");
                         mPkList.add(pk);
                         String id = singleObject.getString("id");
                         mUserId.add(id);
+                        try {
+                            JSONObject ddaObject = singleObject.getJSONObject("dda");
+                            String ddaName = ddaObject.getString("name");
+                            mDdoNames.add(ddaName);
+                        } catch (JSONException e) {
+                            mDdoNames.add("Not Assigned");
+                        }
                     }
                     Log.d(TAG, "onResponse: " + username);
                     recyclerViewAdater.notifyDataSetChanged();
@@ -225,6 +236,7 @@ public class ado_fragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NoConnectionError)
                     Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                isNextBusy = false;
             }
         }) {
 

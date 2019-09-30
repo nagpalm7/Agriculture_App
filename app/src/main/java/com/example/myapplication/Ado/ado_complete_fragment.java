@@ -42,7 +42,7 @@ public class ado_complete_fragment extends Fragment {
     private AdoListAdapter adoListAdapter;
     private ArrayList<String> longitude;
     private ArrayList<String> latitude;
-    private String url = "http://13.235.100.235:8000/api/locations/ado/completed";
+    private String url = "http://13.235.100.235/api/locations/ado/completed";
     private String nextUrl;
     private boolean isNextBusy = false;
     private View view;
@@ -155,6 +155,7 @@ public class ado_complete_fragment extends Fragment {
                         else
                             Toast.makeText(getActivity(), "Something went wrong, please try again",
                                     Toast.LENGTH_LONG).show();
+                        isNextBusy = false;
                     }
                 }) {
             @Override

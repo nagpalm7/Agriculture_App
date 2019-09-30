@@ -45,7 +45,7 @@ public class ado_pending_fragment extends Fragment {
     private ArrayList<String> longitude;
     private ArrayList<String> latitude;
     private ArrayList<String> idList;
-    private String url="http://13.235.100.235:8000/api/locations/ado/pending";
+    private String url = "http://13.235.100.235/api/locations/ado/pending";
     private String nextUrl;
     private boolean isNextBusy = false;
     View view;
@@ -155,6 +155,8 @@ public class ado_pending_fragment extends Fragment {
                         else
                             Toast.makeText(getActivity(), "Something went wrong, please try again",
                                     Toast.LENGTH_LONG).show();
+
+                        isNextBusy = false;
                         Log.d(TAG, "onErrorResponse: " + error);
                     }
                 }) {

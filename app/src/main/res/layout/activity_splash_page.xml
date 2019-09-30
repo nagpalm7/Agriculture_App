@@ -59,7 +59,7 @@
         android:textStyle="italic"
         android:textSize="12sp"
         android:textColor="#ffffff"
-        android:text="developed by : Surjit kumar, mohit nagpal, manav maini, harsh, manish"
+        android:text="developed by : Uiet, pu, CHANDIGARH"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"

@@ -1,5 +1,6 @@
 package com.example.myapplication.Dda;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -10,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,16 +45,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import dmax.dialog.SpotsDialog;
+
 public class map_fragemnt_dda extends Fragment {
     private final String TAG = "map fragment";
 
     public GoogleMap map = null;
-    private String url_pending = "http://13.235.100.235:8000/api/locations/dda/assigned";
+    private String url_pending = "http://13.235.100.235/api/locations/dda/assigned";
     private String token;
     private String next;
     private SupportMapFragment mapFragment;
     private int count = 0;
-    private ProgressBar pbar;
+    //    private ProgressBar pbar;
+    private AlertDialog dialog;
 
     private ArrayList<Double> latitude;
     private ArrayList<Double> longitude;
@@ -71,7 +74,10 @@ public class map_fragemnt_dda extends Fragment {
         latitude = new ArrayList<>();
         longitude = new ArrayList<>();
         villname = new ArrayList<>();
-        pbar = view.findViewById(R.id.pbar);
+//        pbar = view.findViewById(R.id.pbar);
+        dialog = new SpotsDialog.Builder().setContext(getActivity()).setMessage("Loading locations...")
+                .setCancelable(false).build();
+        dialog.show();
 
 
         next = url_pending;
@@ -148,17 +154,20 @@ public class map_fragemnt_dda extends Fragment {
                         longitude.add(lon);
                         villname.add(vill);
                     }
-
+                    dialog.dismiss();
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                     e.printStackTrace();
+                    dialog.dismiss();
+                    Toast.makeText(getActivity(), "Please try again!", Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "onErrorResponse: " + error);
-                pbar.setVisibility(View.GONE);
+//                pbar.setVisibility(View.GONE);
+                dialog.dismiss();
                 if (error instanceof NoConnectionError) {
                     Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_LONG).show();
                 } else {
@@ -196,14 +205,14 @@ public class map_fragemnt_dda extends Fragment {
     }
 
     private void marklocation() {
-
+        dialog.dismiss();
         for (int i = 0; i < latitude.size(); i++) {
             MarkerOptions Dlocation = new MarkerOptions().position(new LatLng(latitude.get(i), longitude.get(i))).title(villname.get(i)).icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_action_name));
             map.addMarker(Dlocation);
-            if (i == 0) {
-                pbar.setVisibility(View.GONE);
+           /* if (i == 0) {
+//                pbar.setVisibility(View.GONE);
 
-            }
+            }*/
         }
     }
 

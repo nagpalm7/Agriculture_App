@@ -43,17 +43,10 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
     private boolean isDdoFragment;
     ArrayList<String> mUserId;
     private ArrayList<String> mPkList;
+    private ArrayList<String> mDdoNames;
     private boolean isBusy = false;
     private int SHIMMER_ITEM_COUNT = 6;
     private String TAG = "RecyclerViewAdapter";
-
-    public RecyclerViewAdater(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, boolean isDdoFragment) {
-        this.mcontext = mcontext;
-        this.mtextview1 = mtextview1;
-        this.mtextview2 = mtextview2;
-        this.isDdoFragment = isDdoFragment;
-
-    }
 
     public RecyclerViewAdater(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2,
                               ArrayList<String> mUserId, boolean isDdoFragment, ArrayList<String> pkList) {
@@ -63,6 +56,16 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
         this.mcontext = mcontext;
         this.isDdoFragment = isDdoFragment;
         mPkList = pkList;
+    }
+
+    public RecyclerViewAdater(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mUserId, boolean isDdoFragment, ArrayList<String> mPkList, ArrayList<String> mDdoNames) {
+        this.mtextview1 = mtextview1;
+        this.mtextview2 = mtextview2;
+        this.mcontext = mcontext;
+        this.isDdoFragment = isDdoFragment;
+        this.mUserId = mUserId;
+        this.mPkList = mPkList;
+        this.mDdoNames = mDdoNames;
     }
 
     @Override
@@ -145,6 +148,11 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
             holder.tv2.setBackground(null);
             holder.tv1.setText(mtextview1.get(position));
             holder.tv2.setText(mtextview2.get(position));
+            if (!isDdoFragment) {
+                holder.districtTextview.setText("DDA : " + mDdoNames.get(position).toUpperCase());
+                holder.districtTextview.setBackground(null);
+            } else
+                holder.districtTextview.setVisibility(View.GONE);
         }
 
     }
@@ -172,7 +180,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
 
     private void deleteRecord(int pos) {
         String id = mPkList.get(pos);
-        final String url = "http://13.235.100.235:8000/api/user/" + id + "/";
+        final String url = "http://13.235.100.235/api/user/" + id + "/";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -207,6 +215,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
         ShimmerFrameLayout shimmerFrameLayout;
         ImageView editImage;
         ImageView deleteImage;
+        TextView districtTextview;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -217,6 +226,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
             shimmerFrameLayout = itemView.findViewById(R.id.ado_ddo_shimmer);
             editImage = itemView.findViewById(R.id.edit_id);
             deleteImage = itemView.findViewById(R.id.delete_id);
+            districtTextview = itemView.findViewById(R.id.district_info);
         }
     }
 }

@@ -43,7 +43,7 @@ public class completed_fragment extends Fragment {
     private ArrayList<String> mIds;
     private AdminLocationAdapter adapter;
     private LinearLayoutManager layoutManager;
-    private String completedUrl = "http://13.235.100.235:8000/api/locations/completed";
+    private String completedUrl = "http://13.235.100.235/api/locations/completed";
     private String nextUrl;
     private String token;
     private ProgressBar progressBar;
@@ -199,6 +199,7 @@ public class completed_fragment extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof NoConnectionError)
                             Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                        isNextBusy = false;
                     }
                 }) {
             @Override

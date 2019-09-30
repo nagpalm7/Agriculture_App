@@ -51,8 +51,8 @@ public class pending_fragment extends Fragment {
 
     //tags
     private static final String TAG = "pending_fragment";
-    private String url_unassigned = "http://13.235.100.235:8000/api/locations/unassigned";
-    private String url_assigned = "http://13.235.100.235:8000/api/locations/assigned";
+    private String url_unassigned = "http://13.235.100.235/api/locations/unassigned";
+    private String url_assigned = "http://13.235.100.235/api/locations/assigned";
     private String next_unassigned_url;
     private String next_assigned_url;
     private LinearLayoutManager layoutManager;
@@ -60,6 +60,7 @@ public class pending_fragment extends Fragment {
     private ProgressBar progressBar;
     private int NEXT_LOCATION_COUNT = 1;
     private boolean isNextBusy;
+    private boolean isSendingNotifications = false;
     private View view;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -237,7 +238,11 @@ public class pending_fragment extends Fragment {
         notificationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendNotifications();
+                if (!isSendingNotifications)
+                    sendNotifications();
+                else
+                    Toast.makeText(getActivity(), "Please wait, Notifications request in progress",
+                            Toast.LENGTH_SHORT).show();
             }
         });
         return view;
@@ -355,6 +360,7 @@ public class pending_fragment extends Fragment {
                     if (error instanceof NoConnectionError)
                         Toast.makeText(getActivity(), "Check Your Internt Connection Please!",
                                 Toast.LENGTH_SHORT).show();
+                    isNextBusy = false;
                     Log.e(TAG, "onErrorResponse: " + error);
                 }
             }) {
@@ -383,12 +389,16 @@ public class pending_fragment extends Fragment {
     }
 
     private void sendNotifications() {
-        String url = "http://13.235.100.235:8000/api/trigger/sms/pending";
+        isSendingNotifications = true;
+        String url = "http://13.235.100.235/api/trigger/sms/pending";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, "onResponse: sendNotifications " + response);
+                        Toast.makeText(getActivity(), "Notifications Successfully Sent!",
+                                Toast.LENGTH_SHORT).show();
+                        isSendingNotifications = false;
                     }
                 },
                 new Response.ErrorListener() {
@@ -401,6 +411,7 @@ public class pending_fragment extends Fragment {
                             Toast.makeText(getActivity(), "Something went wrong, please try again!",
                                     Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onErrorResponse: sendNotifications " + error);
+                        isSendingNotifications = false;
                     }
                 }) {
             @Override
@@ -410,6 +421,8 @@ public class pending_fragment extends Fragment {
                 return map;
             }
         };
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(jsonObjectRequest);
     }
 }
 

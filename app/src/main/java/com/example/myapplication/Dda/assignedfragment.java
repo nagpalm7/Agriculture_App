@@ -40,7 +40,7 @@ public class assignedfragment extends Fragment {
     private ArrayList<String> Name;
     private ArrayList<String> Address;
     private DdapendingassignedAdapter ddaassignedAdapter;
-    private String urlget = "http://13.235.100.235:8000/api/locations/dda/assigned";
+    private String urlget = "http://13.235.100.235/api/locations/dda/assigned";
     private String token;
     private String villagename;
     private String blockname;
@@ -219,6 +219,7 @@ public class assignedfragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "onErrorResponse: " + error);
+                isNextBusy = false;
             }
         }) {
 

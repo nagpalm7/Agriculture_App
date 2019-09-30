@@ -67,13 +67,13 @@ public class EditActivity extends AppCompatActivity {
         isDdo = intent.getBooleanExtra("isDdo", false);
         place = intent.getStringExtra("place");
         if (isDdo) {
-            spinnerUrl = "http://13.235.100.235:8000/api/district/";
+            spinnerUrl = "http://13.235.100.235/api/district/";
         } else {
-            spinnerUrl = "http://13.235.100.235:8000/api/villages-list/";
+            spinnerUrl = "http://13.235.100.235/api/villages-list/";
         }
         Log.d(TAG, "onCreate: SPINNER URL " + spinnerUrl);
         //id = "2";
-        final String url = "http://13.235.100.235:8000/api/user/" + id + "/";
+        final String url = "http://13.235.100.235/api/user/" + id + "/";
         getDetails(url);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override

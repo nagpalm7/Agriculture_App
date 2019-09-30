@@ -125,13 +125,9 @@ public class ReviewReport extends AppCompatActivity {
         isComplete = intent.getBooleanExtra("isComplete", false);
         isAdmin = intent.getBooleanExtra("isAdmin", false);
         isOngoing = intent.getBooleanExtra("isOngoing", false);
-        mUrl = "http://13.235.100.235:8000/api/report-ado/" + id + "/";
+        mUrl = "http://13.235.100.235/api/report-ado/" + id + "/";
         Log.d(TAG, "onCreate: URL " + mUrl);
-        schemedata.add("Scheme Name");
-        programNamedata.add("Program Name");
-        financialYearNamedata.add("Financial Year");
-        dateOfBenefitdata.add("Date Of Benefit");
-        schemedata.add("State Scheme for Promotion of Cotton Cultivation in Haryana ");
+        /*schemedata.add("State Scheme for Promotion of Cotton Cultivation in Haryana ");
         programNamedata.add("Pest Management Demonstration (IPM)");
         financialYearNamedata.add("2018-2019");
         dateOfBenefitdata.add("2018-11-05 11:51:53");
@@ -144,7 +140,7 @@ public class ReviewReport extends AppCompatActivity {
         schemedata.add("State Scheme for Promotion of Cotton Cultivation in Haryana ");
         programNamedata.add("Pest Management Demonstration (IPM)");
         financialYearNamedata.add("2018-2019");
-        dateOfBenefitdata.add("2018-11-05 11:51:53");
+        dateOfBenefitdata.add("2018-11-05 11:51:53");*/
 
         /*actionLeft = findViewById(R.id.actionLeft);
         actionRight = findViewById(R.id.actionRight);
@@ -405,7 +401,7 @@ public class ReviewReport extends AppCompatActivity {
             ex.printStackTrace();
         }
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String urlpatch = "http://13.235.100.235:8000/api/location/" + id + "/";
+        String urlpatch = "http://13.235.100.235/api/location/" + id + "/";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, urlpatch, postbody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -450,8 +446,12 @@ public class ReviewReport extends AppCompatActivity {
                             String status = rootObject.getString("success");
                             Log.d(TAG, "onResponse: hereshowsub");
                             if (status.equals("1")) {
-                                addRowtoTable("Scheme Name", "Program Name", "Financial Year Name",
-                                        "Date Of Benefit", false);
+                                /*addRowtoTable("Scheme Name", "Program Name", "Financial Year Name",
+                                        "Date Of Benefit", false);*/
+                                schemedata.add("Scheme Name");
+                                programNamedata.add("Program Name");
+                                financialYearNamedata.add("Financial Year");
+                                dateOfBenefitdata.add("Date Of Benefit");
                                 JSONArray dataArray = rootObject.getJSONArray("data");
                                 for (int i = 0; i < dataArray.length(); i++) {
                                     JSONObject singleObject = dataArray.getJSONObject(i);

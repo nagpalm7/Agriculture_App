@@ -38,7 +38,7 @@ import static com.example.myapplication.AppNotificationChannels.CHANNEL_2_ID;
 
 public class upload_fragment extends Fragment {
 
-    private String url = "http://13.235.100.235:8000/api/upload/locations/";
+    private String url = "http://13.235.100.235/api/upload/locations/";
     private String token;
     private static final String TAG = "UploadFragment";
     private String filePath;

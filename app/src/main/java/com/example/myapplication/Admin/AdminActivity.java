@@ -61,7 +61,7 @@ public class AdminActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         if (getPermission()) {
             navigationView.setCheckedItem(R.id.nav_home);
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt(), "MAP FRAGMENT").commit();
             getSupportActionBar().setTitle("HOME");
         }
 
@@ -127,7 +127,7 @@ public class AdminActivity extends AppCompatActivity
 
             if (deniedCount == 0) {
                 navigationView.setCheckedItem(R.id.nav_home);
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt(), "MAP FRAGMENT").commit();
 
             } else {
                 for (Map.Entry<String, Integer> entry : permissionResults.entrySet()) {
@@ -198,7 +198,7 @@ public class AdminActivity extends AppCompatActivity
         Log.d(TAG, "showMap: getsupport");
         FragmentManager mfragmentmanager = getSupportFragmentManager();
         Log.d(TAG, "showMap: getsupport" + mfragmentmanager);
-        mfragmentmanager.beginTransaction().replace(R.id.container, new map_fragemnt()).commit();
+        mfragmentmanager.beginTransaction().replace(R.id.container, new map_fragemnt(), "MAP FRAGMENT").commit();
     }
 
     @Override
@@ -274,7 +274,7 @@ public class AdminActivity extends AppCompatActivity
             getSupportActionBar().setTitle("LOCATIONS");
 
         } else if (id == R.id.nav_home) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt(), "MAP FRAGMENT").commit();
             getSupportActionBar().setTitle("HOME");
         }
 

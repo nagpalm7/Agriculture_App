@@ -42,7 +42,7 @@ public class ddo_fragment extends Fragment {
     private ArrayList<String> userinfo;
     private ArrayList<String> mUserId;
     private ArrayList<String> mPkList;
-    private String mUrl = "http://13.235.100.235:8000/api/users-list/dda/";
+    private String mUrl = "http://13.235.100.235/api/users-list/dda/";
     private final String TAG = "ddo_fragment";
     private RecyclerViewAdater recyclerViewAdater;
     private String token;
@@ -70,6 +70,7 @@ public class ddo_fragment extends Fragment {
             @Override
             public void onRefresh() {
                 getFragmentManager().beginTransaction().detach(ddo_fragment.this).attach(ddo_fragment.this).commit();
+
             }
         });
         username = new ArrayList<>();
@@ -134,7 +135,8 @@ public class ddo_fragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NoConnectionError)
-                    Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Check Your Internt Connection Please!",
+                            Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "onErrorResponse: " + error);
             }
         }) {
@@ -195,7 +197,6 @@ public class ddo_fragment extends Fragment {
                         mPkList.add(pk);
                         String id = singleObject.getString("id");
                         mUserId.add(id);
-
                     }
                     Log.d(TAG, "onResponse: " + username);
                     recyclerViewAdater.notifyDataSetChanged();
@@ -211,6 +212,7 @@ public class ddo_fragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NoConnectionError)
                     Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                isNextBusy = true;
                 Log.e(TAG, "onErrorResponse: " + error);
             }
         }) {

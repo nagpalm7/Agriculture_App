@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public class OnGoingFragment extends Fragment {
 
-    private String ongoingUrl = "http://13.235.100.235:8000/api/locations/ongoing";
+    private String ongoingUrl = "http://13.235.100.235/api/locations/ongoing";
 
     private ArrayList<String> mDDaNames;
     private ArrayList<String> mAdoNames;
@@ -211,6 +211,7 @@ public class OnGoingFragment extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof NoConnectionError)
                             Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                        isNextBusy = false;
                     }
                 }) {
             @Override

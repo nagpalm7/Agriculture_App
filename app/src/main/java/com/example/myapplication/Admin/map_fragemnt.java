@@ -1,5 +1,6 @@
 package com.example.myapplication.Admin;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -10,8 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,21 +45,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import dmax.dialog.SpotsDialog;
+
 public class map_fragemnt extends Fragment {
     private final String TAG = "map fragment";
 
     public GoogleMap map = null;
-    private String url_unassigned = "http://13.235.100.235:8000/api/locations/unassigned";
-    private String url_assigned = "http://13.235.100.235:8000/api/locations/assigned";
+    private String url_unassigned = "http://13.235.100.235/api/locations/unassigned";
+    private String url_assigned = "http://13.235.100.235/api/locations/assigned";
     private String token;
     private String next;
     private SupportMapFragment mapFragment;
     private int count = 0 ;
-    private ProgressBar pbar;
+    //    private ProgressBar pbar;
+    private RequestQueue requestQueue;
 
     private ArrayList<Double> latitude;
     private ArrayList<Double> longitude;
     private ArrayList<String> villname;
+    private AlertDialog dialog;
 
 
 
@@ -74,9 +77,11 @@ public class map_fragemnt extends Fragment {
         latitude = new ArrayList<>();
         longitude = new ArrayList<>();
         villname = new ArrayList<>();
-        pbar = view.findViewById(R.id.pbar);
+//        pbar = view.findViewById(R.id.pbar);
 
-
+        dialog = new SpotsDialog.Builder().setContext(getActivity()).setMessage("Loading locations...")
+                .setCancelable(false).build();
+        dialog.show();
         next = url_assigned;
         getMarkers(next);
 
@@ -135,7 +140,8 @@ public class map_fragemnt extends Fragment {
     }
 
     void getMarkers(String url) {
-        final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
+        requestQueue = Volley.newRequestQueue(getContext());
 
         final JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -157,13 +163,15 @@ public class map_fragemnt extends Fragment {
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                     e.printStackTrace();
+                    dialog.dismiss();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "onErrorResponse: " + error);
-                pbar.setVisibility(View.GONE);
+//                pbar.setVisibility(View.GONE);
+                dialog.dismiss();
                 if(error instanceof NoConnectionError){
                     Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_LONG).show();
                 }
@@ -180,7 +188,7 @@ public class map_fragemnt extends Fragment {
                 return map;
             }
         };
-
+        jsonObjectRequest2.setTag("MAP REQUEEST");
         requestQueue.add(jsonObjectRequest2);
         requestFinished(requestQueue);
     }
@@ -201,11 +209,13 @@ public class map_fragemnt extends Fragment {
 
     private void marklocation() {
 
+//        pbar.setVisibility(View.GONE);
+        dialog.dismiss();
         for(int i = 0 ; i < latitude.size();i++){
             MarkerOptions Dlocation = new MarkerOptions().position(new LatLng(latitude.get(i), longitude.get(i))).title(villname.get(i)).icon(bitmapDescriptorFromVector(getActivity(),R.drawable.ic_action_name));
             map.addMarker(Dlocation);
             if(i == 0 ){
-                pbar.setVisibility(View.GONE);
+                dialog.dismiss();
 
             }
         }

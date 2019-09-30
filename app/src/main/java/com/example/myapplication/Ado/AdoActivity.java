@@ -77,6 +77,7 @@ public class AdoActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().replace(R.id.container_ado, new map_fragemnt_ado()).commit();
                         navigationView.getMenu().getItem(0).setChecked(true);
                         getSupportActionBar().setTitle("HOME");
+                        break;
 
                     case R.id.nav_home1:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container_ado, new ado_pending_fragment()).commit();

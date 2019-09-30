@@ -107,9 +107,9 @@ public class CheckInActivity2 extends AppCompatActivity implements
     private ReportImageRecyAdapter adapter;
     private Button pickPhotoButton;
     private Button submitReportButton;
-    private String reportSubmitUrl = "http://13.235.100.235:8000/api/report-ado/add/";
-    private String imageUploadUrl = "http://13.235.100.235:8000/api/upload/images/";
-    private String villageListUrl = "http://13.235.100.235:8000/api/user/";
+    private String reportSubmitUrl = "http://13.235.100.235/api/report-ado/add/";
+    private String imageUploadUrl = "http://13.235.100.235/api/upload/images/";
+    private String villageListUrl = "http://13.235.100.235/api/user/";
     private String farmerDetailsUrl = "http://117.240.196.238:8080/api/CRM/getFarmerDetail";
     private ArrayList<String> mImagesPath;
     private ArrayList<File> mImages;
