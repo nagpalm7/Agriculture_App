@@ -8,6 +8,12 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home_black_24dp"
             android:title="@string/menu_home" />
+
+        <item
+            android:id="@+id/nav_ado"
+            android:icon="@drawable/ic_user"
+            android:title="ADO LIST" />
+
         <item
             android:id="@+id/pending_item"
             android:icon="@drawable/arrow"

@@ -89,29 +89,36 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         int id = menuItem.getItemId();
+
+
         if (id == R.id.nav_home) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt_dda()).commit();
             navigationView.getMenu().getItem(0).setChecked(true);
             getSupportActionBar().setTitle("HOME");
-        }
 
-        if(id==R.id.pending_item){
+        } else if(id==R.id.pending_item){
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaPendingFragment()).commit();
-            navigationView.getMenu().getItem(1).setChecked(true);
+            navigationView.getMenu().getItem(2).setChecked(true);
             getSupportActionBar().setTitle("Pending Locations");
 
         }else if(id==R.id.ongoing_item){
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaOngoingFragment()).commit();
-            navigationView.getMenu().getItem(2).setChecked(true);
+            navigationView.getMenu().getItem(3).setChecked(true);
             getSupportActionBar().setTitle("Ongoing Locations");
 
         }else if(id==R.id.completed_item){
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaCompletedFragment()).commit();
-            navigationView.getMenu().getItem(3).setChecked(true);
+            navigationView.getMenu().getItem(4).setChecked(true);
             getSupportActionBar().setTitle("Completed Locations");
+
+        }else if(id == R.id.nav_ado){
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,new adounderddo()).commit();
+            navigationView.getMenu().getItem(1).setChecked(true);
+            getSupportActionBar().setTitle("ADO LIST");
 
         }
 
