@@ -62,6 +62,7 @@ public class AdminActivity extends AppCompatActivity
         if (getPermission()) {
             navigationView.setCheckedItem(R.id.nav_home);
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt()).commit();
+            getSupportActionBar().setTitle("HOME");
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
