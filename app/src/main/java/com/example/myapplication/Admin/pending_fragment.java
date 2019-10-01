@@ -33,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +45,8 @@ public class pending_fragment extends Fragment {
     private ArrayList<String> mDdaName;
     private ArrayList<String> mAdaName;
     private ArrayList<String> mAddress;
+    private ArrayList<String> mpkado;
+    private ArrayList<String> mpkdda;
     private String token;
     private String villagename;
     private String blockname;
@@ -85,7 +88,9 @@ public class pending_fragment extends Fragment {
         mDdaName = new ArrayList<>();
         mAdaName = new ArrayList<>();
         mAddress = new ArrayList<>();
-        recyclerViewAdater = new AdminLocationAdapter(getActivity(), mDdaName, mAdaName, mAddress, null, false);
+        mpkado = new ArrayList<>();
+        mpkdda = new ArrayList<>();
+        recyclerViewAdater = new AdminLocationAdapter(getActivity(), mDdaName, mAdaName,true, mAddress, null,mpkado,mpkdda);
         recyclerView.setAdapter(recyclerViewAdater);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -170,6 +175,15 @@ public class pending_fragment extends Fragment {
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
+                        JSONObject adoobj = c.getJSONObject("ado");
+                        JSONObject authado = adoobj.getJSONObject("auth_user");
+                        mpkado.add(authado.getString("pk"));
+
+                        JSONObject ddaobj = c.getJSONObject("dda");
+                        JSONObject authddo = ddaobj.getJSONObject("auth_user");
+                        mpkdda.add(authddo.getString("pk"));
+
+
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
@@ -277,6 +291,15 @@ public class pending_fragment extends Fragment {
                         next_unassigned_url = jsonObject.getString("next");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject c = jsonArray.getJSONObject(i);
+
+                            JSONObject adoobj = c.getJSONObject("ado");
+                            JSONObject authado = adoobj.getJSONObject("auth_user");
+                            mpkado.add(authado.getString("pk"));
+
+                            JSONObject ddaobj = c.getJSONObject("dda");
+                            JSONObject authddo = ddaobj.getJSONObject("auth_user");
+                            mpkdda.add(authddo.getString("pk"));
+
                             villagename = c.getString("village_name");
                             blockname = c.getString("block_name");
                             district = c.getString("district");

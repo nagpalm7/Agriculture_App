@@ -24,8 +24,11 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
     ArrayList<String> mtextview2;
     ArrayList<String> mtextview3;
     private ArrayList<String> mIds;
+    private ArrayList<String> mpkado;
+    private ArrayList<String> mpkdda;
     private boolean isComplete = false;
     private boolean isOngoing = false;
+    private boolean isPending = false;
     boolean mShowShimmer = true;
     private int SHIMMER_ITEM_NO = 5;
     Context mcontext;
@@ -48,18 +51,31 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
         this.isComplete = isComplete;
     }
 
+    public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, boolean isPending, ArrayList<String> mtextview3, ArrayList<String> mIds,ArrayList<String> ado_pk, ArrayList<String> dda_pk) {
+        this.mcontext = mcontext;
+        this.mtextview1 = mtextview1;
+        this.mtextview2 = mtextview2;
+        this.mtextview3 = mtextview3;
+        this.isPending = isPending;
+        mpkado = ado_pk;
+        mpkdda = dda_pk;
+        this.mIds = mIds;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mcontext).inflate(R.layout.adminlocationlist,parent,false);
         final ViewHolder viewHolderDda = new ViewHolder(view);
+
         viewHolderDda.parentnotassigned.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int pos = viewHolderDda.getAdapterPosition();
                 if (!mShowShimmer) {
                     if (isComplete || isOngoing) {
                         Intent intent = new Intent(mcontext, ReviewReport.class);
-                        int pos = viewHolderDda.getAdapterPosition();
+
                         intent.putExtra("id", mIds.get(pos));
                         intent.putExtra("isDdo", true);
                         intent.putExtra("isAdmin", true);
@@ -68,6 +84,19 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
                         }
                         mcontext.startActivity(intent);
                     }
+
+                    if(isPending){
+                        Intent intent = new Intent(mcontext,detailsActivity.class);
+                        intent.putExtra("ado_name",mtextview1.get(pos));
+                        intent.putExtra("dda_name",mtextview2.get(pos));
+                        intent.putExtra("ado_pk",mpkado.get(pos));
+                        intent.putExtra("dda_pk",mpkdda.get(pos));
+                        mcontext.startActivity(intent);
+
+
+                    }
+
+
                 }
             }
         });
