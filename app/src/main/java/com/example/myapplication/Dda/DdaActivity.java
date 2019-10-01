@@ -99,19 +99,19 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
         } else if(id==R.id.pending_item){
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaPendingFragment()).commit();
-            navigationView.getMenu().getItem(2).setChecked(true);
+            navigationView.setCheckedItem(R.id.pending_item);
             getSupportActionBar().setTitle("Pending Locations");
 
         }else if(id==R.id.ongoing_item){
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaOngoingFragment()).commit();
-            navigationView.getMenu().getItem(3).setChecked(true);
+            navigationView.setCheckedItem(R.id.ongoing_item);
             getSupportActionBar().setTitle("Ongoing Locations");
 
         }else if(id==R.id.completed_item){
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new DdaCompletedFragment()).commit();
-            navigationView.getMenu().getItem(4).setChecked(true);
+            navigationView.setCheckedItem(R.id.completed_item);
             getSupportActionBar().setTitle("Completed Locations");
 
         }else if(id == R.id.nav_ado){

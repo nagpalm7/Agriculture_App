@@ -151,7 +151,7 @@ public class ado_map_activity extends AppCompatActivity
 
     private void startgeofence(MarkerOptions dlocation) {
         if (dlocation != null) {
-            Geofence geofence = creategeofence(dlocation.getPosition(), 400f);
+            Geofence geofence = creategeofence(dlocation.getPosition(), 300f);
             geofencingRequest = creategeofencerequest(geofence);
             addgeofence(geofence);
         }

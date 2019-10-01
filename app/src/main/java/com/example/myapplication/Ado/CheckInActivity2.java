@@ -461,7 +461,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
                                 Log.d(TAG, "onResponse: current " + village + "     " + destVillageName);
                                 String tempDest = destVillageName.toUpperCase();
                                 String tempVillageName = village.toUpperCase();
-                                if (tempDest.equals(tempVillageName)) {
+                                if (tempDest.contains(tempVillageName)) {
                                     pos = i;
                                     isEqual = true;
                                 }
@@ -799,7 +799,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
 
     private void startgeofence(MarkerOptions dlocation) {
         if (dlocation != null) {
-            Geofence geofence = creategeofence(dlocation.getPosition(), 400f);
+            Geofence geofence = creategeofence(dlocation.getPosition(), 300f);
             geofencingRequest = creategeofencerequest(geofence);
             addgeofence(geofence);
         }

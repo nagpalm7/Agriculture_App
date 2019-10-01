@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,13 +39,16 @@ public class adounderddo extends Fragment {
 
     RecyclerView recyclerView;
     ArrayList<String> ado_names;
+    private ArrayList<String> adoIds;
     private String urlget = "http://13.235.100.235/api/ado/";
+    private String nextUrl;
     private adounderddoadapter adapter;
     private final String TAG ="adouderddo";
     private String token;
     private boolean isNextBusy = false;
-
-
+    private ProgressBar progressBar;
+    private ArrayList<ArrayList<Integer>> villagesMap;
+    private ArrayList<String> adoPhones;
 
 
     @Nullable
@@ -52,18 +56,40 @@ public class adounderddo extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.adounderddo_list,container,false);
         ado_names = new ArrayList<>();
+        adoIds = new ArrayList<>();
+        villagesMap = new ArrayList<>();
+        adoPhones = new ArrayList<>();
         recyclerView = view.findViewById(R.id.recyclerViewadounderddo);
-        adapter  = new adounderddoadapter(getContext(),ado_names);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
+        progressBar = view.findViewById(R.id.ado_list_loading);
+        adapter = new adounderddoadapter(getContext(), ado_names, adoIds, villagesMap, adoPhones);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        DividerItemDecoration divider = new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation());
+        DividerItemDecoration divider = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(divider);
-
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
         loadData(urlget);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            int totalCount, pastCount, visibleCount;
 
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    totalCount = layoutManager.getItemCount();
+                    pastCount = layoutManager.findFirstVisibleItemPosition();
+                    visibleCount = layoutManager.getChildCount();
+                    if ((pastCount + visibleCount) >= totalCount) {
+                        if (!nextUrl.equals("null") && !isNextBusy) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            loadData(nextUrl);
+                        }
+                        Log.d(TAG, "onScrolled:");
+                    }
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
         return view;
     }
 
@@ -75,35 +101,56 @@ public class adounderddo extends Fragment {
             public void onResponse(JSONObject response) {
                 try {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
-
-                    JSONArray jsonArray = jsonObject.getJSONArray("results");
-                    for(int i=0;i<jsonArray.length();i++){
-                        JSONObject c =jsonArray.getJSONObject(i);
-
+                    nextUrl = jsonObject.getString("next");
+                    JSONArray resultsArray = jsonObject.getJSONArray("results");
+                    for (int i = 0; i < resultsArray.length(); i++) {
+                        JSONObject c = resultsArray.getJSONObject(i);
                         ado_names.add(c.getString("name"));
+                        JSONObject authObject = c.getJSONObject("auth_user");
+                        String adoId = authObject.getString("pk");
+                        adoIds.add(adoId);
                         JSONArray villageArray = c.getJSONArray("village");
-
+                        ArrayList<Integer> villageIds = new ArrayList<>();
+                        for (int j = 0; j < villageArray.length(); j++) {
+                            JSONObject singleVillage = villageArray.getJSONObject(j);
+                            int villageId = singleVillage.getInt("id");
+                            Log.d(TAG, "onResponse: IDS " + villageId);
+                            villageIds.add(villageId);
+                        }
+                        String adoPhone = c.getString("number");
+                        adoPhones.add(adoPhone);
+                        villagesMap.add(villageIds);
+                        if (i == 0) {
+                            JSONObject ddaObject = c.getJSONObject("dda");
+                            JSONObject districtObject = ddaObject.getJSONObject("district");
+                            String districtId = districtObject.getString("id");
+                            adapter.sendDistrictId(districtId);
+                            Log.d(TAG, "onResponse: DISTRICT ID " + districtId);
+                        }
                     }
+                    adapter.showShimmer = false;
                     isNextBusy = false;
+                    progressBar.setVisibility(View.GONE);
                     adapter.notifyDataSetChanged();
                 }catch (JSONException e){
                     Log.d(TAG, "onResponse: "+e);
                     isNextBusy = false;
-
+                    progressBar.setVisibility(View.GONE);
                     Log.d(TAG, "onResponse: JSON EXCEPTION " + e);
                 }
-
-
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "onErrorResponse: "+error.getLocalizedMessage());
+                Log.d(TAG, "onErrorResponse: " + error.getLocalizedMessage());
                 if (error instanceof NoConnectionError)
                     Toast.makeText(getActivity(), "Please Check your internet connection",
                             Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getActivity(), "Something went wrong, please try again!",
+                            Toast.LENGTH_LONG).show();
                 isNextBusy = false;
-
+                progressBar.setVisibility(View.GONE);
             }
         })
         {
@@ -116,6 +163,5 @@ public class adounderddo extends Fragment {
         };
 
         requestQueue.add(jsonObjectRequest);
-
     }
 }

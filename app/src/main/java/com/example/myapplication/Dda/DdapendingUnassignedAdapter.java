@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.example.myapplication.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -42,7 +41,7 @@ public class DdapendingUnassignedAdapter extends RecyclerView.Adapter<Ddapending
         viewHolderPendingDda.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!showunassignedshimmer)
+                if (showunassignedshimmer)
                 {Log.d(TAG, "onClick: item clicked");
                 Intent intent = new Intent(mcontext, DdaselectAdo.class);
                 intent.putExtra("Id_I_Need",id.get(viewHolderPendingDda.getAdapterPosition()));

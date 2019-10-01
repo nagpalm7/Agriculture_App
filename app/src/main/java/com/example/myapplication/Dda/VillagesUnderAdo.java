@@ -12,7 +12,7 @@ import com.example.myapplication.R;
 
 import java.util.ArrayList;
 
-public class ListOfVillages extends AppCompatActivity {
+public class VillagesUnderAdo extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

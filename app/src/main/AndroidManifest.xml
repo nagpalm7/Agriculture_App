@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".Dda.ListOfVillages"
+            android:name=".Dda.VillagesUnderAdo"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Ado.CheckInActivity2"
