@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.myapplication.Admin.EditActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.login_activity;
 import com.google.android.material.navigation.NavigationView;
@@ -128,6 +129,14 @@ public class AdoActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
             return true;
+        }
+
+        if(id == R.id.edit_profile){
+            SharedPreferences preferences = this.getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
+            String pk= preferences.getString("pk","");
+            Intent intent = new Intent(this, EditActivity.class);
+            intent.putExtra("id",pk);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

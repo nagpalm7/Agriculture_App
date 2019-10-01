@@ -181,13 +181,15 @@ public class login_activity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        String pk;
                         try {
                             JSONObject c = new JSONObject(String.valueOf(response));
                             Log.d(TAG, "onResponse: " + c);
                             JSONObject a = c.getJSONObject("auth_user");
                             typeOfUser = a.getString("type_of_user");
                             Name = c.getString("name");
-                            String pk = a.getString("pk");
+                            pk = a.getString("pk");
+                            Log.d(TAG, "onResponse: valuepk"+pk);
                             SharedPreferences.Editor editor = getSharedPreferences("tokenFile", Context.MODE_PRIVATE).edit();
                             editor.putString("typeOfUser", typeOfUser);
                             editor.putString("Name", Name);
