@@ -63,9 +63,10 @@ public class EditActivity extends AppCompatActivity {
         token = prefs.getString("token", "");
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
+        Log.d(TAG, "onCreate: check id here"+ id);
         Log.d(TAG, "onCreate: gettheidhere"+id);
         isDdo = intent.getBooleanExtra("isDdo", false);
-        place = intent.getStringExtra("place");
+        //place = intent.getStringExtra("place");
         if (isDdo) {
             spinnerUrl = "http://13.235.100.235/api/district/";
         } else {

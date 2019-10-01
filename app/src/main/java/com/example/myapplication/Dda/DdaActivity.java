@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.myapplication.Admin.EditActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.login_activity;
 import com.google.android.material.navigation.NavigationView;
@@ -159,6 +161,17 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
             startActivity(intent);
             finish();
             return true;
+        }
+
+        if (id == R.id.edit_profile){
+
+
+            SharedPreferences preferences = this.getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
+            String pk= preferences.getString("pk","");
+            Intent intent = new Intent(this, EditActivity.class);
+            intent.putExtra("id",pk);
+            startActivity(intent);
+
         }
 
         return super.onOptionsItemSelected(item);

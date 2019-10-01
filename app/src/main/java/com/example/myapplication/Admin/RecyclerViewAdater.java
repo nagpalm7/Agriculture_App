@@ -99,6 +99,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
                     Intent intent = new Intent(mcontext, EditActivity.class);
                     int pos = viewHolder.getAdapterPosition();
                     intent.putExtra("id", mPkList.get(pos));
+                    Log.d(TAG, "onClick: checkpkhere "+mPkList.get(pos));
                     if (isDdoFragment)
                         intent.putExtra("isDdo", true);
                     else
