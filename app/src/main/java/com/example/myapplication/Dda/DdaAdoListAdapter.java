@@ -119,7 +119,7 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
         adoListViewHolder.adolistlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mcontext, ListOfVillages.class);
+                Intent intent = new Intent(mcontext, VillagesUnderAdo.class);
                 intent.putExtra("listArray", mtextview2);
                 intent.putExtra("adoName", mtextview1.get(adoListViewHolder.getAdapterPosition()));
                 mcontext.startActivity(intent);

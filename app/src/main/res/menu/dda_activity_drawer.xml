@@ -13,20 +13,27 @@
             android:id="@+id/nav_ado"
             android:icon="@drawable/ic_user"
             android:title="ADO LIST" />
-
-        <item
-            android:id="@+id/pending_item"
-            android:icon="@drawable/arrow"
-            android:title="@string/pending" />
-        <item
-            android:id="@+id/ongoing_item"
-            android:icon="@drawable/arrow"
-            android:title="@string/ongoing" />
-        <item
-            android:id="@+id/completed_item"
-            android:icon="@drawable/arrow"
-            android:title="@string/completed" />
     </group>
+    <item
+        android:checkable="true"
+        android:title="LOCATIONS">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/pending_item"
+                    android:icon="@drawable/arrow"
+                    android:title="@string/pending" />
+                <item
+                    android:id="@+id/ongoing_item"
+                    android:icon="@drawable/arrow"
+                    android:title="@string/ongoing" />
+                <item
+                    android:id="@+id/completed_item"
+                    android:icon="@drawable/arrow"
+                    android:title="@string/completed" />
+            </group>
+        </menu>
+    </item>
 
 <!--    <item android:title="Communicate">-->
 <!--        <menu>-->

@@ -14,7 +14,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".Admin.detailsActivity"></activity>
         <activity
-            android:name=".Dda.ListOfVillages"
+            android:name=".Dda.VillagesUnderAdo"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Ado.CheckInActivity2"
