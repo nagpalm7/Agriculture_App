@@ -36,7 +36,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,6 +65,9 @@ public class map_fragemnt extends Fragment {
     private ArrayList<Double> longitude;
     private ArrayList<String> villname;
     private AlertDialog dialog;
+
+    private ClusterManager<MyItem> mClusterManager;
+
 
 
 
@@ -227,15 +230,41 @@ public class map_fragemnt extends Fragment {
     private void marklocation() {
 
 //        pbar.setVisibility(View.GONE);
-        dialog.dismiss();
-        for(int i = 0 ; i < latitude.size();i++){
+
+        /*for(int i = 0 ; i < latitude.size();i++){
             MarkerOptions Dlocation = new MarkerOptions().position(new LatLng(latitude.get(i), longitude.get(i))).title(villname.get(i)).icon(bitmapDescriptorFromVector(getActivity(),R.drawable.ic_action_name));
             map.addMarker(Dlocation);
             if(i == 0 ){
                 dialog.dismiss();
 
             }
+        }*/
+
+        mClusterManager = new ClusterManager<MyItem>(getActivity(), map);
+
+        map.setOnCameraIdleListener(mClusterManager);
+        map.setOnMarkerClickListener(mClusterManager);
+
+        addmarkers();
+
+        dialog.dismiss();
+
+
+    }
+
+    void addmarkers(){
+
+        for(int i = 0 ;i<latitude.size();i++){
+            double lat = latitude.get(i);
+            double lon = longitude.get(i);
+            String title = villname.get(i);
+
+            MyItem item = new MyItem(lat,lon,title);
+
+            mClusterManager.addItem(item);
+
         }
+
     }
 
     void nextRequest(){
