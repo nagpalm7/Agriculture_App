@@ -93,7 +93,6 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
                         intent.putExtra("dda_pk",mpkdda.get(pos));
                         mcontext.startActivity(intent);
 
-
                     }
 
 

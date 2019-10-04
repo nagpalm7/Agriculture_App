@@ -43,13 +43,6 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
         this.idList = idList;
     }
 
-    public AdoListAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2) {
-        this.mtextview1 = mtextview1;
-        this.mtextview2 = mtextview2;
-        this.mcontext = mcontext;
-        isDDoAdo = true;
-    }
-
     public AdoListAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, boolean isAdoComplete, ArrayList<String> mAdoCompleteIds) {
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
@@ -117,6 +110,7 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
             holder.tv2.setBackground(null);
             holder.tv1.setText(mtextview1.get(position));
             holder.tv2.setText(mtextview2.get(position));
+            Log.d(TAG, "onBindViewHolder: ");
             if (isDDo) {
                 holder.mAdoName.setText(mAdoName.get(position));
                 holder.mAdoName.setVisibility(View.VISIBLE);

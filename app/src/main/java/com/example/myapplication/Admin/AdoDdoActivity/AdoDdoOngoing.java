@@ -152,6 +152,7 @@ public class AdoDdoOngoing extends Fragment {
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
                             }
+                            Log.d(TAG, "onResponse: NOTIFY " + mAdoNames + "    " + locationNames + "   " + locationAddresses);
                             adapter.mshowshimmer = false;
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {

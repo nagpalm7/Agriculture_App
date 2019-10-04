@@ -1,21 +1,21 @@
 package com.example.myapplication.Admin;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -60,6 +60,8 @@ public class detailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         Intent intent = getIntent();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("DETAILS");
         ado_name = intent.getStringExtra("ado_name");
         dda_name = intent.getStringExtra("dda_name");
         ado_id = intent.getStringExtra("ado_pk");
@@ -124,15 +126,33 @@ public class detailsActivity extends AppCompatActivity {
 
                             if(isado){
 
-                                aname.setText(name);
-                                anumber.setText(number);
-                                aemail.setText(email);
+                                if (!name.isEmpty())
+                                    aname.setText(name.toUpperCase());
+                                else
+                                    aname.setText("NONE");
+                                if (!number.isEmpty())
+                                    anumber.setText(number.toUpperCase());
+                                else
+                                    anumber.setText("NONE");
+                                if (!email.isEmpty())
+                                    aemail.setText(email.toUpperCase());
+                                else
+                                    aemail.setText("NONE");
 
                             }
                             else{
-                                bname.setText(name);
-                                bnumber.setText(number);
-                                bemail.setText(email);
+                                if (!name.isEmpty())
+                                    bname.setText(name.toUpperCase());
+                                else
+                                    bname.setText("NONE");
+                                if (!number.isEmpty())
+                                    bnumber.setText(number.toUpperCase());
+                                else
+                                    bnumber.setText("NONE");
+                                if (!email.isEmpty())
+                                    bemail.setText(email.toUpperCase());
+                                else
+                                    bemail.setText("NONE");
 
 
                             }
@@ -163,6 +183,23 @@ public class detailsActivity extends AppCompatActivity {
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonObjectRequest);
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+        requestFinished(requestQueue);
 
     }
 
@@ -180,5 +217,9 @@ public class detailsActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
 }

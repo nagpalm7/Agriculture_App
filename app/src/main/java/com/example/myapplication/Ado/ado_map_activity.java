@@ -31,7 +31,6 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -151,7 +150,7 @@ public class ado_map_activity extends AppCompatActivity
 
     private void startgeofence(MarkerOptions dlocation) {
         if (dlocation != null) {
-            Geofence geofence = creategeofence(dlocation.getPosition(), 300f);
+            Geofence geofence = creategeofence(dlocation.getPosition(), 350f);
             geofencingRequest = creategeofencerequest(geofence);
             addgeofence(geofence);
         }
@@ -420,7 +419,7 @@ public class ado_map_activity extends AppCompatActivity
     public void onClickCheckIn(View view) {
         Log.d(TAG, "onClickCheckIn: is "+isEntered);
 
-        if (true) {
+        if (isEntered) {
             Intent intent = new Intent(this, CheckInActivity2.class);
             intent.putExtra("id", id);
             intent.putExtra("lat",latitude);
@@ -472,7 +471,7 @@ public class ado_map_activity extends AppCompatActivity
         map.setLatLngBoundsForCameraTarget(bounds);
 
         //move camera to fill the bound to screen
-        map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+        // map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
 
         //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
         map.setMinZoomPreference(map.getCameraPosition().zoom);
