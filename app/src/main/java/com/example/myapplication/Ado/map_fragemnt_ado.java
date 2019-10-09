@@ -27,6 +27,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.myapplication.Admin.MyItem;
 import com.example.myapplication.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,7 +37,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,7 +53,7 @@ public class map_fragemnt_ado extends Fragment {
     private final String TAG = "map fragment";
 
     public GoogleMap map = null;
-    private String url_pending = "http://13.235.100.235/api/locations/ado/pending";
+    private String url_pending = "http://18.224.202.135/api/locations/ado/pending";
     private String token;
     private String next;
     private SupportMapFragment mapFragment;
@@ -62,7 +63,7 @@ public class map_fragemnt_ado extends Fragment {
     private ArrayList<Double> latitude;
     private ArrayList<Double> longitude;
     private ArrayList<String> villname;
-
+    private ClusterManager<MyItem> mClusterManager;
 
     @Nullable
     @Override
@@ -221,7 +222,7 @@ public class map_fragemnt_ado extends Fragment {
 
     private void marklocation() {
 //        pbar.setVisibility(View.GONE);
-        dialog.dismiss();
+        /*dialog.dismiss();
         for (int i = 0; i < latitude.size(); i++) {
             MarkerOptions Dlocation = new MarkerOptions().position(new LatLng(latitude.get(i), longitude.get(i))).title(villname.get(i)).icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_action_name));
             map.addMarker(Dlocation);
@@ -230,7 +231,30 @@ public class map_fragemnt_ado extends Fragment {
                 dialog.dismiss();
 
             }
+        }*/
+        mClusterManager = new ClusterManager<MyItem>(getActivity(), map);
+
+        map.setOnCameraIdleListener(mClusterManager);
+        map.setOnMarkerClickListener(mClusterManager);
+
+        addmarkers();
+
+        dialog.dismiss();
+    }
+
+    private void addmarkers() {
+
+        for (int i = 0; i < latitude.size(); i++) {
+            double lat = latitude.get(i);
+            double lon = longitude.get(i);
+            String title = villname.get(i);
+
+            MyItem item = new MyItem(lat, lon, title);
+
+            mClusterManager.addItem(item);
+
         }
+
     }
 
   /*  void nextRequest(){

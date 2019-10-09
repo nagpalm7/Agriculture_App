@@ -103,15 +103,15 @@ public class AdoDdoPending extends Fragment {
         String role;
         if (isDdo) {
             role = "dda";
-            String mUrlAssigned = "http://13.235.100.235/api/admin/" + role + "/" + mDdoId + "/assigned";
-            mUrlUnAssigned = "http://13.235.100.235/api/admin/" + role + "/" + mDdoId + "/unassigned";
+            String mUrlAssigned = "http://18.224.202.135/api/admin/" + role + "/" + mDdoId + "/assigned";
+            mUrlUnAssigned = "http://18.224.202.135/api/admin/" + role + "/" + mDdoId + "/unassigned";
             Log.d("url", "onCreateView: pending" + mUrlAssigned);
             Log.d("url", "onCreateView: pending" + mUrlUnAssigned);
             getData(mUrlAssigned);
 
         } else {
             role = "ado";
-            String mUrlPending = "http://13.235.100.235/api/admin/" + role + "/" + mDdoId + "/pending";
+            String mUrlPending = "http://18.224.202.135/api/admin/" + role + "/" + mDdoId + "/pending";
             Log.d("url", "onCreateView: pending" + mUrlPending);
             getData(mUrlPending); //just passed true and Set it accordingly in the function called
         }

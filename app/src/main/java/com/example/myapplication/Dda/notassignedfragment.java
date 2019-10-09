@@ -20,6 +20,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -39,7 +40,7 @@ public class notassignedfragment extends Fragment {
     private ArrayList<String> mHeading;
     private ArrayList<String> Address;
     private DdapendingUnassignedAdapter ddapendingUnassignedAdapter;
-    private String urlget = "http://13.235.100.235/api/locations/dda/unassigned";
+    private String urlget = "http://18.224.202.135/api/locations/dda/unassigned";
     private String villagename;
     private String blockname;
     private String district;
@@ -133,7 +134,22 @@ public class notassignedfragment extends Fragment {
                 return map;
             }
         };
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
 
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         unassignedrequestqueue.add(jsonObjectRequest);
         notassignedreview.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -233,7 +249,22 @@ public class notassignedfragment extends Fragment {
                 return map;
             }
         };
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
 
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         unassignedrequestqueue.add(jsonObjectRequest);
     }
 

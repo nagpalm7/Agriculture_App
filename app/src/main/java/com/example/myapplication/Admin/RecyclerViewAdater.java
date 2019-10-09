@@ -185,7 +185,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
 
     private void deleteRecord(int pos) {
         String id = mPkList.get(pos);
-        final String url = "http://13.235.100.235/api/user/" + id + "/";
+        final String url = "http://18.224.202.135/api/user/" + id + "/";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override

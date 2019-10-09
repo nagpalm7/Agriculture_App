@@ -98,9 +98,9 @@ public class CheckInActivity extends AppCompatActivity
     private ArrayList<File> mImages;
     private ArrayList<String> mImagesPath;
     private ReportImageRecyAdapter adapter;
-    private String reportSubmitUrl = "http://13.235.100.235:8000/api/report-ado/add/";
-    private String imageUploadUrl = "http://13.235.100.235:8000/api/upload/images/";
-    private String villageListUrl = "http://13.235.100.235:8000/api/village/";
+    private String reportSubmitUrl = "http://18.224.202.135/api/report-ado/add/";
+    private String imageUploadUrl = "http://18.224.202.135/api/upload/images/";
+    private String villageListUrl = "http://18.224.202.135/api/village/";
     private Intent intent;
     private int locationId;
     private String reportId;
@@ -754,7 +754,7 @@ public class CheckInActivity extends AppCompatActivity
         String url = "";
         villageNames = new ArrayList<>();
         if (!pk.equals("")) {
-            url = "http://13.235.100.235:8000/api/user/" + pk + "/";
+            url = "http://18.224.202.135/api/user/" + pk + "/";
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                     new Response.Listener<JSONObject>() {
                         @Override

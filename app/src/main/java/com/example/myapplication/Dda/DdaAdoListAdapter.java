@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -38,17 +39,18 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
     private static final String TAG = "DdaAdoListAdapter";
 
     private ArrayList<String> mtextview1;
-    private ArrayList<String> mtextview2;
+    private Map<Integer, ArrayList<String>> mtextview2;
     private Context mcontext;
     private String locationid;
-    private String adoid;
+    private ArrayList<String> adoid;
     private String urlpatch;
     private String token;
 
-    public DdaAdoListAdapter(Context mcontext,ArrayList<String> mtextview1, ArrayList<String> mtextview2) {
+    public DdaAdoListAdapter(Context mcontext, ArrayList<String> mtextview1, Map<Integer, ArrayList<String>> mtextview2) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
+        adoid = new ArrayList<>();
     }
 
     @NonNull
@@ -71,9 +73,9 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
                         Log.d(TAG, "onClick: TOKEN"+token);
                         try {
                             final JSONObject postbody = new JSONObject();
-                            postbody.put("ado", adoid);
+                            postbody.put("ado", adoid.get(adoListViewHolder.getAdapterPosition()));
                             final RequestQueue requestQueue = Volley.newRequestQueue(mcontext);
-                            urlpatch = "http://13.235.100.235/api/location/" + locationid + "/";
+                            urlpatch = "http://18.224.202.135/api/location/" + locationid + "/";
                             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, urlpatch, postbody, new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
@@ -101,6 +103,22 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
                                     return headers;
                                 }
                             };
+                            jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+                                @Override
+                                public int getCurrentTimeout() {
+                                    return 50000;
+                                }
+
+                                @Override
+                                public int getCurrentRetryCount() {
+                                    return 50000;
+                                }
+
+                                @Override
+                                public void retry(VolleyError error) throws VolleyError {
+
+                                }
+                            });
                             requestQueue.add(jsonObjectRequest);
                         }catch (JSONException e){
                             Log.d(TAG, "onClick: "+e);
@@ -120,8 +138,9 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mcontext, VillagesUnderAdo.class);
-                intent.putExtra("listArray", mtextview2);
-                intent.putExtra("adoName", mtextview1.get(adoListViewHolder.getAdapterPosition()));
+                int pos = adoListViewHolder.getAdapterPosition();
+                intent.putExtra("listArray", mtextview2.get(pos));
+                intent.putExtra("adoName", mtextview1.get(pos));
                 mcontext.startActivity(intent);
             }
         });
@@ -182,6 +201,6 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
     }
 
     public void getadoid(String adoid){
-        this.adoid = adoid;
+        this.adoid.add(adoid);
     }
 }

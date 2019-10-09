@@ -44,7 +44,7 @@ public class ado_fragment extends Fragment {
     private ArrayList<String> mPkList;
     private ArrayList<String> mDdoNames;
     private ArrayList<String> mDistrictNames;
-    private String mUrl = "http://13.235.100.235/api/users-list/ado/";
+    private String mUrl = "http://18.224.202.135/api/users-list/ado/";
     private RecyclerViewAdater recyclerViewAdater;
     private String token;
     private String nextUrl;

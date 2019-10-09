@@ -31,6 +31,7 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -100,7 +101,7 @@ public class ado_map_activity extends AppCompatActivity
 
                     //get latlong for corners for specified city
 
-                  /*  LatLng one = new LatLng(latitude,longitude);
+                    LatLng one = new LatLng(latitude, longitude);
                     LatLng two = new LatLng(37.090000, 97.34466);
 
                     LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -125,7 +126,7 @@ public class ado_map_activity extends AppCompatActivity
                     map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
 
                     //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
-                    map.setMinZoomPreference(map.getCameraPosition().zoom);*/
+                    map.setMinZoomPreference(map.getCameraPosition().zoom);
 
                     Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
@@ -173,14 +174,14 @@ public class ado_map_activity extends AppCompatActivity
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             circleOptions = new CircleOptions()
                     .center(Dlocation.getPosition())
-                    .strokeColor(Color.argb(50, 70, 70, 70))
-                    .fillColor(Color.argb(100, 150, 150, 150))
-                    .radius(250f);
+                    .strokeColor(Color.argb(94, 182, 24, 38))
+                    .fillColor(Color.argb(100, 239, 83, 79))
+                    .radius(350f);
         } else {
             circleOptions = new CircleOptions()
                     .center(Dlocation.getPosition())
-                    .strokeColor(Color.argb(50, 70, 70, 70))
-                    .radius(250f);
+                    .strokeColor(Color.argb(94, 182, 24, 38))
+                    .radius(350f);
 
 
         }
@@ -282,7 +283,7 @@ public class ado_map_activity extends AppCompatActivity
 
                         //get latlong for corners for specified city
 
-                       /* LatLng one = new LatLng(7.798000, 68.14712);
+                        LatLng one = new LatLng(7.798000, 68.14712);
                         LatLng two = new LatLng(37.090000, 97.34466);
 
                         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -310,7 +311,43 @@ public class ado_map_activity extends AppCompatActivity
                         map.setMinZoomPreference(map.getCameraPosition().zoom);
 
                         //marking the position
-                        map.addMarker(Dlocation);*/
+//                        map.addMarker(Dlocation);
+
+                       /* LatLng one = new LatLng(7.798000, 68.14712);
+                        LatLng two = new LatLng(37.090000, 97.34466);
+
+                        LatLng shimala = new LatLng(31.104815,77.173401);
+                        LatLng jaipur = new LatLng(26.912434,75.787270);
+
+                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                        LatLngBounds.Builder builder1 = new LatLngBounds.Builder();
+
+
+                        //add them to builder
+                        builder.include(one);
+                        builder.include(two);
+
+                        builder1.include(shimala);
+                        builder1.include(jaipur);
+
+                        LatLngBounds bounds = builder.build();
+                        LatLngBounds bounds1 = builder1.build();
+
+                        //get width and height to current display screen
+                        int width = getResources().getDisplayMetrics().widthPixels;
+                        int height = getResources().getDisplayMetrics().heightPixels;
+
+                        // 20% padding
+                        int padding = (int) (width * 0.20);
+
+                        //set latlong bounds
+                        map.setLatLngBoundsForCameraTarget(bounds);
+
+                        //move camera to fill the bound to screen
+                        map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds1, width, height, padding));
+
+                        map.setMinZoomPreference(map.getCameraPosition().zoom);*/
+
                         Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
                         //marking the position
@@ -443,11 +480,11 @@ public class ado_map_activity extends AppCompatActivity
 
         //Place current location marker
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
+        /*MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        mCurrLocationMarker = map.addMarker(markerOptions);
+        mCurrLocationMarker = map.addMarker(markerOptions);*/
 
         LatLng one = new LatLng(latitude,longitude);
         LatLng two =latLng;

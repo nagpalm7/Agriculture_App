@@ -126,7 +126,7 @@ public class ReviewReport extends AppCompatActivity {
         isComplete = intent.getBooleanExtra("isComplete", false);
         isAdmin = intent.getBooleanExtra("isAdmin", false);
         isOngoing = intent.getBooleanExtra("isOngoing", false);
-        mUrl = "http://13.235.100.235/api/report-ado/" + id + "/";
+        mUrl = "http://18.224.202.135/api/report-ado/" + id + "/";
         Log.d(TAG, "onCreate: URL " + mUrl);
         /*schemedata.add("State Scheme for Promotion of Cotton Cultivation in Haryana ");
         programNamedata.add("Pest Management Demonstration (IPM)");
@@ -434,7 +434,7 @@ public class ReviewReport extends AppCompatActivity {
             ex.printStackTrace();
         }
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String urlpatch = "http://13.235.100.235/api/location/" + id + "/";
+        String urlpatch = "http://18.224.202.135/api/location/" + id + "/";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, urlpatch, postbody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

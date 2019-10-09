@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public class OnGoingFragment extends Fragment {
 
-    private String ongoingUrl = "http://13.235.100.235/api/locations/ongoing";
+    private String ongoingUrl = "http://18.224.202.135/api/locations/ongoing";
 
     private ArrayList<String> mDDaNames;
     private ArrayList<String> mAdoNames;

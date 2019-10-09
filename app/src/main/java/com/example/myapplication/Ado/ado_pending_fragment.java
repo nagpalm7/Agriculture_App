@@ -46,7 +46,7 @@ public class ado_pending_fragment extends Fragment {
     private ArrayList<String> longitude;
     private ArrayList<String> latitude;
     private ArrayList<String> idList;
-    private String url = "http://13.235.100.235/api/locations/ado/pending";
+    private String url = "http://18.224.202.135/api/locations/ado/pending";
     private String nextUrl;
     private boolean isNextBusy = false;
     View view;

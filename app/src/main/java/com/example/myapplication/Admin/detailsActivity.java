@@ -81,8 +81,8 @@ public class detailsActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("tokenFile", MODE_PRIVATE);
         token = prefs.getString("token", "");
 
-        urlado = "http://13.235.100.235/api/user/" + ado_id + "/";
-        urldda = "http://13.235.100.235/api/user/" + dda_id + "/";
+        urlado = "http://18.224.202.135/api/user/" + ado_id + "/";
+        urldda = "http://18.224.202.135/api/user/" + dda_id + "/";
 
         Log.d(TAG, "onCreate: "+ado_id);
         Log.d(TAG, "onCreate: "+dda_id);

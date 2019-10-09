@@ -52,8 +52,8 @@ public class map_fragemnt extends Fragment {
     private final String TAG = "map fragment";
 
     public GoogleMap map = null;
-    private String url_unassigned = "http://13.235.100.235/api/locations/unassigned";
-    private String url_assigned = "http://13.235.100.235/api/locations/assigned";
+    private String url_unassigned = "http://18.224.202.135/api/locations/unassigned";
+    private String url_assigned = "http://18.224.202.135/api/locations/assigned";
     private String token;
     private String next;
     private SupportMapFragment mapFragment;
@@ -252,7 +252,7 @@ public class map_fragemnt extends Fragment {
 
     }
 
-    void addmarkers(){
+    private void addmarkers() {
 
         for(int i = 0 ;i<latitude.size();i++){
             double lat = latitude.get(i);

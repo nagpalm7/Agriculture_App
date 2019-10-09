@@ -43,7 +43,7 @@ public class ddo_fragment extends Fragment {
     private ArrayList<String> userinfo;
     private ArrayList<String> mUserId;
     private ArrayList<String> mPkList;
-    private String mUrl = "http://13.235.100.235/api/users-list/dda/";
+    private String mUrl = "http://18.224.202.135/api/users-list/dda/";
     private final String TAG = "ddo_fragment";
     private RecyclerViewAdater recyclerViewAdater;
     private String token;

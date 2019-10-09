@@ -44,7 +44,7 @@ public class completed_fragment extends Fragment {
     private ArrayList<String> mIds;
     private AdminLocationAdapter adapter;
     private LinearLayoutManager layoutManager;
-    private String completedUrl = "http://13.235.100.235/api/locations/completed";
+    private String completedUrl = "http://18.224.202.135/api/locations/completed";
     private String nextUrl;
     private String token;
     private ProgressBar progressBar;

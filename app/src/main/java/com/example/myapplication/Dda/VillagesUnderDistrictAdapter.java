@@ -55,9 +55,9 @@ public class VillagesUnderDistrictAdapter extends RecyclerView.Adapter<VillagesU
                 int pos = viewHolder.getAdapterPosition();
                 Integer selectedVillageId = villageIdsFiltered.get(pos);
                 int actualPos = villageIds.indexOf(selectedVillageId);
+                Log.d("ADAPTER ", "onCreateViewHolder: " + actualPos + compoundButton.isPressed());
                 if (compoundButton.isPressed() || sparseBooleanArray.get(actualPos, false))
                     toggleSelection(actualPos);
-                Log.d("ADAPTER ", "onCreateViewHolder: " + actualPos + compoundButton.isPressed());
             }
         });
         return viewHolder;

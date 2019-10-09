@@ -55,10 +55,10 @@ public class login_activity extends AppCompatActivity {
     private EditText editEmail, editPassword;
     private TextView signUpAdo, signUpDda;
 
-    private String urlget = "http://13.235.100.235/api/get-user/";
+    private String urlget = "http://18.224.202.135/api/get-user/";
     //    private String urlpost = getString(R.string.rooturl)+ "api-token-auth/";
-//    private String urlpost = getString(R.string.rooturl);
-    private String urlpost = "http://13.235.100.235/api-token-auth/";
+//    private String urlpost = getString(R.string.rooturl)
+    private String urlpost = "http://18.224.202.135/api-token-auth/";
 
     private AlertDialog dialog;
     private CheckBox checkBox;
