@@ -292,9 +292,15 @@ public class pending_fragment extends Fragment {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject c = jsonArray.getJSONObject(i);
 
-                            JSONObject adoobj = c.getJSONObject("ado");
-                            JSONObject authado = adoobj.getJSONObject("auth_user");
-                            mpkado.add(authado.getString("pk"));
+                            try{
+                                JSONObject adoobj = c.getJSONObject("ado");
+                                JSONObject authado = adoobj.getJSONObject("auth_user");
+                                mpkado.add(authado.getString("pk"));
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                mpkado.add(null);
+                            }
 
                             JSONObject ddaobj = c.getJSONObject("dda");
                             JSONObject authddo = ddaobj.getJSONObject("auth_user");

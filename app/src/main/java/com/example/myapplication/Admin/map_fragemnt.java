@@ -225,10 +225,12 @@ public class map_fragemnt extends Fragment {
 
         mClusterManager = new ClusterManager<MyItem>(getActivity(), map);
 
+        addmarkers();
+
         map.setOnCameraIdleListener(mClusterManager);
         map.setOnMarkerClickListener(mClusterManager);
 
-        addmarkers();
+
 
         dialog.dismiss();
 
