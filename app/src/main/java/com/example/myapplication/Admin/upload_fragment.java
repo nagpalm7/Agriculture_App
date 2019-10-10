@@ -50,14 +50,23 @@ public class upload_fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.upload_fragment, container, false);
         CardView uploadCard = view.findViewById(R.id.card1);
+        CardView uploadcsv= view.findViewById(R.id.card2);
         SharedPreferences prefs = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = prefs.getString("token", "");
         Log.d("url", "onCreateView: " + url);
         uploadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //change the url  variable here
                 openCsvPicker();
 
+            }
+        });
+        uploadcsv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //change the url variable here
+                openCsvPicker();
             }
         });
         manager = NotificationManagerCompat.from(getActivity());
@@ -112,7 +121,7 @@ public class upload_fragment extends Fragment {
                     @Override
                     public void onProgress(long bytesUploaded, long totalBytes) {
                         Log.d(TAG, "onProgress: " + bytesUploaded);
-                        notificationBuilder.setContentText(String.valueOf((int) (bytesUploaded / totalBytes) * 100) + "/100")
+                        notificationBuilder.setContentText(((int) (bytesUploaded / totalBytes) * 100) + "/100")
                                 .setProgress((int) totalBytes, (int) ((bytesUploaded / totalBytes) * 100), false);
                         manager.notify(2, notificationBuilder.build());
 

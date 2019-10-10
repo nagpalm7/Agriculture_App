@@ -26,6 +26,7 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
     private ArrayList<String> mIds;
     private ArrayList<String> mpkado;
     private ArrayList<String> mpkdda;
+    private ArrayList<String> mdate;
     private boolean isComplete = false;
     private boolean isOngoing = false;
     private boolean isPending = false;
@@ -33,30 +34,33 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
     private int SHIMMER_ITEM_NO = 5;
     Context mcontext;
 
-    public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3, ArrayList<String> mIds, boolean isOngoing) {
+    public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3, ArrayList<String> mIds, boolean isOngoing,ArrayList<String> mdate) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         this.mtextview3 = mtextview3;
         this.isOngoing = isOngoing;
         this.mIds = mIds;
+        this.mdate = mdate;
     }
 
-    public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3, boolean isComplete, ArrayList<String> mIds) {
+    public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3, boolean isComplete, ArrayList<String> mIds,ArrayList<String> mdate) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         this.mtextview3 = mtextview3;
         this.mIds = mIds;
+        this.mdate = mdate;
         this.isComplete = isComplete;
     }
 
-    public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, boolean isPending, ArrayList<String> mtextview3, ArrayList<String> mIds,ArrayList<String> ado_pk, ArrayList<String> dda_pk) {
+    public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, boolean isPending, ArrayList<String> mtextview3, ArrayList<String> mIds,ArrayList<String> ado_pk, ArrayList<String> dda_pk,ArrayList<String> mdate) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         this.mtextview3 = mtextview3;
         this.isPending = isPending;
+        this.mdate = mdate;
         mpkado = ado_pk;
         mpkdda = dda_pk;
         this.mIds = mIds;
@@ -112,8 +116,10 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
             holder.tv1.setBackground(null);
             holder.tv2.setBackground(null);
             holder.tv3.setBackground(null);
+            holder.tv4.setBackground(null);
             holder.tv1.setText("DDA     : " + mtextview1.get(position).toUpperCase());
             holder.tv2.setText("ADO     : " + mtextview2.get(position).toUpperCase());
+            holder.tv4.setText("DATE    : " + mdate.get(position));
             holder.tv3.setText(mtextview3.get(position));
         }
     }
@@ -128,6 +134,7 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
         TextView tv1;
         TextView tv2;
         TextView tv3;
+        TextView tv4;
         RelativeLayout parentnotassigned;
         ShimmerFrameLayout shimmerFrameLayout;
 
@@ -137,6 +144,7 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
             tv1 = itemView.findViewById(R.id.dda_name);
             tv2 = itemView.findViewById(R.id.ada_name);
             tv3 = itemView.findViewById(R.id.address);
+            tv4 = itemView.findViewById(R.id.date);
             shimmerFrameLayout = itemView.findViewById(R.id.locations_shimmer);
         }
 

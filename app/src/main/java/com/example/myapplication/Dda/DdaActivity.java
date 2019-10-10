@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -243,6 +242,7 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
 
             if (deniedCount == 0) {
                 navigationView.setCheckedItem(R.id.nav_home);
+                getSupportActionBar().setTitle("HOME");
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt_dda()).commit();
 
             } else {

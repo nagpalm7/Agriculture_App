@@ -3,7 +3,6 @@ package com.example.myapplication.Dda;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
@@ -30,7 +29,6 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.myapplication.DatabaseHelper;
 import com.example.myapplication.R;
 import com.example.myapplication.login_activity;
 
@@ -49,14 +47,14 @@ public class villagenameActivity extends AppCompatActivity {
     private ArrayList<Integer> villageIds;
     private ArrayList<Integer> currentVillages;
     private String nextUrl;
+    private boolean isNextBusy = false;
     private VillagesUnderDistrictAdapter adapter;
     private LinearLayoutManager layoutManager;
     private ProgressBar progressBar;
+    private ProgressBar listNextProgressBar;
     private String mAdoId;
-    private boolean flag = true;
     private SearchView searchView;
-    private SQLiteDatabase mDatabase;
-    private DatabaseHelper databaseHelper;
+    //private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +66,7 @@ public class villagenameActivity extends AppCompatActivity {
         villageIds = new ArrayList<>();
         RecyclerView recyclerView = findViewById(R.id.villages_list_recy);
         progressBar = findViewById(R.id.village_list_loading);
+        listNextProgressBar = findViewById(R.id.village_list_next);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new VillagesUnderDistrictAdapter(this, villagesNames, villageIds);
@@ -81,11 +80,11 @@ public class villagenameActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: URL " + url);
         SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
-        boolean isSqlDatabaseAvail = preferences.getBoolean("isSqlDatabaseAvail", false);
+       /* boolean isSqlDatabaseAvail = preferences.getBoolean("isSqlDatabaseAvail", false);
         databaseHelper = new DatabaseHelper(this);
-        mDatabase = databaseHelper.getWritableDatabase();
-//        if (!isSqlDatabaseAvail)
-        loadData(url, 0);
+        if (!isSqlDatabaseAvail)*/
+        progressBar.setVisibility(View.VISIBLE);
+        loadData(url);
         /*else
         {
             Cursor res = databaseHelper.getAllData();
@@ -109,7 +108,7 @@ public class villagenameActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             }
         }*/
-        /*recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             int totalCount, pastCount, visibleCount;
 
             @Override
@@ -119,14 +118,17 @@ public class villagenameActivity extends AppCompatActivity {
                     pastCount = layoutManager.findFirstVisibleItemPosition();
                     visibleCount = layoutManager.getChildCount();
                     if ((pastCount + visibleCount) >= totalCount) {
-                        if (!nextUrl.equals("null") && !isNextBusy)
+                        if (!nextUrl.equals("null") && !isNextBusy) {
+                            listNextProgressBar.setVisibility(View.VISIBLE);
                             loadData(nextUrl);
+                        }
                         Log.d(TAG, "onScrolled:");
                     }
+                    Log.d(TAG, "onScrolled: " + totalCount + "total" + pastCount + "past" + visibleCount + "visible");
                 }
                 super.onScrolled(recyclerView, dx, dy);
             }
-        });*/
+        });
     }
 
     @Override
@@ -168,24 +170,27 @@ public class villagenameActivity extends AppCompatActivity {
         });
     }
 
-    private void loadData(String url, final int j) {
-        if (!url.equals("null")) {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                int k = j;
-                                JSONObject rootObject = new JSONObject(String.valueOf(response));
-                                nextUrl = rootObject.getString("next");
-                                JSONArray resultsArray = rootObject.getJSONArray("results");
-                                for (int i = 0; i < resultsArray.length(); i++, k++) {
-                                    JSONObject villageObject = resultsArray.getJSONObject(i);
-                                    String villageName = villageObject.getString("village");
-                                    villagesNames.add(villageName);
-                                    int villageId = villageObject.getInt("id");
-                                    villageIds.add(villageId);
-                                    boolean result = databaseHelper.insertData(villageId, villageName);
+    private void loadData(String url) {
+        isNextBusy = true;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject rootObject = new JSONObject(String.valueOf(response));
+                            nextUrl = rootObject.getString("next");
+                            JSONArray resultsArray = rootObject.getJSONArray("results");
+                            for (int i = 0; i < resultsArray.length(); i++) {
+                                JSONObject villageObject = resultsArray.getJSONObject(i);
+                                String villageName = villageObject.getString("village");
+                                villagesNames.add(villageName);
+                                int villageId = villageObject.getInt("id");
+                                villageIds.add(villageId);
+                                if (currentVillages.contains(villageId)) {
+                                    adapter.addtoCurrentVillagesPos(villagesNames.size() + i - 1);
+                                    Log.d(TAG, "onResponse: loaddata " + currentVillages);
+                                }
+                                    /*boolean result = databaseHelper.insertData(villageId, villageName);
                                     SharedPreferences.Editor editor = getSharedPreferences("tokenFile",
                                             MODE_PRIVATE).edit();
                                     if (result) {
@@ -194,67 +199,63 @@ public class villagenameActivity extends AppCompatActivity {
                                     } else {
                                         editor.remove("isSqlDatabaseAvail");
                                         editor.apply();
-                                    }
-                                    if (currentVillages.contains(villageId)) {
-                                        adapter.addtoCurrentVillagesPos(k);
-                                        Log.d(TAG, "onResponse: loaddata " + currentVillages + k);
-                                    }
-                                }
-//                                if (flag) {
-//                                    flag = false;
-//                                    loadData(nextUrl);
-//                                }
-                                loadData(nextUrl, k);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                progressBar.setVisibility(View.GONE);
-                                Toast.makeText(villagenameActivity.this, "Please try again",
-                                        Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "onResponse: JSON EXCEPTION " + e);
+                                    }*/
                             }
+                            progressBar.setVisibility(View.GONE);
+                            listNextProgressBar.setVisibility(View.GONE);
+                            adapter.notifyDataSetChanged();
+                            isNextBusy = false;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            progressBar.setVisibility(View.GONE);
+                            listNextProgressBar.setVisibility(View.GONE);
+                            Toast.makeText(villagenameActivity.this, "Please try again",
+                                    Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "onResponse: JSON EXCEPTION " + e);
+                            isNextBusy = false;
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            if (error instanceof NoConnectionError)
-                                Toast.makeText(villagenameActivity.this, "Please check your Internet Connection!",
-                                        Toast.LENGTH_LONG).show();
-                            else
-                                Toast.makeText(villagenameActivity.this, "Something went wrong, please try again!",
-                                        Toast.LENGTH_LONG).show();
-                            Log.d(TAG, "onErrorResponse: loadData " + error);
-                        }
-                    }) {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put("Authorization", "Token " + token);
-                    return map;
-                }
-            };
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-            jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
-                @Override
-                public int getCurrentTimeout() {
-                    return 50000;
-                }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(villagenameActivity.this, "Please check your Internet Connection!",
+                                    Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(villagenameActivity.this, "Something went wrong, please try again!",
+                                    Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "onErrorResponse: loadData " + error);
+                        isNextBusy = false;
+                        progressBar.setVisibility(View.GONE);
+                        listNextProgressBar.setVisibility(View.GONE);
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Authorization", "Token " + token);
+                return map;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        /*jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
 
-                @Override
-                public int getCurrentRetryCount() {
-                    return 50000;
-                }
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
 
-                @Override
-                public void retry(VolleyError error) throws VolleyError {
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
 
-                }
-            });
-            requestQueue.add(jsonObjectRequest);
-        } else {
-            adapter.notifyDataSetChanged();
-            progressBar.setVisibility(View.GONE);
-        }
+            }
+        });*/
+        requestQueue.add(jsonObjectRequest);
     }
 
     private void saveChanges() {

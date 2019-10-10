@@ -48,6 +48,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dmax.dialog.SpotsDialog;
+
 public class ado_map_activity extends AppCompatActivity
         implements
         GoogleApiClient.ConnectionCallbacks,
@@ -74,6 +76,7 @@ public class ado_map_activity extends AppCompatActivity
     Location mLastLocation;
     Marker mCurrLocationMarker;
     MarkerOptions Dlocation;
+    private android.app.AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +136,8 @@ public class ado_map_activity extends AppCompatActivity
                     //marking the position
                     map.addMarker(Dlocation);
 
-                    buildGoogleApiClient();
+                    //buildGoogleApiClient();
+
                     map.setMyLocationEnabled(true);
 
 
@@ -187,6 +191,7 @@ public class ado_map_activity extends AppCompatActivity
         }
 
         geofencelimit = map.addCircle(circleOptions);
+        dialog.dismiss();
 
 
     }
@@ -543,23 +548,31 @@ public class ado_map_activity extends AppCompatActivity
 
     }
 
-
-
     @Override
     public void onPause() {
         super.onPause();
         //stop location updates when Activity is no longer active
         if (mGoogleApiClient != null) {
+            isEntered = false;
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
         }
     }
-
 
     @Override
     protected void onResume() {
         super.onResume();
-        isEntered= false;
-        buildGoogleApiClient();
+        Log.d(TAG, "onResume: superhere");
+
+        if (true) {
+            if (true) {
+                dialog = new SpotsDialog.Builder().setContext(this).setMessage("Connecting...")
+                        .setCancelable(false).build();
+                dialog.show();
+                Log.d(TAG, "onResume: here");
+                buildGoogleApiClient();
+            }
+        }
     }
 }
 

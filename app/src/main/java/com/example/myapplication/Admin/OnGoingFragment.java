@@ -48,6 +48,7 @@ public class OnGoingFragment extends Fragment {
     private ArrayList<String> mAdoNames;
     private ArrayList<String> mAddresses;
     private ArrayList<String> mIds;
+    private ArrayList<String> mdate;
     private AdminLocationAdapter adapter;
     private LinearLayoutManager layoutManager;
     private String token;
@@ -83,7 +84,8 @@ public class OnGoingFragment extends Fragment {
         mAdoNames = new ArrayList<>();
         mAddresses = new ArrayList<>();
         mIds = new ArrayList<>();
-        adapter = new AdminLocationAdapter(getActivity(), mDDaNames, mAdoNames, mAddresses, mIds, true);
+        mdate = new ArrayList<>();
+        adapter = new AdminLocationAdapter(getActivity(), mDDaNames, mAdoNames, mAddresses, mIds, true,mdate);
         recyclerView.setAdapter(adapter);
         final SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
@@ -128,8 +130,10 @@ public class OnGoingFragment extends Fragment {
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 JSONObject mDdaObject = singleObject.getJSONObject("dda");
+                                String date = singleObject.getString("acq_date");
                                 String ddaName = mDdaObject.getString("name");
                                 mDDaNames.add(ddaName);
+                                mdate.add(date);
                                 String id = singleObject.getString("id");
                                 mIds.add(id);
                                 try {
@@ -199,8 +203,10 @@ public class OnGoingFragment extends Fragment {
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 JSONObject mDdaObject = singleObject.getJSONObject("dda");
+                                String date = singleObject.getString("acq_date");
                                 String ddaName = mDdaObject.getString("name");
                                 mDDaNames.add(ddaName);
+                                mdate.add(date);
                                 String id = singleObject.getString("id");
                                 mIds.add(id);
                                 try {

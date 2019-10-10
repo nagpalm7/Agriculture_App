@@ -267,6 +267,8 @@ public class map_fragemnt extends Fragment {
 
         }
 
+        mClusterManager.cluster();
+
     }
 
     void nextRequest(){

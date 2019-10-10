@@ -55,6 +55,20 @@ public class AdoActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.nav_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+       /* try {
+            Intent intent = getIntent();
+            boolean isReportSubmitted = intent.getBooleanExtra("isReportSubmitted", false);
+            if (isReportSubmitted)
+            {
+                navigationView.getMenu().getItem(2).setChecked(true);
+                getSupportFragmentManager().beginTransaction().replace(R.id.container_ado, new ado_complete_fragment()).commit();
+                getSupportActionBar().setTitle("Completed Locations");
+            }
+        }
+        catch (Exception e)
+        {
+            Log.d("ADOACTIVITY", "onCreate: INTENT EXCEPTION");
+        }*/
         if (getPermission()) {
             navigationView.getMenu().getItem(0).setChecked(true);
             getSupportFragmentManager().beginTransaction().replace(R.id.container_ado, new map_fragemnt_ado()).commit();

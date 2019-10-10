@@ -29,6 +29,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,6 +49,7 @@ public class pending_fragment extends Fragment {
     private ArrayList<String> mAddress;
     private ArrayList<String> mpkado;
     private ArrayList<String> mpkdda;
+    private ArrayList<String> mdate;
     private String token;
     private String villagename;
     private String blockname;
@@ -91,7 +93,8 @@ public class pending_fragment extends Fragment {
         mAddress = new ArrayList<>();
         mpkado = new ArrayList<>();
         mpkdda = new ArrayList<>();
-        recyclerViewAdater = new AdminLocationAdapter(getActivity(), mDdaName, mAdaName,true, mAddress, null,mpkado,mpkdda);
+        mdate = new ArrayList<>();
+        recyclerViewAdater = new AdminLocationAdapter(getActivity(), mDdaName, mAdaName,true, mAddress, null,mpkado,mpkdda,mdate);
         recyclerView.setAdapter(recyclerViewAdater);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -100,7 +103,6 @@ public class pending_fragment extends Fragment {
         final SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
         Log.d(TAG, "onCreateView: " + token);
-
         Log.d(TAG, "onCreateView: inflated fragment_ongoing");
 
         final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
@@ -119,9 +121,11 @@ public class pending_fragment extends Fragment {
                     }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
+                        String date = c.getString("acq_date");
                         JSONObject adoobj = c.getJSONObject("ado");
                         JSONObject authado = adoobj.getJSONObject("auth_user");
                         mpkado.add(authado.getString("pk"));
+                        mdate.add(date);
 
                         JSONObject ddaobj = c.getJSONObject("dda");
                         JSONObject authddo = ddaobj.getJSONObject("auth_user");
@@ -187,8 +191,10 @@ public class pending_fragment extends Fragment {
                         JSONObject c = jsonArray.getJSONObject(i);
                         try {
                             JSONObject adoobj = c.getJSONObject("ado");
+                            String date = c.getString("acq_date");
                             JSONObject authado = adoobj.getJSONObject("auth_user");
                             mpkado.add(authado.getString("pk"));
+                            mdate.add(date);
                         } catch (JSONException e) {
                             mpkado.add("null");
                         }
@@ -346,8 +352,10 @@ public class pending_fragment extends Fragment {
 
                             try {
                                 JSONObject adoobj = c.getJSONObject("ado");
+                                String date = c.getString("acq_date");
                                 JSONObject authado = adoobj.getJSONObject("auth_user");
                                 mpkado.add(authado.getString("pk"));
+                                mdate.add(date);
                             } catch (JSONException e) {
                                 mpkado.add("null");
                             }
@@ -430,8 +438,10 @@ public class pending_fragment extends Fragment {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject c = jsonArray.getJSONObject(i);
                             JSONObject adoobj = c.getJSONObject("ado");
+                            String date = c.getString("acq_date");
                             JSONObject authado = adoobj.getJSONObject("auth_user");
                             mpkado.add(authado.getString("pk"));
+                            mdate.add(date);
 
                             JSONObject ddaobj = c.getJSONObject("dda");
                             JSONObject authddo = ddaobj.getJSONObject("auth_user");

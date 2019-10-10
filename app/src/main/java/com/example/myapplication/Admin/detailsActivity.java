@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.ClientError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -170,8 +171,24 @@ public class detailsActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, "onErrorResponse: getDetails " + error);
-                        Toast.makeText(detailsActivity.this, "Something went wrong, try again later!",
-                                Toast.LENGTH_LONG).show();
+                        if (error instanceof ClientError) {
+                            if (isado) {
+
+                                Toast.makeText(detailsActivity.this, "ado not assigned",
+                                        Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(detailsActivity.this, "dda not assigned",
+                                        Toast.LENGTH_LONG).show();
+
+                            }
+                        } else {
+                            Toast.makeText(detailsActivity.this, "Something went wrong, try again later!",
+                                    Toast.LENGTH_LONG).show();
+
+
+                        }
+
+
                     }
                 }) {
             @Override

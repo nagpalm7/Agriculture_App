@@ -234,7 +234,8 @@ public class ado_fragment extends Fragment {
                                 userinfo.add("NOT ASSIGNED");
                             }
                         }
-                        String pk = singleObject.getString("id");
+                        JSONObject authObject = singleObject.getJSONObject("auth_user");
+                        String pk = authObject.getString("pk");
                         mPkList.add(pk);
                         String id = singleObject.getString("id");
                         mUserId.add(id);
