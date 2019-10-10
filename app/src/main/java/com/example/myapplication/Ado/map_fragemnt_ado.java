@@ -243,6 +243,7 @@ public class map_fragemnt_ado extends Fragment {
     }
 
     private void addmarkers() {
+        Log.d(TAG, "addmarkers: inside addmaekers");
 
         for (int i = 0; i < latitude.size(); i++) {
             double lat = latitude.get(i);
@@ -253,7 +254,9 @@ public class map_fragemnt_ado extends Fragment {
 
             mClusterManager.addItem(item);
 
+
         }
+        mClusterManager.cluster();
 
     }
 

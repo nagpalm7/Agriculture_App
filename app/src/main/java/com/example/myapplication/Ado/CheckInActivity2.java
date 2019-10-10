@@ -2,6 +2,7 @@ package com.example.myapplication.Ado;
 
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -76,6 +77,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
+import id.zelory.compressor.Compressor;
 
 import static com.example.myapplication.AppNotificationChannels.CHANNEL_1_ID;
 
@@ -137,6 +139,8 @@ public class CheckInActivity2 extends AppCompatActivity implements
     private boolean isReportSubmitted = false;
     private int photosUploadedCount = 0;
     private NotificationManagerCompat notificationManager;
+    private NotificationCompat.Builder notificationBuilder;
+    private Context loctionContext;
 
     public static void getStatus(Boolean status) {
         Log.d("getStatus2", "getStatus: comehere" + status);
@@ -165,7 +169,6 @@ public class CheckInActivity2 extends AppCompatActivity implements
         pickPhotoButton = findViewById(R.id.pick_photo);
         submitReportButton = findViewById(R.id.submit_report_ado);
         notificationManager = NotificationManagerCompat.from(this);
-        buildGoogleApiClient();
         Intent intent = getIntent();
         latitude = intent.getDoubleExtra("lat", 0);
         longitude = intent.getDoubleExtra("long", 0);
@@ -429,10 +432,17 @@ public class CheckInActivity2 extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == IMAGE_CAPTURE_RC) {
             if (resultCode == RESULT_OK) {
-                mImagesPath.add(imageFilePath);
                 File file = new File(imageFilePath);
-                mImages.add(file);
-                adapter.notifyDataSetChanged();
+                try {
+                    mImagesPath.add(imageFilePath);
+                    File compressedFile = new Compressor(CheckInActivity2.this).compressToFile(file);
+                    mImages.add(compressedFile);
+                    adapter.notifyDataSetChanged();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Unable to load Image, please try again!",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -734,7 +744,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
 //        if (actionTaken.equals("chalaan"))
 //            mImages.add(chalaanFile);
         final int progressMax = mImages.size() - photosUploadedCount;
-        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+        notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_upload)
                 .setContentTitle("Uploading Photos")
                 .setContentText("0/" + progressMax)
@@ -743,69 +753,76 @@ public class CheckInActivity2 extends AppCompatActivity implements
                 .setOnlyAlertOnce(true)
                 .setProgress((int) mImages.get(photosUploadedCount).length(), 0, false);
         notificationManager.notify(1, notificationBuilder.build());
-        for (int pos = photosUploadedCount; pos < mImages.size(); pos++) {
-            final int finalPos = pos;
-            AndroidNetworking.upload(imageUploadUrl)
-                    .addHeaders("Authorization", "Token " + token)
-                    .addMultipartParameter("report", reportId)
-                    .addMultipartFile("image", mImages.get(pos))
-                    .setTag("Upload Images")
-                    .setPriority(Priority.HIGH)
-                    .build()
-                    .setUploadProgressListener(new UploadProgressListener() {
-                        @Override
-                        public void onProgress(long bytesUploaded, long totalBytes) {
-                            Log.d(TAG, "onProgress: " + bytesUploaded + "files uploaded: " + finalPos);
-                            if (bytesUploaded == totalBytes) {
-                                notificationBuilder.setProgress(0, 0, false)
-                                        .setContentText((finalPos + 1) + "/" + mImages.size());
-                                notificationManager.notify(1, notificationBuilder.build());
-                            } else {
-                                notificationBuilder.setProgress((int) totalBytes, (int) (bytesUploaded / totalBytes), false);
-                                notificationManager.notify(1, notificationBuilder.build());
-                            }
-                        }
-                    })
-                    .getAsJSONObject(new JSONObjectRequestListener() {
-                                         @Override
-                                         public void onResponse(JSONObject response) {
-                                             Log.d(TAG, "onResponse: " + response);
-                                             photosUploadedCount++;
-                                             if (finalPos == mImages.size() - 1) {
-                                                 Toast.makeText(CheckInActivity2.this, "Photos Uploaded", Toast.LENGTH_SHORT).show();
-                                                 notificationBuilder.setContentText("Upload Successful!")
-                                                         .setProgress(0, 0, false)
-                                                         .setOngoing(false);
-                                                 notificationManager.notify(1, notificationBuilder.build());
-                                                 Toast.makeText(CheckInActivity2.this, "Report Submitted Successfully", Toast.LENGTH_SHORT).show();
-                                                 reportSubmitLoading.dismiss();
-                                                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                                                 Intent intent = new Intent(CheckInActivity2.this, com.example.myapplication.login_activity.class);
-                                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                 startActivity(intent);
-                                                 finish();
-                                             } else {
-                                                 notificationBuilder.setProgress(0, 0, false)
-                                                         .setContentText((finalPos + 1) + "/" + (int) mImages.get(finalPos + 1).length());
-                                                 notificationManager.notify(1, notificationBuilder.build());
-                                             }
-                                         }
+//        for (int pos = photosUploadedCount; pos < mImages.size(); pos++) {
+//            final int finalPos = pos;
+        uploadingPhotos();
 
-                                         @Override
-                                         public void onError(ANError anError) {
-                                             Log.d(TAG, "onError: " + anError.getErrorBody());
-                                             notificationBuilder.setContentText("Upload Failed!")
+//        }
+    }
+
+    private void uploadingPhotos() {
+        AndroidNetworking.upload(imageUploadUrl)
+                .addHeaders("Authorization", "Token " + token)
+                .addMultipartParameter("report", reportId)
+                .addMultipartFile("image", mImages.get(photosUploadedCount))
+                .setTag("Upload Images")
+                .setPriority(Priority.HIGH)
+                .build()
+                .setUploadProgressListener(new UploadProgressListener() {
+                    @Override
+                    public void onProgress(long bytesUploaded, long totalBytes) {
+                        Log.d(TAG, "onProgress: " + bytesUploaded + "files uploaded: " + photosUploadedCount);
+                        if (bytesUploaded == totalBytes) {
+                            notificationBuilder.setProgress(0, 0, false)
+                                    .setContentText((photosUploadedCount + 1) + "/" + mImages.size());
+                            notificationManager.notify(1, notificationBuilder.build());
+                        } else {
+                            notificationBuilder.setProgress((int) totalBytes, (int) (bytesUploaded / totalBytes), false)
+                                    .setContentText(photosUploadedCount + "/" + mImages.size());
+                            notificationManager.notify(1, notificationBuilder.build());
+                        }
+                    }
+                })
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                                     @Override
+                                     public void onResponse(JSONObject response) {
+                                         Log.d(TAG, "onResponse: " + response);
+                                         photosUploadedCount++;
+                                         if (photosUploadedCount == mImages.size()) {
+                                             Toast.makeText(CheckInActivity2.this, "Photos Uploaded", Toast.LENGTH_SHORT).show();
+                                             notificationBuilder.setContentText("Upload Successful!")
                                                      .setProgress(0, 0, false)
                                                      .setOngoing(false);
                                              notificationManager.notify(1, notificationBuilder.build());
+                                             Toast.makeText(CheckInActivity2.this, "Report Submitted Successfully", Toast.LENGTH_SHORT).show();
                                              reportSubmitLoading.dismiss();
-                                             Toast.makeText(CheckInActivity2.this, "Photos Upload failed, please try again", Toast.LENGTH_SHORT).show();
+                                             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                             Intent intent = new Intent(CheckInActivity2.this, AdoActivity.class);
+                                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                             intent.putExtra("isReportSubmitted", true);
+                                             startActivity(intent);
+                                             finish();
+                                         } else {
+                                             notificationBuilder.setProgress(0, 0, false)
+                                                     .setContentText((photosUploadedCount + 1) + "/" + (int) mImages.get(photosUploadedCount + 1).length());
+                                             notificationManager.notify(1, notificationBuilder.build());
+                                             uploadingPhotos();
                                          }
-
                                      }
-                    );
 
-        }
+                                     @Override
+                                     public void onError(ANError anError) {
+                                         Log.d(TAG, "onError: " + anError.getErrorBody());
+                                         notificationBuilder.setContentText("Upload Failed!")
+                                                 .setProgress(0, 0, false)
+                                                 .setOngoing(false);
+                                         notificationManager.notify(1, notificationBuilder.build());
+                                         reportSubmitLoading.dismiss();
+                                         Toast.makeText(CheckInActivity2.this, "Photos Upload failed, please try again", Toast.LENGTH_SHORT).show();
+                                     }
+
+                                 }
+                );
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -815,8 +832,6 @@ public class CheckInActivity2 extends AppCompatActivity implements
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiClient.connect();
-
-
     }
 
     @Override
@@ -827,8 +842,6 @@ public class CheckInActivity2 extends AppCompatActivity implements
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         startgeofence(Dlocation);
-
-
     }
 
     private void startgeofence(MarkerOptions dlocation) {
@@ -874,13 +887,20 @@ public class CheckInActivity2 extends AppCompatActivity implements
     @Override
     public void onPause() {
         super.onPause();
-
+        isEntered = false;
         //stop location updates when Activity is no longer active
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        buildGoogleApiClient();
+
+    }
 
     @Override
     public void onConnectionSuspended(int i) {

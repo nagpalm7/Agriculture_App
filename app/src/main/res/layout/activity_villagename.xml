@@ -1,40 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:scrollbars="vertical">
+    android:scrollbars="vertical">-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Dda.villagenameActivity">
 
-    <RelativeLayout
+    <!-- <Button
+         android:id="@+id/saveChanges"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/villages_list_recy"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="24dp"
+         android:layout_marginBottom="16dp"
+         android:background="@drawable/shape"
+         android:padding="16dp"
+         android:text="SAVE CHANGES"
+         android:textColor="#ffffff" />-->
+
+    <ProgressBar
+        android:id="@+id/village_list_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminateDrawable="@drawable/progress" />
+
+    <ProgressBar
+        android:id="@+id/village_list_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:indeterminateDrawable="@drawable/progress"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/villages_list_recy"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".Dda.villagenameActivity">
+        android:layout_height="match_parent" />
 
-        <!-- <Button
-             android:id="@+id/saveChanges"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_below="@id/villages_list_recy"
-             android:layout_centerHorizontal="true"
-             android:layout_marginTop="24dp"
-             android:layout_marginBottom="16dp"
-             android:background="@drawable/shape"
-             android:padding="16dp"
-             android:text="SAVE CHANGES"
-             android:textColor="#ffffff" />-->
-
-        <ProgressBar
-            android:id="@+id/village_list_loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:indeterminateDrawable="@drawable/progress" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/villages_list_recy"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </RelativeLayout>
-</androidx.core.widget.NestedScrollView>
+</RelativeLayout><!--</androidx.core.widget.NestedScrollView>-->

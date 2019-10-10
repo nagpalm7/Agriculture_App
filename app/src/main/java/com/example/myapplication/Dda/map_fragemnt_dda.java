@@ -54,6 +54,7 @@ public class map_fragemnt_dda extends Fragment {
 
     public GoogleMap map = null;
     private String url_pending = "http://18.224.202.135/api/locations/dda/assigned";
+    private String url_unassigned = "http://18.224.202.135/api/locations/dda/unassigned";
     private String token;
     private String next;
     private SupportMapFragment mapFragment;
@@ -213,8 +214,8 @@ public class map_fragemnt_dda extends Fragment {
             @Override
             public void onRequestFinished(Request<Object> request) {
                 Log.d(TAG, "onRequestFinished: here too");
-               /* if(count == 0)nextRequest();
-                else if(count == 1)*/
+                if (count == 0) nextRequest();
+                else if (count == 1)
                 marklocation();
 
             }
@@ -243,6 +244,8 @@ public class map_fragemnt_dda extends Fragment {
 
     private void addmarkers() {
 
+        Log.d(TAG, "addmarkers: inside ");
+
         for (int i = 0; i < latitude.size(); i++) {
             double lat = latitude.get(i);
             double lon = longitude.get(i);
@@ -252,17 +255,18 @@ public class map_fragemnt_dda extends Fragment {
 
             mClusterManager.addItem(item);
 
+
         }
+
+        mClusterManager.cluster();
 
     }
 
-   /* void nextRequest(){
+    void nextRequest() {
         count = 1;
       next= url_unassigned;
       getMarkers(next);
-
-
-    }*/
+    }
 
     BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
