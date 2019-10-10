@@ -21,6 +21,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -45,7 +46,7 @@ public class ado_pending_fragment extends Fragment {
     private ArrayList<String> longitude;
     private ArrayList<String> latitude;
     private ArrayList<String> idList;
-    private String url = "http://13.235.100.235/api/locations/ado/pending";
+    private String url = "http://18.224.202.135/api/locations/ado/pending";
     private String nextUrl;
     private boolean isNextBusy = false;
     View view;
@@ -169,7 +170,24 @@ public class ado_pending_fragment extends Fragment {
                 return map;
             }
         };
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         requestQueue.add(jsonObjectRequest);
+
     }
 
     @Override

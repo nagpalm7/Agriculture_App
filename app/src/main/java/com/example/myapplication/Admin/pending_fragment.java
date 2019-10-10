@@ -23,6 +23,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -54,10 +55,10 @@ public class pending_fragment extends Fragment {
 
     //tags
     private static final String TAG = "pending_fragment";
-    private String url_unassigned = "http://13.235.100.235/api/locations/unassigned";
-    private String url_assigned = "http://13.235.100.235/api/locations/assigned";
-    private String next_unassigned_url;
-    private String next_assigned_url;
+    private String url_unassigned = "http://18.224.202.135/api/locations/unassigned";
+    private String url_assigned = "http://18.224.202.135/api/locations/assigned";
+    private String next_unassigned_url = "null";
+    private String next_assigned_url = "null";
     private LinearLayoutManager layoutManager;
     private AdminLocationAdapter recyclerViewAdater;
     private ProgressBar progressBar;
@@ -118,9 +119,18 @@ public class pending_fragment extends Fragment {
                     }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
+                        JSONObject adoobj = c.getJSONObject("ado");
+                        JSONObject authado = adoobj.getJSONObject("auth_user");
+                        mpkado.add(authado.getString("pk"));
+
+                        JSONObject ddaobj = c.getJSONObject("dda");
+                        JSONObject authddo = ddaobj.getJSONObject("auth_user");
+                        mpkdda.add(authddo.getString("pk"));
+                        Log.d(TAG, "onResponse: DDA " + authddo.getString("pk"));
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
+
                         try {
                             JSONObject mDdaObject = c.getJSONObject("dda");
                             String ddaName = mDdaObject.getString("name");
@@ -175,9 +185,13 @@ public class pending_fragment extends Fragment {
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
-                        JSONObject adoobj = c.getJSONObject("ado");
-                        JSONObject authado = adoobj.getJSONObject("auth_user");
-                        mpkado.add(authado.getString("pk"));
+                        try {
+                            JSONObject adoobj = c.getJSONObject("ado");
+                            JSONObject authado = adoobj.getJSONObject("auth_user");
+                            mpkado.add(authado.getString("pk"));
+                        } catch (JSONException e) {
+                            mpkado.add("null");
+                        }
 
                         JSONObject ddaobj = c.getJSONObject("dda");
                         JSONObject authddo = ddaobj.getJSONObject("auth_user");
@@ -231,6 +245,39 @@ public class pending_fragment extends Fragment {
 
 
         requestQueue.add(jsonObjectRequest1);
+        jsonObjectRequest1.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+
+        jsonObjectRequest2.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             int totalCount, pastItemCount, visibleItemCount;
@@ -263,7 +310,7 @@ public class pending_fragment extends Fragment {
     }
 
     private void loadNextLocations() {
-        switch (NEXT_LOCATION_COUNT) {
+        /*switch (NEXT_LOCATION_COUNT) {
             case 1:
                 if (!next_unassigned_url.equals("null"))
                     get_Unassigned();
@@ -274,6 +321,11 @@ public class pending_fragment extends Fragment {
                     get_Assigned();
                 NEXT_LOCATION_COUNT = 1;
                 break;
+        }*/
+        if (!next_unassigned_url.equals("null")) {
+            get_Unassigned();
+        } else if (!next_assigned_url.equals("null")) {
+            get_Assigned();
         }
 
     }
@@ -292,14 +344,12 @@ public class pending_fragment extends Fragment {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject c = jsonArray.getJSONObject(i);
 
-                            try{
+                            try {
                                 JSONObject adoobj = c.getJSONObject("ado");
                                 JSONObject authado = adoobj.getJSONObject("auth_user");
                                 mpkado.add(authado.getString("pk"));
-
                             } catch (JSONException e) {
-                                e.printStackTrace();
-                                mpkado.add(null);
+                                mpkado.add("null");
                             }
 
                             JSONObject ddaobj = c.getJSONObject("dda");
@@ -321,9 +371,9 @@ public class pending_fragment extends Fragment {
                             }
                             mAddress.add(villagename.toUpperCase() + ", "
                                     + blockname.toUpperCase() + ", " + district.toUpperCase());
-                            recyclerViewAdater.notifyDataSetChanged();
-                            isNextBusy = false;
                         }
+                        recyclerViewAdater.notifyDataSetChanged();
+                        isNextBusy = false;
                     } catch (JSONException e) {
                         Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                         e.printStackTrace();
@@ -345,12 +395,30 @@ public class pending_fragment extends Fragment {
                     return map;
                 }
             };
+        jsonObjectRequest1.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
             requestQueue.add(jsonObjectRequest1);
         requestFinished(requestQueue);
+
     }
 
     private void get_Assigned() {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        isNextBusy = true;
         progressBar.setVisibility(View.VISIBLE);
             final JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.GET, next_assigned_url, null, new Response.Listener<JSONObject>() {
                 @Override
@@ -361,6 +429,13 @@ public class pending_fragment extends Fragment {
                         next_assigned_url = jsonObject.getString("next");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject c = jsonArray.getJSONObject(i);
+                            JSONObject adoobj = c.getJSONObject("ado");
+                            JSONObject authado = adoobj.getJSONObject("auth_user");
+                            mpkado.add(authado.getString("pk"));
+
+                            JSONObject ddaobj = c.getJSONObject("dda");
+                            JSONObject authddo = ddaobj.getJSONObject("auth_user");
+                            mpkdda.add(authddo.getString("pk"));
                             villagename = c.getString("village_name");
                             blockname = c.getString("block_name");
                             district = c.getString("district");
@@ -376,8 +451,9 @@ public class pending_fragment extends Fragment {
                             }
                             mAddress.add(villagename.toUpperCase() + ", " +
                                     blockname.toUpperCase() + ", " + district.toUpperCase());
-                            recyclerViewAdater.notifyDataSetChanged();
                         }
+                        recyclerViewAdater.notifyDataSetChanged();
+                        isNextBusy = false;
                     } catch (JSONException e) {
                         Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                         e.printStackTrace();
@@ -401,6 +477,22 @@ public class pending_fragment extends Fragment {
                     return map;
                 }
             };
+        jsonObjectRequest2.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
             requestQueue.add(jsonObjectRequest2);
         requestFinished(requestQueue);
     }
@@ -419,7 +511,7 @@ public class pending_fragment extends Fragment {
 
     private void sendNotifications() {
         isSendingNotifications = true;
-        String url = "http://13.235.100.235/api/trigger/sms/pending";
+        String url = "http://18.224.202.135/api/trigger/sms/pending";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -451,6 +543,22 @@ public class pending_fragment extends Fragment {
             }
         };
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         requestQueue.add(jsonObjectRequest);
     }
 }

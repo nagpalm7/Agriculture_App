@@ -20,6 +20,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -40,7 +41,7 @@ public class DdaOngoingFragment extends Fragment {
     private ArrayList<String> Name;
     private ArrayList<String> Address;
     private DdaongoingAdapter ddaongoingAdapter;
-    private String url_get_ongoing = "http://13.235.100.235/api/locations/dda/ongoing";
+    private String url_get_ongoing = "http://18.224.202.135/api/locations/dda/ongoing";
     private String next_url_get_ongoing;
     private String token;
     private String villagename;
@@ -161,7 +162,22 @@ public class DdaOngoingFragment extends Fragment {
                 return map;
             }
         };
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
 
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         requestQueue.add(jsonObjectRequest);
     }
 
@@ -218,6 +234,22 @@ public class DdaOngoingFragment extends Fragment {
                     return map;
                 }
             };
+        jsonObjectRequest1.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
             requestQueue1.add(jsonObjectRequest1);
     }
 

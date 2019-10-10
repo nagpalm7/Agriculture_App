@@ -19,6 +19,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -68,13 +69,13 @@ public class EditActivity extends AppCompatActivity {
         isDdo = intent.getBooleanExtra("isDdo", false);
         //place = intent.getStringExtra("place");
         if (isDdo) {
-            spinnerUrl = "http://13.235.100.235/api/district/";
+            spinnerUrl = "http://18.224.202.135/api/district/";
         } else {
-            spinnerUrl = "http://13.235.100.235/api/villages-list/";
+            spinnerUrl = "http://18.224.202.135/api/villages-list/";
         }
         Log.d(TAG, "onCreate: SPINNER URL " + spinnerUrl);
         //id = "2";
-        final String url = "http://13.235.100.235/api/user/" + id + "/";
+        final String url = "http://18.224.202.135/api/user/" + id + "/";
         getDetails(url);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +151,22 @@ public class EditActivity extends AppCompatActivity {
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonObjectRequest);
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
     }
 
     private void saveChanges(String url) {
@@ -200,7 +217,22 @@ public class EditActivity extends AppCompatActivity {
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonObjectRequest);
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
 
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
     }
 
     private void fetchSpinnerData(String url) {
@@ -278,5 +310,21 @@ public class EditActivity extends AppCompatActivity {
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonArrayRequest);
+        jsonArrayRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
     }
 }

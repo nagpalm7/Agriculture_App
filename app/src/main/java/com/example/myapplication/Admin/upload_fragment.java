@@ -38,10 +38,9 @@ import static com.example.myapplication.AppNotificationChannels.CHANNEL_2_ID;
 
 public class upload_fragment extends Fragment {
 
-    private String url = "http://13.235.100.235/api/upload/locations/";
+    private String url = "http://18.224.202.135/api/upload/locations/";
     private String token;
     private static final String TAG = "UploadFragment";
-    private String filePath;
     private File csvFile;
     private AlertDialog uploadingDialog;
     private NotificationManagerCompat manager;
@@ -74,7 +73,6 @@ public class upload_fragment extends Fragment {
                 .withChosenListener(new ChooserDialog.Result() {
                     @Override
                     public void onChoosePath(String s, File file) {
-                        filePath = s;
                         csvFile = file;
                         uploadingDialog = new SpotsDialog.Builder().setContext(getActivity())
                                 .setMessage("Uploading Csv...")

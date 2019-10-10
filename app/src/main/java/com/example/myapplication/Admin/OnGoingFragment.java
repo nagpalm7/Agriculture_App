@@ -22,6 +22,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -41,7 +42,7 @@ import java.util.Map;
  */
 public class OnGoingFragment extends Fragment {
 
-    private String ongoingUrl = "http://13.235.100.235/api/locations/ongoing";
+    private String ongoingUrl = "http://18.224.202.135/api/locations/ongoing";
 
     private ArrayList<String> mDDaNames;
     private ArrayList<String> mAdoNames;
@@ -166,6 +167,22 @@ public class OnGoingFragment extends Fragment {
             }
         };
         requestQueue.add(jsonObjectRequest);
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
     }
 
     private void get_Ongoing() {
@@ -223,6 +240,22 @@ public class OnGoingFragment extends Fragment {
         };
         requestQueue.add(jsonObjectRequest);
         requestFinished(requestQueue);
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
     }
 
 

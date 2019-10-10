@@ -39,6 +39,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -107,9 +108,9 @@ public class CheckInActivity2 extends AppCompatActivity implements
     private ReportImageRecyAdapter adapter;
     private Button pickPhotoButton;
     private Button submitReportButton;
-    private String reportSubmitUrl = "http://13.235.100.235/api/report-ado/add/";
-    private String imageUploadUrl = "http://13.235.100.235/api/upload/images/";
-    private String villageListUrl = "http://13.235.100.235/api/user/";
+    private String reportSubmitUrl = "http://18.224.202.135/api/report-ado/add/";
+    private String imageUploadUrl = "http://18.224.202.135/api/upload/images/";
+    private String villageListUrl = "http://18.224.202.135/api/user/";
     private String farmerDetailsUrl = "http://117.240.196.238:8080/api/CRM/getFarmerDetail";
     private ArrayList<String> mImagesPath;
     private ArrayList<File> mImages;
@@ -164,11 +165,12 @@ public class CheckInActivity2 extends AppCompatActivity implements
         pickPhotoButton = findViewById(R.id.pick_photo);
         submitReportButton = findViewById(R.id.submit_report_ado);
         notificationManager = NotificationManagerCompat.from(this);
-        Dlocation = new MarkerOptions().position(new LatLng(30.76338, 76.7689826)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         buildGoogleApiClient();
         Intent intent = getIntent();
         latitude = intent.getDoubleExtra("lat", 0);
         longitude = intent.getDoubleExtra("long", 0);
+        Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Locati  on").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
         String id = intent.getStringExtra("id");
         locationId = id;
         destVillageName = intent.getStringExtra("village_name");
@@ -285,7 +287,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
         submitReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (true) {
+                if (isEntered) {
                     Log.d(TAG, "onClick: inside it damn!");
 
 //                    if (actionTaken.equals("Chalaan")) {
@@ -597,6 +599,22 @@ public class CheckInActivity2 extends AppCompatActivity implements
                     }
                 }) {
         };
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         requestQueue.add(jsonObjectRequest);
     }
 
@@ -691,6 +709,22 @@ public class CheckInActivity2 extends AppCompatActivity implements
                     return map;
                 }
             };
+            jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 50000;
+                }
+
+                @Override
+                public int getCurrentRetryCount() {
+                    return 50000;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+
+                }
+            });
             requestQueue.add(jsonObjectRequest);
         } else
             uploadPhotos();
@@ -799,7 +833,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
 
     private void startgeofence(MarkerOptions dlocation) {
         if (dlocation != null) {
-            Geofence geofence = creategeofence(dlocation.getPosition(), 300f);
+            Geofence geofence = creategeofence(dlocation.getPosition(), 350f);
             geofencingRequest = creategeofencerequest(geofence);
             addgeofence(geofence);
         }

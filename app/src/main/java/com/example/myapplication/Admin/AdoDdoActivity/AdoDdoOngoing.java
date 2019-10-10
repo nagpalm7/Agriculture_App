@@ -83,7 +83,7 @@ public class AdoDdoOngoing extends Fragment {
             role = "dda";
         else
             role = "ado";
-        String mUrl = "http://13.235.100.235/api/admin/" + role + "/" + mDdoId + "/ongoing";
+        String mUrl = "http://18.224.202.135/api/admin/" + role + "/" + mDdoId + "/ongoing";
         Log.d("url", "onCreateView: ongoing" + mUrl);
         progressBar = view.findViewById(R.id.Ddo_ongoing_loading);
         recyclerView = view.findViewById(R.id.Ddo_ongoing_recyclerview);
@@ -152,6 +152,7 @@ public class AdoDdoOngoing extends Fragment {
                                 locationNames.add(locName);
                                 locationAddresses.add(locAdd);
                             }
+                            Log.d(TAG, "onResponse: NOTIFY " + mAdoNames + "    " + locationNames + "   " + locationAddresses);
                             adapter.mshowshimmer = false;
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {

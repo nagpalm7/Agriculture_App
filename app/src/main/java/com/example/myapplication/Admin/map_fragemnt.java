@@ -23,6 +23,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -51,8 +52,8 @@ public class map_fragemnt extends Fragment {
     private final String TAG = "map fragment";
 
     public GoogleMap map = null;
-    private String url_unassigned = "http://13.235.100.235/api/locations/unassigned";
-    private String url_assigned = "http://13.235.100.235/api/locations/assigned";
+    private String url_unassigned = "http://18.224.202.135/api/locations/unassigned";
+    private String url_assigned = "http://18.224.202.135/api/locations/assigned";
     private String token;
     private String next;
     private SupportMapFragment mapFragment;
@@ -193,6 +194,22 @@ public class map_fragemnt extends Fragment {
         };
         jsonObjectRequest2.setTag("MAP REQUEEST");
         requestQueue.add(jsonObjectRequest2);
+        jsonObjectRequest2.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         requestFinished(requestQueue);
     }
     private void requestFinished(RequestQueue queue) {
@@ -237,7 +254,7 @@ public class map_fragemnt extends Fragment {
 
     }
 
-    void addmarkers(){
+    private void addmarkers() {
 
         for(int i = 0 ;i<latitude.size();i++){
             double lat = latitude.get(i);

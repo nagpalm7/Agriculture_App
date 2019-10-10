@@ -20,6 +20,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -37,9 +38,9 @@ import java.util.Map;
 public class DdaselectAdo extends AppCompatActivity {
     private static final String TAG = "DdaselectAdo";
     private ArrayList<String> nameofado;
-    private ArrayList<String> villagename;
+    private Map<Integer, ArrayList<String>> villagename;
 
-    private String urlget = "http://13.235.100.235/api/ado/";
+    private String urlget = "http://18.224.202.135/api/ado/";
     private String token;
     private DdaAdoListAdapter ddaAdoListAdapter;
     private String idtopass;
@@ -57,7 +58,7 @@ public class DdaselectAdo extends AppCompatActivity {
 
 
         nameofado = new ArrayList<String>();
-        villagename = new ArrayList<String>();
+        villagename = new HashMap<>();
         progressBar = findViewById(R.id.ado_list_loading);
         ddaAdoListAdapter = new DdaAdoListAdapter(DdaselectAdo.this,nameofado,villagename);
         RecyclerView review = findViewById(R.id.RecyclerViewadolist);
@@ -69,11 +70,11 @@ public class DdaselectAdo extends AppCompatActivity {
         //getting location id coming from unassigned fragment to this activity
         Bundle extras = getIntent().getExtras();
         idtopass = extras.getString("Id_I_Need");
-        Log.d(TAG, "onCreate: Id_I_Need="+idtopass);
+        Log.d(TAG, "onCreate: Id_I_Need=" + idtopass);
         ddaAdoListAdapter.getlocationid(idtopass);
 
 
-        Toast.makeText(this, "List of Ado's", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "List of Ado's", Toast.LENGTH_SHORT).show();
         loadData(urlget);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("List of Ado's");
@@ -111,20 +112,23 @@ public class DdaselectAdo extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 try {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
-
+                    nextUrl = jsonObject.getString("next");
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c =jsonArray.getJSONObject(i);
                         adoid = c.getString("id");
                         ddaAdoListAdapter.getadoid(adoid);
-                        nameofado.add(c.getString("name"));
+                        Log.d(TAG, "onResponse: ID " + adoid);
+                        nameofado.add(c.getString("name").toUpperCase());
                         JSONArray villageArray = c.getJSONArray("village");
+                        ArrayList<String> villagesList = new ArrayList<>();
                         for (int j = 0; j < villageArray.length(); j++)
                         {
                             JSONObject singleObject = villageArray.getJSONObject(j);
                             String village = singleObject.getString("village");
-                            villagename.add(singleObject.getString("village"));
+                            villagesList.add(village);
                         }
+                        villagename.put(i, villagesList);
                     }
                     isNextBusy = false;
                     ddaAdoListAdapter.notifyDataSetChanged();
@@ -157,7 +161,22 @@ public class DdaselectAdo extends AppCompatActivity {
                 return map;
             }
         };
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
 
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         requestQueue.add(jsonObjectRequest);
 
     }
@@ -173,12 +192,6 @@ public class DdaselectAdo extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 //        getMenuInflater().inflate(R.menu.searchmenu,menu);
         return true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume: ");
     }
 
 

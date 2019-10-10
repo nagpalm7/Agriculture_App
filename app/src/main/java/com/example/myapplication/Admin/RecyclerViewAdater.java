@@ -21,6 +21,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -44,6 +45,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
     ArrayList<String> mUserId;
     private ArrayList<String> mPkList;
     private ArrayList<String> mDdoNames;
+    private ArrayList<String> mDistrictNames;
     private boolean isBusy = false;
     private int SHIMMER_ITEM_COUNT = 6;
     private String TAG = "RecyclerViewAdapter";
@@ -58,7 +60,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
         mPkList = pkList;
     }
 
-    public RecyclerViewAdater(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mUserId, boolean isDdoFragment, ArrayList<String> mPkList, ArrayList<String> mDdoNames) {
+    public RecyclerViewAdater(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mUserId, boolean isDdoFragment, ArrayList<String> mPkList, ArrayList<String> mDdoNames, ArrayList<String> mDistrictNames) {
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         this.mcontext = mcontext;
@@ -66,6 +68,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
         this.mUserId = mUserId;
         this.mPkList = mPkList;
         this.mDdoNames = mDdoNames;
+        this.mDistrictNames = mDistrictNames;
     }
 
     @Override
@@ -150,7 +153,8 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
             holder.tv1.setText(mtextview1.get(position));
             holder.tv2.setText(mtextview2.get(position));
             if (!isDdoFragment) {
-                holder.districtTextview.setText("DDA : " + mDdoNames.get(position).toUpperCase());
+                holder.districtTextview.setText("DDA : " + mDdoNames.get(position).toUpperCase() + " (" +
+                        mDistrictNames.get(position) + ")");
                 holder.districtTextview.setBackground(null);
             } else
                 holder.districtTextview.setVisibility(View.GONE);
@@ -181,7 +185,7 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
 
     private void deleteRecord(int pos) {
         String id = mPkList.get(pos);
-        final String url = "http://13.235.100.235/api/user/" + id + "/";
+        final String url = "http://18.224.202.135/api/user/" + id + "/";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -206,6 +210,22 @@ public class RecyclerViewAdater extends RecyclerView.Adapter<RecyclerViewAdater.
         };
         RequestQueue requestQueue = Volley.newRequestQueue(mcontext);
         requestQueue.add(jsonObjectRequest);
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

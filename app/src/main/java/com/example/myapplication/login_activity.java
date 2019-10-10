@@ -29,6 +29,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -54,10 +55,10 @@ public class login_activity extends AppCompatActivity {
     private EditText editEmail, editPassword;
     private TextView signUpAdo, signUpDda;
 
-    private String urlget = "http://13.235.100.235/api/get-user/";
+    private String urlget = "http://18.224.202.135/api/get-user/";
     //    private String urlpost = getString(R.string.rooturl)+ "api-token-auth/";
-//    private String urlpost = getString(R.string.rooturl);
-    private String urlpost = "http://13.235.100.235/api-token-auth/";
+//    private String urlpost = getString(R.string.rooturl)
+    private String urlpost = "http://18.224.202.135/api-token-auth/";
 
     private AlertDialog dialog;
     private CheckBox checkBox;
@@ -292,7 +293,29 @@ public class login_activity extends AppCompatActivity {
 
         MyRequestQueue.add(jsonObjectRequest);
 
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+
     }
+
+
+
+
+
 
     public void onClickregister(String url, boolean isAdo) {
 

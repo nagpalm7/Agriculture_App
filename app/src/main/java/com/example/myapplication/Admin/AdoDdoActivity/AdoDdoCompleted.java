@@ -80,7 +80,7 @@ public class AdoDdoCompleted extends Fragment {
             role = "dda";
         else
             role = "ado";
-        String mUrl = "http://13.235.100.235/api/admin/" + role + "/" + mDdoId + "/completed";
+        String mUrl = "http://18.224.202.135/api/admin/" + role + "/" + mDdoId + "/completed";
         Log.d("url", "onCreateView: completed" + mUrl);
         progressBar = view.findViewById(R.id.Ddo_completed_loading);
         recyclerView = view.findViewById(R.id.Ddo_completed_recyclerview);

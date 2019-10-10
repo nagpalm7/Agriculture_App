@@ -21,6 +21,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -42,7 +43,7 @@ public class ado_complete_fragment extends Fragment {
     private AdoListAdapter adoListAdapter;
     private ArrayList<String> longitude;
     private ArrayList<String> latitude;
-    private String url = "http://13.235.100.235/api/locations/ado/completed";
+    private String url = "http://18.224.202.135/api/locations/ado/completed";
     private String nextUrl;
     private boolean isNextBusy = false;
     private View view;
@@ -168,5 +169,21 @@ public class ado_complete_fragment extends Fragment {
             }
         };
         requestQueue.add(jsonObjectRequest);
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
     }
 }

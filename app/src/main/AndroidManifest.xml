@@ -12,7 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Admin.detailsActivity"></activity>
+
+        <activity
+            android:name=".Admin.detailsActivity"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".Dda.VillagesUnderAdo"
             android:screenOrientation="portrait" />
@@ -113,6 +117,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAUKi9N7ZNLUj3QjYK9Zn-7PxVMw85koOY" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -131,6 +138,7 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

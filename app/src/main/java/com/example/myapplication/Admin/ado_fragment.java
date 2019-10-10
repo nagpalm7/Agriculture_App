@@ -23,6 +23,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -42,7 +43,8 @@ public class ado_fragment extends Fragment {
     private ArrayList<String> mUserId;
     private ArrayList<String> mPkList;
     private ArrayList<String> mDdoNames;
-    private String mUrl = "http://13.235.100.235/api/users-list/ado/";
+    private ArrayList<String> mDistrictNames;
+    private String mUrl = "http://18.224.202.135/api/users-list/ado/";
     private RecyclerViewAdater recyclerViewAdater;
     private String token;
     private String nextUrl;
@@ -68,6 +70,7 @@ public class ado_fragment extends Fragment {
         mUserId = new ArrayList<>();
         mPkList = new ArrayList<>();
         mDdoNames = new ArrayList<>();
+        mDistrictNames = new ArrayList<>();
         swipeRefreshLayout = view.findViewById(R.id.refreshpull);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -78,7 +81,7 @@ public class ado_fragment extends Fragment {
         });
         progressBar = view.findViewById(R.id.ado_list_progressbar);
         recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, mUserId, false,
-                mPkList, mDdoNames);
+                mPkList, mDdoNames, mDistrictNames);
         RecyclerView Rview = view.findViewById(R.id.recyclerViewado);
         Rview.setAdapter(recyclerViewAdater);
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
@@ -130,6 +133,13 @@ public class ado_fragment extends Fragment {
                             JSONObject ddaObject = singleObject.getJSONObject("dda");
                             String ddaName = ddaObject.getString("name");
                             mDdoNames.add(ddaName);
+                            try {
+                                JSONObject districtObject = ddaObject.getJSONObject("district");
+                                String districtName = districtObject.getString("district");
+                                mDistrictNames.add(districtName.toUpperCase());
+                            } catch (JSONException e) {
+                                mDistrictNames.add("NOT ASSIGNED");
+                            }
                         } catch (JSONException e) {
                             mDdoNames.add("Not Assigned");
                         }
@@ -178,6 +188,22 @@ public class ado_fragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         return view;
     }
 
@@ -216,6 +242,13 @@ public class ado_fragment extends Fragment {
                             JSONObject ddaObject = singleObject.getJSONObject("dda");
                             String ddaName = ddaObject.getString("name");
                             mDdoNames.add(ddaName);
+                            try {
+                                JSONObject districtObject = ddaObject.getJSONObject("district");
+                                String districtName = districtObject.getString("district");
+                                mDistrictNames.add(districtName.toUpperCase());
+                            } catch (JSONException e) {
+                                mDistrictNames.add("NOT ASSIGNED");
+                            }
                         } catch (JSONException e) {
                             mDdoNames.add("Not Assigned");
                         }
@@ -235,7 +268,8 @@ public class ado_fragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NoConnectionError)
-                    Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Check Your Internt Connection Please!",
+                            Toast.LENGTH_SHORT).show();
                 isNextBusy = false;
             }
         }) {
@@ -250,6 +284,22 @@ public class ado_fragment extends Fragment {
 
         requestQueue.add(jsonArrayRequest);
         requestFinished(requestQueue);
+        jsonArrayRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
 
     }
 

@@ -22,6 +22,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -43,7 +44,7 @@ public class completed_fragment extends Fragment {
     private ArrayList<String> mIds;
     private AdminLocationAdapter adapter;
     private LinearLayoutManager layoutManager;
-    private String completedUrl = "http://13.235.100.235/api/locations/completed";
+    private String completedUrl = "http://18.224.202.135/api/locations/completed";
     private String nextUrl;
     private String token;
     private ProgressBar progressBar;
@@ -156,6 +157,22 @@ public class completed_fragment extends Fragment {
             }
         };
         requestQueue.add(jsonObjectRequest);
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
     }
 
     private void getNextLocations() {
@@ -211,6 +228,22 @@ public class completed_fragment extends Fragment {
         };
         requestQueue.add(jsonObjectRequest);
         requestFinished(requestQueue);
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
     }
 
     private void requestFinished(RequestQueue queue) {

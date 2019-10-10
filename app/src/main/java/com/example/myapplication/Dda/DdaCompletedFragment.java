@@ -19,6 +19,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -38,7 +39,7 @@ public class DdaCompletedFragment extends Fragment {
     private ArrayList<String> Address;
     private ArrayList<String> mIdLsit;
     private DdacompletedAdapter ddacompletedAdapter;
-    private String urlget = "http://13.235.100.235/api/locations/dda/completed";
+    private String urlget = "http://18.224.202.135/api/locations/dda/completed";
     private String dda;
     private String token;
     private String villagename;
@@ -129,7 +130,22 @@ public class DdaCompletedFragment extends Fragment {
                 return map;
             }
         };
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
 
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         requestQueue.add(jsonObjectRequest);
         review.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -205,7 +221,22 @@ public class DdaCompletedFragment extends Fragment {
                 return map;
             }
         };
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
 
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         requestQueue.add(jsonObjectRequest);
     }
 }

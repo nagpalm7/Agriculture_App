@@ -23,9 +23,11 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.myapplication.Admin.MyItem;
 import com.example.myapplication.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,7 +37,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,7 +53,7 @@ public class map_fragemnt_dda extends Fragment {
     private final String TAG = "map fragment";
 
     public GoogleMap map = null;
-    private String url_pending = "http://13.235.100.235/api/locations/dda/assigned";
+    private String url_pending = "http://18.224.202.135/api/locations/dda/assigned";
     private String token;
     private String next;
     private SupportMapFragment mapFragment;
@@ -62,6 +64,7 @@ public class map_fragemnt_dda extends Fragment {
     private ArrayList<Double> latitude;
     private ArrayList<Double> longitude;
     private ArrayList<String> villname;
+    private ClusterManager<MyItem> mClusterManager;
 
 
     @Nullable
@@ -183,7 +186,22 @@ public class map_fragemnt_dda extends Fragment {
                 return map;
             }
         };
+        jsonObjectRequest2.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
 
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         requestQueue.add(jsonObjectRequest2);
         requestFinished(requestQueue);
     }
@@ -205,15 +223,37 @@ public class map_fragemnt_dda extends Fragment {
     }
 
     private void marklocation() {
-        dialog.dismiss();
+        /*dialog.dismiss();
         for (int i = 0; i < latitude.size(); i++) {
             MarkerOptions Dlocation = new MarkerOptions().position(new LatLng(latitude.get(i), longitude.get(i))).title(villname.get(i)).icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_action_name));
-            map.addMarker(Dlocation);
+            map.addMarker(Dlocation);*/
            /* if (i == 0) {
 //                pbar.setVisibility(View.GONE);
 
             }*/
+        mClusterManager = new ClusterManager<MyItem>(getActivity(), map);
+
+        map.setOnCameraIdleListener(mClusterManager);
+        map.setOnMarkerClickListener(mClusterManager);
+
+        addmarkers();
+
+        dialog.dismiss();
         }
+
+    private void addmarkers() {
+
+        for (int i = 0; i < latitude.size(); i++) {
+            double lat = latitude.get(i);
+            double lon = longitude.get(i);
+            String title = villname.get(i);
+
+            MyItem item = new MyItem(lat, lon, title);
+
+            mClusterManager.addItem(item);
+
+        }
+
     }
 
    /* void nextRequest(){
