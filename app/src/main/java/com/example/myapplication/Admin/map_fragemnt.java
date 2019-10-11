@@ -5,12 +5,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Outline;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -87,6 +91,16 @@ public class map_fragemnt extends Fragment {
                 .setCancelable(false).build();
         dialog.show();
         next = url_assigned;
+        final LinearLayout bottomsheetLayout = view.findViewById(R.id.map_bottom_sheet);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            bottomsheetLayout.setOutlineProvider(new ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    outline.setRoundRect(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight() + 40, 40f);
+                }
+            });
+            bottomsheetLayout.setClipToOutline(true);
+        }
         getMarkers(next);
 
 
@@ -239,7 +253,7 @@ public class map_fragemnt extends Fragment {
 
             }
         }*/
-
+        Log.d(TAG, "marklocation: SIZE" + latitude.size());
         mClusterManager = new ClusterManager<MyItem>(getActivity(), map);
 
         addmarkers();
@@ -268,6 +282,7 @@ public class map_fragemnt extends Fragment {
         }
 
         mClusterManager.cluster();
+        Log.d(TAG, "addmarkers: CLUSTER SIZE" + mClusterManager.getRenderer());
 
     }
 

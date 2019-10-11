@@ -45,6 +45,7 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
     private ArrayList<String> adoid;
     private String urlpatch;
     private String token;
+    private int currentAdoPos = -1;
 
     public DdaAdoListAdapter(Context mcontext, ArrayList<String> mtextview1, Map<Integer, ArrayList<String>> mtextview2) {
         this.mcontext = mcontext;
@@ -150,6 +151,11 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
     @Override
     public void onBindViewHolder(@NonNull AdoListViewHolder holder, int position) {
         holder.tv1.setText(mtextview1.get(position));
+        if (currentAdoPos == position) {
+            holder.btnassign.setText("Assigned");
+            holder.btnassign.setEnabled(false);
+            holder.btnassign.setAlpha(0.7f);
+        }
 //        holder.tv2.setVisibility(View.GONE);
         //holder.tv2.setText(mtextview2.get(position));
     }
@@ -202,5 +208,9 @@ public class DdaAdoListAdapter extends RecyclerView.Adapter<DdaAdoListAdapter.Ad
 
     public void getadoid(String adoid){
         this.adoid.add(adoid);
+    }
+
+    public void getCurrentAdo(int pos) {
+        currentAdoPos = pos;
     }
 }

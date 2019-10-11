@@ -1,6 +1,7 @@
 package com.example.myapplication.Dda;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,7 +40,7 @@ public class DdaselectAdo extends AppCompatActivity {
     private static final String TAG = "DdaselectAdo";
     private ArrayList<String> nameofado;
     private Map<Integer, ArrayList<String>> villagename;
-
+    private String mCurrentAdoId = "";
     private String urlget = "http://18.224.202.135/api/ado/";
     private String token;
     private DdaAdoListAdapter ddaAdoListAdapter;
@@ -68,12 +69,16 @@ public class DdaselectAdo extends AppCompatActivity {
         DividerItemDecoration divider = new DividerItemDecoration(review.getContext(), layoutManager.getOrientation());
         review.addItemDecoration(divider);
         //getting location id coming from unassigned fragment to this activity
-        Bundle extras = getIntent().getExtras();
-        idtopass = extras.getString("Id_I_Need");
+        Intent intent = getIntent();
+        idtopass = intent.getStringExtra("Id_I_Need");
+        mCurrentAdoId = intent.getStringExtra("adoId");
         Log.d(TAG, "onCreate: Id_I_Need=" + idtopass);
         ddaAdoListAdapter.getlocationid(idtopass);
+        try {
 
+        } catch (Exception e) {
 
+        }
         //Toast.makeText(this, "List of Ado's", Toast.LENGTH_SHORT).show();
         loadData(urlget);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -114,9 +119,14 @@ public class DdaselectAdo extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     nextUrl = jsonObject.getString("next");
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
+                    int currentListSize = nameofado.size();
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c =jsonArray.getJSONObject(i);
                         adoid = c.getString("id");
+                        if (adoid.equals(mCurrentAdoId)) {
+                            ddaAdoListAdapter.getCurrentAdo(currentListSize + i);
+                            Log.d(TAG, "onResponse: CURRENT ADO ID" + currentListSize + i);
+                        }
                         ddaAdoListAdapter.getadoid(adoid);
                         Log.d(TAG, "onResponse: ID " + adoid);
                         nameofado.add(c.getString("name").toUpperCase());

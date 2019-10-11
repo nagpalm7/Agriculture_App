@@ -115,7 +115,6 @@ public class SearchResultsActivity extends AppCompatActivity {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             nextUrl = rootObject.getString("next");
                             JSONArray resultsArray = rootObject.getJSONArray("results");
-                            int currentListSize = villageNames.size();
                             Log.d(TAG, "onResponse: CURRENT" + currentVillages);
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);

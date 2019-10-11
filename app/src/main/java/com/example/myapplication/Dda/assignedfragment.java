@@ -40,6 +40,7 @@ public class assignedfragment extends Fragment {
     private ArrayList<String> Id;
     private ArrayList<String> Name;
     private ArrayList<String> Address;
+    private ArrayList<String> mAdoIds;
     private DdapendingassignedAdapter ddaassignedAdapter;
     private String urlget = "http://18.224.202.135/api/locations/dda/assigned";
     private String token;
@@ -63,6 +64,7 @@ public class assignedfragment extends Fragment {
         Id = new ArrayList<String>();
         Name = new ArrayList<String>();
         Address = new ArrayList<String>();
+        mAdoIds = new ArrayList<>();
         isReferesh = false;
         swipeRefreshLayout = view.findViewById(R.id.refreshpull_dda);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -71,7 +73,7 @@ public class assignedfragment extends Fragment {
                 getFragmentManager().beginTransaction().detach(assignedfragment.this).attach(assignedfragment.this).commit();
             }
         });
-        ddaassignedAdapter = new DdapendingassignedAdapter(getActivity(),Id,Name,Address);
+        ddaassignedAdapter = new DdapendingassignedAdapter(getActivity(), Id, Name, Address, mAdoIds);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddaassignedAdapter);
@@ -99,16 +101,18 @@ public class assignedfragment extends Fragment {
                         view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
                     }
                     for(int i=0;i<jsonArray.length();i++){
-                        JSONObject c = jsonArray.getJSONObject(i);
-                        JSONObject a = c.getJSONObject("ado");
-                        Name.add(a.getString("name"));
-
-                        Id.add(c.getString("id"));
-                        villagename = c.getString("village_name");
-                        blockname = c.getString("block_name");
-                        district = c.getString("district");
-                        state = c.getString("state");
-                        Address.add(villagename.toUpperCase() + ", " + blockname.toUpperCase() + ", " + district.toUpperCase());
+                        JSONObject singleObject = jsonArray.getJSONObject(i);
+                        Id.add(singleObject.getString("id"));
+                        villagename = singleObject.getString("village_name");
+                        blockname = singleObject.getString("block_name");
+                        district = singleObject.getString("district");
+                        state = singleObject.getString("state");
+                        Address.add(villagename.toUpperCase() + ", " + blockname.toUpperCase() +
+                                ", " + district.toUpperCase());
+                        JSONObject adoObject = singleObject.getJSONObject("ado");
+                        Name.add(adoObject.getString("name"));
+                        String adoId = adoObject.getString("id");
+                        mAdoIds.add(adoId);
                     }
                     ddaassignedAdapter.showassignedshimmer = false;
                     ddaassignedAdapter.notifyDataSetChanged();
@@ -212,18 +216,20 @@ public class assignedfragment extends Fragment {
                         view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
                     }
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject c = jsonArray.getJSONObject(i);
-                        JSONObject a = c.getJSONObject("ado");
-                        Name.add(a.getString("name"));
-                        Id.add(c.getString("id"));
-                        Name.add(c.getString("name"));
-                        villagename = c.getString("village_name");
-                        blockname = c.getString("block_name");
-                        district = c.getString("district");
-                        state = c.getString("state");
-                        Address.add(villagename.toUpperCase() + "," + blockname.toUpperCase() + "," + district.toUpperCase());
-                        isNextBusy = false;
+                        JSONObject singleObject = jsonArray.getJSONObject(i);
+                        Id.add(singleObject.getString("id"));
+                        villagename = singleObject.getString("village_name");
+                        blockname = singleObject.getString("block_name");
+                        district = singleObject.getString("district");
+                        state = singleObject.getString("state");
+                        Address.add(villagename.toUpperCase() + ", " + blockname.toUpperCase() +
+                                ", " + district.toUpperCase());
+                        JSONObject adoObject = singleObject.getJSONObject("ado");
+                        Name.add(adoObject.getString("name"));
+                        String adoId = adoObject.getString("id");
+                        mAdoIds.add(adoId);
                     }
+                    isNextBusy = false;
                     ddaassignedAdapter.showassignedshimmer = false;
                     ddaassignedAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {

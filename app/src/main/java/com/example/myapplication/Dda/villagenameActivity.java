@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -58,9 +57,7 @@ public class villagenameActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ProgressBar listNextProgressBar;
     private String mAdoId;
-    private SearchView searchView;
     private MaterialSearchView materialSearchView;
-    //private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,34 +88,8 @@ public class villagenameActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: URL " + mUrl);
         SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
-       /* boolean isSqlDatabaseAvail = preferences.getBoolean("isSqlDatabaseAvail", false);
-        databaseHelper = new DatabaseHelper(this);
-        if (!isSqlDatabaseAvail)*/
         progressBar.setVisibility(View.VISIBLE);
         loadData(mUrl);
-        /*else
-        {
-            Cursor res = databaseHelper.getAllData();
-            if (res.getCount() == 0)
-            {
-                Log.d(TAG, "onCreate: SQL NO DATA");
-            }
-            else
-            {   int k = 0;
-                while (res.moveToNext())
-                {
-                    int villageId = res.getInt(0);
-                    villageIds.add(villageId);
-                    villagesNames.add(res.getString(1));
-                    if (currentVillages.contains(villageId)) {
-                        Log.d(TAG, "onResponse: loaddata " + currentVillages + k);
-                        adapter.addtoCurrentVillagesPos(k);
-                    }
-                    k++;
-                }
-                adapter.notifyDataSetChanged();
-            }
-        }*/
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             int totalCount, pastCount, visibleCount;
 
@@ -238,9 +209,6 @@ public class villagenameActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_village_list, menu);
-        /*MenuItem searchItem = menu.findItem(R.id.search);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        search(searchView);*/
         return true;
     }
 
@@ -256,27 +224,6 @@ public class villagenameActivity extends AppCompatActivity {
         return false;
     }
 
-    private void search(final SearchView searchView) {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                adapter.getFilter().filter(s);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.isEmpty()) {
-                    adapter.getFilter().filter(s);
-                    return true;
-                }
-
-                return false;
-            }
-        });
-    }
-
-
     private void loadData(String url) {
         isNextBusy = true;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -287,7 +234,6 @@ public class villagenameActivity extends AppCompatActivity {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             nextUrl = rootObject.getString("next");
                             JSONArray resultsArray = rootObject.getJSONArray("results");
-                            int currentListSize = villagesNames.size();
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject villageObject = resultsArray.getJSONObject(i);
                                 String villageName = villageObject.getString("village");
@@ -298,16 +244,6 @@ public class villagenameActivity extends AppCompatActivity {
                                     adapter.addtoCurrentVillagesPos(villageId);
                                     Log.d(TAG, "onResponse: loaddata " + currentVillages);
                                 }
-                                    /*boolean result = databaseHelper.insertData(villageId, villageName);
-                                    SharedPreferences.Editor editor = getSharedPreferences("tokenFile",
-                                            MODE_PRIVATE).edit();
-                                    if (result) {
-                                        editor.putBoolean("isSqlDatabaseAvail", true);
-                                        editor.apply();
-                                    } else {
-                                        editor.remove("isSqlDatabaseAvail");
-                                        editor.apply();
-                                    }*/
                             }
                             progressBar.setVisibility(View.GONE);
                             listNextProgressBar.setVisibility(View.GONE);
