@@ -8,4 +8,5 @@
     <color name="default_grey">#707070</color>
     <color name="shimmer_bg">#dddddd</color>
     <color name="table_row_cells">#9696FF</color>
+    <color name="white">#ffffff</color>
 </resources>

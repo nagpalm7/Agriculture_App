@@ -4,6 +4,7 @@ package com.example.myapplication.Admin;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
     boolean mShowShimmer = true;
     private int SHIMMER_ITEM_NO = 5;
     Context mcontext;
+    private String TAG= "adminLocationAdapter";
 
     public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3, ArrayList<String> mIds, boolean isOngoing,ArrayList<String> mdate) {
         this.mcontext = mcontext;
@@ -42,6 +44,7 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
         this.isOngoing = isOngoing;
         this.mIds = mIds;
         this.mdate = mdate;
+        Log.d(TAG, "AdminLocationAdapter: "+this.mdate.size());
     }
 
     public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3, boolean isComplete, ArrayList<String> mIds,ArrayList<String> mdate) {
@@ -52,6 +55,7 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
         this.mIds = mIds;
         this.mdate = mdate;
         this.isComplete = isComplete;
+        Log.d(TAG, "AdminLocationAdapter: "+this.mdate.size());
     }
 
     public AdminLocationAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, boolean isPending, ArrayList<String> mtextview3, ArrayList<String> mIds,ArrayList<String> ado_pk, ArrayList<String> dda_pk,ArrayList<String> mdate) {
@@ -64,6 +68,7 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
         mpkado = ado_pk;
         mpkdda = dda_pk;
         this.mIds = mIds;
+        Log.d(TAG, "AdminLocationAdapter: "+this.mdate.size());
     }
 
     @NonNull
