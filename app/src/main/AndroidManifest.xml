@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".Dda.SearchResultsActivity"></activity>
         <activity
             android:name=".Admin.detailsActivity"
             android:screenOrientation="portrait" />
@@ -26,7 +27,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Dda.villagenameActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Ado.ReviewReport"
             android:screenOrientation="portrait" />
@@ -129,7 +131,14 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <provider
+            android:name="br.com.mauker.materialsearchview.db.HistoryProvider"
+            android:authorities="br.com.mauker.materialsearchview.searchhistorydatabase"
+            android:exported="false"
+            android:protectionLevel="signature"
+            android:syncable="true" />
         <service android:name=".Ado.GeofenceTransitionService" />
+
         <service android:name=".Ado.GeofenceTransitionService2" />
     </application>
 

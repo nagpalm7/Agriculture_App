@@ -10,13 +10,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.MenuItemCompat;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,12 +41,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.mauker.materialsearchview.MaterialSearchView;
+
 public class villagenameActivity extends AppCompatActivity {
     private static String TAG = "villagenameActivity";
     private String token;
     private ArrayList<String> villagesNames;
     private ArrayList<Integer> villageIds;
     private ArrayList<Integer> currentVillages;
+    private ArrayList<String> suggestedVillageNames;
+    private ArrayList<Integer> suggestedVillageIds;
+    private String mUrl;
     private String nextUrl;
     private boolean isNextBusy = false;
     private VillagesUnderDistrictAdapter adapter;
@@ -54,19 +60,25 @@ public class villagenameActivity extends AppCompatActivity {
     private ProgressBar listNextProgressBar;
     private String mAdoId;
     private SearchView searchView;
+    private MaterialSearchView materialSearchView;
     //private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_villagename);
+        Toolbar toolbar = findViewById(R.id.village_list_toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Villages List");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         villagesNames = new ArrayList<>();
         villageIds = new ArrayList<>();
+        suggestedVillageNames = new ArrayList<>();
+        suggestedVillageIds = new ArrayList<>();
         RecyclerView recyclerView = findViewById(R.id.villages_list_recy);
         progressBar = findViewById(R.id.village_list_loading);
         listNextProgressBar = findViewById(R.id.village_list_next);
+        materialSearchView = findViewById(R.id.searchView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new VillagesUnderDistrictAdapter(this, villagesNames, villageIds);
@@ -76,15 +88,15 @@ public class villagenameActivity extends AppCompatActivity {
         mAdoId = intent.getStringExtra("adoId");
         currentVillages = intent.getIntegerArrayListExtra("currentVillages");
         Log.d(TAG, "onCreate: " + currentVillages);
-        String url = "http://18.224.202.135/api/villages-list/district/" + districtId + "/";
-        Log.d(TAG, "onCreate: URL " + url);
+        mUrl = "http://18.224.202.135/api/villages-list/district/" + districtId + "/";
+        Log.d(TAG, "onCreate: URL " + mUrl);
         SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
        /* boolean isSqlDatabaseAvail = preferences.getBoolean("isSqlDatabaseAvail", false);
         databaseHelper = new DatabaseHelper(this);
         if (!isSqlDatabaseAvail)*/
         progressBar.setVisibility(View.VISIBLE);
-        loadData(url);
+        loadData(mUrl);
         /*else
         {
             Cursor res = databaseHelper.getAllData();
@@ -129,15 +141,107 @@ public class villagenameActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+
+        materialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!query.isEmpty()) {
+                    Intent intent = new Intent(villagenameActivity.this, SearchResultsActivity.class);
+                    intent.putExtra("searchUrl", mUrl + "?search=" + query);
+                    intent.putIntegerArrayListExtra("currentVillages", currentVillages);
+                    intent.putExtra("mAdoId", mAdoId);
+                    startActivity(intent);
+                    return true;
+                } else
+                    return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!newText.isEmpty()) {
+                    suggestionRequest(newText);
+                    return true;
+                } else
+                    return false;
+            }
+        });
+
+        materialSearchView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d(TAG, "onItemClick: SIZE" + suggestedVillageNames.size() + "ELEMENTS" + suggestedVillageNames);
+                if (i < suggestedVillageNames.size() - 1) {
+                    String villageNameSelected = suggestedVillageNames.get(i);
+                    Log.d(TAG, "onItemClick: " + villageNameSelected);
+                    Intent intent = new Intent(villagenameActivity.this, SearchResultsActivity.class);
+                    intent.putExtra("searchUrl", mUrl + "?search=" + villageNameSelected);
+                    intent.putIntegerArrayListExtra("currentVillages", currentVillages);
+                    intent.putExtra("mAdoId", mAdoId);
+                    startActivity(intent);
+                }
+            }
+        });
+    }
+
+    private void suggestionRequest(String searchText) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        suggestedVillageNames.clear();
+        suggestedVillageIds.clear();
+        Log.d(TAG, "suggestionRequest: " + suggestedVillageNames.size() + " ids" + suggestedVillageIds.size());
+        String url = mUrl + "?search=" + searchText;
+        Log.d(TAG, "suggestionRequest: URL  " + url);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject rootObject = new JSONObject(String.valueOf(response));
+                            JSONArray resultsArray = rootObject.getJSONArray("results");
+                            for (int i = 0; i < 7 && i < resultsArray.length(); i++) {
+                                JSONObject singleObject = resultsArray.getJSONObject(i);
+                                String villageName = singleObject.getString("village");
+                                suggestedVillageNames.add(villageName);
+                                int villageId = singleObject.getInt("id");
+                                suggestedVillageIds.add(villageId);
+                            }
+                            materialSearchView.clearSuggestions();
+                            materialSearchView.clearHistory();
+                            Log.d(TAG, "onResponse: SIZE" + suggestedVillageNames.size() + "ELEMENTS" + suggestedVillageNames);
+                            materialSearchView.addSuggestions(suggestedVillageNames);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "onErrorResponse: VILLAGE NAME SUGGESTION " + error);
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(villagenameActivity.this, "Please check your Internet Connection!",
+                                    Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(villagenameActivity.this, "Something went wrong, please try again!",
+                                    Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("Authorization", "Token " + token);
+                return map;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_village_list, menu);
-        MenuItem searchItem = menu.findItem(R.id.search);
+        /*MenuItem searchItem = menu.findItem(R.id.search);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        search(searchView);
+        search(searchView);*/
         return true;
     }
 
@@ -146,12 +250,14 @@ public class villagenameActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.done) {
             saveChanges();
             return true;
+        } else if (item.getItemId() == R.id.search) {
+            materialSearchView.openSearch();
+            return true;
         }
-
         return false;
     }
 
-    private void search(SearchView searchView) {
+    private void search(final SearchView searchView) {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -165,10 +271,12 @@ public class villagenameActivity extends AppCompatActivity {
                     adapter.getFilter().filter(s);
                     return true;
                 }
+
                 return false;
             }
         });
     }
+
 
     private void loadData(String url) {
         isNextBusy = true;
@@ -180,6 +288,7 @@ public class villagenameActivity extends AppCompatActivity {
                             JSONObject rootObject = new JSONObject(String.valueOf(response));
                             nextUrl = rootObject.getString("next");
                             JSONArray resultsArray = rootObject.getJSONArray("results");
+                            int currentListSize = villagesNames.size();
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject villageObject = resultsArray.getJSONObject(i);
                                 String villageName = villageObject.getString("village");
@@ -187,7 +296,7 @@ public class villagenameActivity extends AppCompatActivity {
                                 int villageId = villageObject.getInt("id");
                                 villageIds.add(villageId);
                                 if (currentVillages.contains(villageId)) {
-                                    adapter.addtoCurrentVillagesPos(villagesNames.size() + i - 1);
+                                    adapter.addtoCurrentVillagesPos(currentListSize + i);
                                     Log.d(TAG, "onResponse: loaddata " + currentVillages);
                                 }
                                     /*boolean result = databaseHelper.insertData(villageId, villageName);
@@ -345,14 +454,17 @@ public class villagenameActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        finish();
+        if (materialSearchView.isOpen())
+            materialSearchView.closeSearch();
+        else
+            finish();
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        if (!searchView.isIconified())
-            searchView.setIconified(true);
+        if (materialSearchView.isOpen())
+            materialSearchView.closeSearch();
         else
             super.onBackPressed();
     }
