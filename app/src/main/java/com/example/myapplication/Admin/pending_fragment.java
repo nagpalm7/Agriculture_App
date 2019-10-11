@@ -189,16 +189,18 @@ public class pending_fragment extends Fragment {
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
+                        String date = c.getString("acq_date");
                         try {
                             JSONObject adoobj = c.getJSONObject("ado");
-                            String date = c.getString("acq_date");
+
                             JSONObject authado = adoobj.getJSONObject("auth_user");
                             mpkado.add(authado.getString("pk"));
-                            mdate.add(date);
+
                         } catch (JSONException e) {
                             mpkado.add("null");
                         }
 
+                        mdate.add(date);
                         JSONObject ddaobj = c.getJSONObject("dda");
                         JSONObject authddo = ddaobj.getJSONObject("auth_user");
                         mpkdda.add(authddo.getString("pk"));
@@ -225,6 +227,7 @@ public class pending_fragment extends Fragment {
                         mAddress.add(villagename.toUpperCase() + ", " +
                                 blockname.toUpperCase() + ", " + district.toUpperCase());
                     }
+                    Log.d(TAG, "onResponse: SIZE " + mdate.size() + "hgfh"+ mDdaName.size());
                     requestQueue.add(jsonObjectRequest2);
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
@@ -236,7 +239,7 @@ public class pending_fragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NoConnectionError)
-                    Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Check Your Internet Connection Please!", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "onErrorResponse: " + error);
             }
         }) {
@@ -337,6 +340,7 @@ public class pending_fragment extends Fragment {
     }
 
     private void get_Unassigned() {
+        Log.d(TAG, "get_Unassigned: inside");
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         progressBar.setVisibility(View.VISIBLE);
         isNextBusy = true;
@@ -349,13 +353,15 @@ public class pending_fragment extends Fragment {
                         next_unassigned_url = jsonObject.getString("next");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject c = jsonArray.getJSONObject(i);
+                            String date = c.getString("acq_date");
+                            mdate.add(date);
 
                             try {
                                 JSONObject adoobj = c.getJSONObject("ado");
-                                String date = c.getString("acq_date");
+
                                 JSONObject authado = adoobj.getJSONObject("auth_user");
                                 mpkado.add(authado.getString("pk"));
-                                mdate.add(date);
+
                             } catch (JSONException e) {
                                 mpkado.add("null");
                             }
@@ -380,6 +386,7 @@ public class pending_fragment extends Fragment {
                             mAddress.add(villagename.toUpperCase() + ", "
                                     + blockname.toUpperCase() + ", " + district.toUpperCase());
                         }
+                        Log.d(TAG, "onResponse:mdate size"+mdate.size());
                         recyclerViewAdater.notifyDataSetChanged();
                         isNextBusy = false;
                     } catch (JSONException e) {
@@ -442,6 +449,7 @@ public class pending_fragment extends Fragment {
                             JSONObject authado = adoobj.getJSONObject("auth_user");
                             mpkado.add(authado.getString("pk"));
                             mdate.add(date);
+                            Log.d(TAG, "onResponse: mdatesize"+mdate.size());
 
                             JSONObject ddaobj = c.getJSONObject("dda");
                             JSONObject authddo = ddaobj.getJSONObject("auth_user");
