@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,7 +53,6 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dda);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -65,7 +65,19 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-
+        boolean isAssignedLocation = false;
+        try {
+            Intent intent = getIntent();
+            isAssignedLocation = intent.getBooleanExtra("isAssignedLocation", false);
+            Log.d("DDAACTIVITY", "onCreate: " + isAssignedLocation);
+            if (isAssignedLocation) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new adounderddo()).commit();
+                navigationView.getMenu().getItem(1).setChecked(true);
+                getSupportActionBar().setTitle("ADO LIST");
+            }
+        } catch (Exception error) {
+            Log.d("DDAACTIVITY", "onCreate: INTENT ERROR" + error);
+        }
 
         //setting header dynamically
         View header = navigationView.getHeaderView(0);
@@ -77,7 +89,7 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
         final String nameOfUser = preferences.getString("Name","");
         textView.setText(nameOfUser.toUpperCase());
         //close
-
+        if (!isAssignedLocation)
         if (getPermission()) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt_dda()).commit();
             navigationView.getMenu().getItem(0).setChecked(true);

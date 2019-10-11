@@ -2,7 +2,6 @@ package com.example.myapplication.Dda;
 
 import android.content.Context;
 import android.util.Log;
-import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +28,6 @@ public class VillagesUnderDistrictAdapter extends RecyclerView.Adapter<VillagesU
     private ArrayList<Integer> villageIdsFiltered;
     private Context mContext;
     private SparseBooleanArray sparseBooleanArray;
-    private SparseArray<Integer> selectedVillageIds;
     private ArrayList<Integer> currentVillagesPos;
 
     public VillagesUnderDistrictAdapter(Context mContext, ArrayList<String> villageNames, ArrayList<Integer> villageIds) {
@@ -39,7 +37,6 @@ public class VillagesUnderDistrictAdapter extends RecyclerView.Adapter<VillagesU
         villageNamesFiltered = villageNames;
         villageIdsFiltered = villageIds;
         sparseBooleanArray = new SparseBooleanArray();
-        selectedVillageIds = new SparseArray<>();
         currentVillagesPos = new ArrayList<>();
     }
 
@@ -52,12 +49,11 @@ public class VillagesUnderDistrictAdapter extends RecyclerView.Adapter<VillagesU
         viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                int pos = viewHolder.getAdapterPosition();
-                Integer selectedVillageId = villageIdsFiltered.get(pos);
-                int actualPos = villageIds.indexOf(selectedVillageId);
-                Log.d("ADAPTER ", "onCreateViewHolder: " + actualPos + compoundButton.isPressed());
-                if (compoundButton.isPressed() || sparseBooleanArray.get(actualPos, false))
-                    toggleSelection(actualPos);
+                if (compoundButton.isPressed()) {
+                    int pos = viewHolder.getAdapterPosition();
+                    int selectedVillageId = villageIdsFiltered.get(pos);
+                    toggleSelection(selectedVillageId);
+                }
             }
         });
         return viewHolder;
@@ -67,15 +63,10 @@ public class VillagesUnderDistrictAdapter extends RecyclerView.Adapter<VillagesU
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         holder.villageTextView.setText(villageNamesFiltered.get(position));
         holder.checkBox.setChecked(false);
-        Integer selectedVillageId = villageIdsFiltered.get(position);
-        int actualPos = villageIds.indexOf(selectedVillageId);
-        if (currentVillagesPos.contains(actualPos) || sparseBooleanArray.get(actualPos, false)) {
-            Log.d("ADAPTER ", "onBindViewHolder: " + actualPos + "   " + villageNamesFiltered.get(actualPos)
-            );
-            if (!holder.checkBox.isChecked()) {
-                Log.d("ADAPTER ", "onBindViewHolder: CHECKBOX ");
-                holder.checkBox.setChecked(true);
-            }
+        int villageId = villageIdsFiltered.get(position);
+        if (currentVillagesPos.contains(villageId)) {
+            holder.checkBox.setChecked(true);
+            toggleSelection(villageId);
         }
     }
 
@@ -92,16 +83,13 @@ public class VillagesUnderDistrictAdapter extends RecyclerView.Adapter<VillagesU
     private void selectView(int pos, boolean value) {
         if (value) {
             sparseBooleanArray.put(pos, value);
-            selectedVillageIds.put(pos, villageIds.get(pos));
         } else {
             sparseBooleanArray.delete(pos);
-            selectedVillageIds.delete(pos);
         }
     }
 
-    public SparseArray<Integer> getSelectedVillageIds() {
-        Log.d("ADAPTER ", "getSelectedVillageIds: " + selectedVillageIds);
-        return selectedVillageIds;
+    public SparseBooleanArray getSparseBooleanArray() {
+        return sparseBooleanArray;
     }
 
     public void addtoCurrentVillagesPos(int pos) {

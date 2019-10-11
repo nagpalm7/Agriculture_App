@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -116,6 +116,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                             nextUrl = rootObject.getString("next");
                             JSONArray resultsArray = rootObject.getJSONArray("results");
                             int currentListSize = villageNames.size();
+                            Log.d(TAG, "onResponse: CURRENT" + currentVillages);
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 String villageName = singleObject.getString("village");
@@ -123,7 +124,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                                 int villageId = singleObject.getInt("id");
                                 villageIds.add(villageId);
                                 if (currentVillages.contains(villageId)) {
-                                    adapter.addtoCurrentVillagesPos(currentListSize + i);
+                                    adapter.addtoCurrentVillagesPos(villageId);
                                     Log.d(TAG, "onResponse: loadResults " + currentVillages);
                                 }
                             }
@@ -182,15 +183,17 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     private void saveChanges() {
-        SparseArray villagesIdSparse = adapter.getSelectedVillageIds();
+        SparseBooleanArray villagesIdSparse = adapter.getSparseBooleanArray();
         Log.d(TAG, "saveChanges: " + villagesIdSparse);
         if (villagesIdSparse.size() != 0) {
             ArrayList<Integer> selectedIds = new ArrayList<>();
             for (int i = 0; i < villageNames.size(); i++) {
-                Object ob = villagesIdSparse.get(i);
-                if (ob != null)
-                    selectedIds.add(Integer.parseInt(villagesIdSparse.get(i).toString()));
+                boolean isSelectedVillage = villagesIdSparse.get(villageIds.get(i));
+                if (isSelectedVillage)
+                    selectedIds.add(villageIds.get(i));
             }
+            Log.d(TAG, "saveChanges: " + villageIds);
+            Log.d(TAG, "saveChanges: " + selectedIds);
             JSONArray villagesIdArray = new JSONArray(selectedIds);
             JSONObject paramObject = new JSONObject();
             try {
@@ -209,6 +212,10 @@ public class SearchResultsActivity extends AppCompatActivity {
                                 Log.d(TAG, "onResponse: " + jsonObject);
                                 Toast.makeText(SearchResultsActivity.this, "Villages Successfully Assigned!",
                                         Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(SearchResultsActivity.this, DdaActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.putExtra("isAssignedLocation", true);
+                                startActivity(intent);
                                 finish();
                             } catch (JSONException e) {
                                 e.printStackTrace();
