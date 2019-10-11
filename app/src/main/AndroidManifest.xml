@@ -13,9 +13,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".Dda.SearchResultsActivity"></activity>
+
         <activity
             android:name=".Admin.detailsActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".Dda.VillagesUnderAdo"
             android:screenOrientation="portrait" />
@@ -145,6 +147,7 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

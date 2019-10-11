@@ -42,6 +42,7 @@ public class completed_fragment extends Fragment {
     private ArrayList<String> mAdoNames;
     private ArrayList<String> mAddresses;
     private ArrayList<String> mIds;
+    private ArrayList<String> mdate;
     private AdminLocationAdapter adapter;
     private LinearLayoutManager layoutManager;
     private String completedUrl = "http://18.224.202.135/api/locations/completed";
@@ -73,7 +74,8 @@ public class completed_fragment extends Fragment {
         mAdoNames = new ArrayList<>();
         mAddresses = new ArrayList<>();
         mIds = new ArrayList<>();
-        adapter = new AdminLocationAdapter(getActivity(), mDdaNames, mAdoNames, mAddresses, true, mIds);
+        mdate = new ArrayList<>();
+        adapter = new AdminLocationAdapter(getActivity(), mDdaNames, mAdoNames, mAddresses, true, mIds,mdate);
         recyclerView.setAdapter(adapter);
         SharedPreferences prefs = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = prefs.getString("token", "");
@@ -119,9 +121,11 @@ public class completed_fragment extends Fragment {
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 JSONObject ddaObject = singleObject.getJSONObject("dda");
+                                String date = singleObject.getString("acq_date");
                                 mDdaNames.add(ddaObject.getString("name"));
                                 String id = singleObject.getString("id");
                                 mIds.add(id);
+                                mdate.add(date);
                                 JSONObject adoObject = singleObject.getJSONObject("ado");
                                 String adoName = adoObject.getString("name");
                                 if (adoName.equals("null"))
@@ -190,8 +194,10 @@ public class completed_fragment extends Fragment {
                             for (int i = 0; i < resultsArray.length(); i++) {
                                 JSONObject singleObject = resultsArray.getJSONObject(i);
                                 mDdaNames.add(singleObject.getString("dda"));
+                                String date = singleObject.getString("acq_date");
                                 String id = singleObject.getString("id");
                                 mIds.add(id);
+                                mdate.add(date);
                                 String adoName = singleObject.getString("ado");
                                 if (adoName.isEmpty())
                                     mAdoNames.add("Not Assigned");

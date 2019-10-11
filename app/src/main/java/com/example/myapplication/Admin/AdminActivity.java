@@ -283,4 +283,10 @@ public class AdminActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
             return true;
         }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
+}

@@ -1,5 +1,6 @@
 package com.example.myapplication.Admin;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,7 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,7 +20,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
@@ -25,6 +28,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
@@ -37,6 +41,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import dmax.dialog.SpotsDialog;
+
 public class ado_fragment extends Fragment {
     private ArrayList<String> username;
     private ArrayList<String> userinfo;
@@ -44,7 +50,11 @@ public class ado_fragment extends Fragment {
     private ArrayList<String> mPkList;
     private ArrayList<String> mDdoNames;
     private ArrayList<String> mDistrictNames;
-    private String mUrl = "http://18.224.202.135/api/users-list/ado/";
+    private ArrayList<String> mdistrictlist;
+
+    private String ado_list;
+    private String district_list_url;
+
     private RecyclerViewAdater recyclerViewAdater;
     private String token;
     private String nextUrl;
@@ -54,7 +64,11 @@ public class ado_fragment extends Fragment {
     private View view;
     private boolean isRefresh;
     private final String TAG = "ado_fragment";
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private  Spinner spinner;
+    private ProgressBar spinner_probar;
+    private RecyclerView Rview;
+    private AlertDialog dialog;
+
 
     public ado_fragment() {
     }
@@ -65,24 +79,25 @@ public class ado_fragment extends Fragment {
         view = inflater.inflate(R.layout.ado_fragment, container, false);
         Log.d(TAG, "onCreateView: ");
         isRefresh = false;
+        ado_list="";
+        district_list_url ="http://18.224.202.135/api/district/";
         username = new ArrayList<>();
         userinfo = new ArrayList<>();
         mUserId = new ArrayList<>();
         mPkList = new ArrayList<>();
         mDdoNames = new ArrayList<>();
         mDistrictNames = new ArrayList<>();
-        swipeRefreshLayout = view.findViewById(R.id.refreshpull);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getFragmentManager().beginTransaction().detach(ado_fragment.this)
-                        .attach(ado_fragment.this).commit();
-            }
-        });
+        mdistrictlist = new ArrayList<>();
+        mdistrictlist.add("Select District");
+
+        spinner = view.findViewById(R.id.spinner);
+        spinner_probar = view.findViewById(R.id.spinner_probar);
+        spinner_probar.setVisibility(View.VISIBLE);
+
         progressBar = view.findViewById(R.id.ado_list_progressbar);
         recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, mUserId, false,
                 mPkList, mDdoNames, mDistrictNames);
-        RecyclerView Rview = view.findViewById(R.id.recyclerViewado);
+        Rview = view.findViewById(R.id.recyclerViewado);
         Rview.setAdapter(recyclerViewAdater);
         SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
@@ -90,13 +105,125 @@ public class ado_fragment extends Fragment {
         Rview.setLayoutManager(layoutManager);
         DividerItemDecoration divider = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
         Rview.addItemDecoration(divider);
+        recyclerViewAdater.mShowShimmer = false;
+
+        dialog = new SpotsDialog.Builder().setContext(getActivity()).setMessage("Loading...")
+                .setCancelable(false).build();
+
+
+
+
+        Rview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                int totalCount, pastItemCount, visibleItemCount;
+                if (dy > 0) {
+                    totalCount = layoutManager.getItemCount();
+                    pastItemCount = layoutManager.findFirstVisibleItemPosition();
+                    visibleItemCount = layoutManager.getChildCount();
+                    if ((pastItemCount + visibleItemCount) >= totalCount) {
+                        Log.d(TAG, "onScrolled: " + totalCount + " " + pastItemCount + " " + visibleItemCount);
+                        if (!nextUrl.equals("null") && !isNextBusy)
+                            getNextAdos();
+                    }
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if(spinner.getSelectedItem().toString().equals("Select District")){
+
+                    }
+                    else {
+                        dialog.show();
+                        Log.d(TAG, "onItemSelected: yoyo");
+                        username.clear();
+                        userinfo.clear();
+                        mUserId.clear();
+                        mPkList.clear();
+                        mDdoNames.clear();
+                        mDistrictNames.clear();
+                        getadolist(spinner.getSelectedItem().toString());
+                    }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        RequestQueue district_requestQueue= Volley.newRequestQueue(getActivity());
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, district_list_url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+
+                for(int i=0;i<response.length();i++){
+                    try {
+                        JSONObject singleObject = response.getJSONObject(i);
+                        mdistrictlist.add(singleObject.getString("district"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                loadSpinnerData();
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(),"something went wrong",Toast.LENGTH_LONG);
+
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String,String> map = new HashMap<>();
+                map.put("Authorization","Token "+token);
+                return map;
+            }
+        };
+
+        district_requestQueue.add(jsonArrayRequest);
+
+
+
+
+
+        return view;
+    }
+
+    void loadSpinnerData(){
+
+
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(getActivity(),  android.R.layout.simple_spinner_dropdown_item, mdistrictlist);
+        adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner_probar.setVisibility(View.GONE);
+    }
+
+    void getadolist(String district){
+
+        ado_list="http://18.224.202.135/api/users-list/ado/?search="+district;
 
         final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 
-
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mUrl, null, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, ado_list, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                view.setBackground(getResources().getDrawable(R.drawable.data_background));
+
+
+                Log.d(TAG, "onResponse: sizes"+username.size()+userinfo.size());
+                
                 try {
                     JSONObject rootObject = new JSONObject(String.valueOf(response));
                     nextUrl = rootObject.getString("next");
@@ -144,8 +271,10 @@ public class ado_fragment extends Fragment {
                             mDdoNames.add("Not Assigned");
                         }
                     }
+
                     recyclerViewAdater.mShowShimmer = false;
                     recyclerViewAdater.notifyDataSetChanged();
+                    dialog.dismiss();
 
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: JSON" + e);
@@ -171,23 +300,7 @@ public class ado_fragment extends Fragment {
         };
 
         requestQueue.add(jsonObjectRequest);
-        Rview.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                int totalCount, pastItemCount, visibleItemCount;
-                if (dy > 0) {
-                    totalCount = layoutManager.getItemCount();
-                    pastItemCount = layoutManager.findFirstVisibleItemPosition();
-                    visibleItemCount = layoutManager.getChildCount();
-                    if ((pastItemCount + visibleItemCount) >= totalCount) {
-                        Log.d(TAG, "onScrolled: " + totalCount + " " + pastItemCount + " " + visibleItemCount);
-                        if (!nextUrl.equals("null") && !isNextBusy)
-                            getNextAdos();
-                    }
-                }
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
+
         jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
             @Override
             public int getCurrentTimeout() {
@@ -204,7 +317,6 @@ public class ado_fragment extends Fragment {
 
             }
         });
-        return view;
     }
 
     private void getNextAdos() {
@@ -303,6 +415,8 @@ public class ado_fragment extends Fragment {
         });
 
     }
+
+
 
     private void requestFinished(RequestQueue queue) {
 

@@ -29,11 +29,13 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +49,7 @@ public class pending_fragment extends Fragment {
     private ArrayList<String> mAddress;
     private ArrayList<String> mpkado;
     private ArrayList<String> mpkdda;
+    private ArrayList<String> mdate;
     private String token;
     private String villagename;
     private String blockname;
@@ -90,7 +93,8 @@ public class pending_fragment extends Fragment {
         mAddress = new ArrayList<>();
         mpkado = new ArrayList<>();
         mpkdda = new ArrayList<>();
-        recyclerViewAdater = new AdminLocationAdapter(getActivity(), mDdaName, mAdaName,true, mAddress, null,mpkado,mpkdda);
+        mdate = new ArrayList<>();
+        recyclerViewAdater = new AdminLocationAdapter(getActivity(), mDdaName, mAdaName,true, mAddress, null,mpkado,mpkdda,mdate);
         recyclerView.setAdapter(recyclerViewAdater);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -99,7 +103,6 @@ public class pending_fragment extends Fragment {
         final SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
         Log.d(TAG, "onCreateView: " + token);
-
         Log.d(TAG, "onCreateView: inflated fragment_ongoing");
 
         final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
@@ -118,9 +121,11 @@ public class pending_fragment extends Fragment {
                     }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
+                        String date = c.getString("acq_date");
                         JSONObject adoobj = c.getJSONObject("ado");
                         JSONObject authado = adoobj.getJSONObject("auth_user");
                         mpkado.add(authado.getString("pk"));
+                        mdate.add(date);
 
                         JSONObject ddaobj = c.getJSONObject("dda");
                         JSONObject authddo = ddaobj.getJSONObject("auth_user");
@@ -184,14 +189,18 @@ public class pending_fragment extends Fragment {
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
+                        String date = c.getString("acq_date");
                         try {
                             JSONObject adoobj = c.getJSONObject("ado");
+
                             JSONObject authado = adoobj.getJSONObject("auth_user");
                             mpkado.add(authado.getString("pk"));
+
                         } catch (JSONException e) {
                             mpkado.add("null");
                         }
 
+                        mdate.add(date);
                         JSONObject ddaobj = c.getJSONObject("dda");
                         JSONObject authddo = ddaobj.getJSONObject("auth_user");
                         mpkdda.add(authddo.getString("pk"));
@@ -218,6 +227,7 @@ public class pending_fragment extends Fragment {
                         mAddress.add(villagename.toUpperCase() + ", " +
                                 blockname.toUpperCase() + ", " + district.toUpperCase());
                     }
+                    Log.d(TAG, "onResponse: SIZE " + mdate.size() + "hgfh"+ mDdaName.size());
                     requestQueue.add(jsonObjectRequest2);
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
@@ -229,7 +239,7 @@ public class pending_fragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NoConnectionError)
-                    Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Check Your Internet Connection Please!", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "onErrorResponse: " + error);
             }
         }) {
@@ -330,6 +340,7 @@ public class pending_fragment extends Fragment {
     }
 
     private void get_Unassigned() {
+        Log.d(TAG, "get_Unassigned: inside");
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         progressBar.setVisibility(View.VISIBLE);
         isNextBusy = true;
@@ -342,11 +353,15 @@ public class pending_fragment extends Fragment {
                         next_unassigned_url = jsonObject.getString("next");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject c = jsonArray.getJSONObject(i);
+                            String date = c.getString("acq_date");
+                            mdate.add(date);
 
                             try {
                                 JSONObject adoobj = c.getJSONObject("ado");
+
                                 JSONObject authado = adoobj.getJSONObject("auth_user");
                                 mpkado.add(authado.getString("pk"));
+
                             } catch (JSONException e) {
                                 mpkado.add("null");
                             }
@@ -371,6 +386,7 @@ public class pending_fragment extends Fragment {
                             mAddress.add(villagename.toUpperCase() + ", "
                                     + blockname.toUpperCase() + ", " + district.toUpperCase());
                         }
+                        Log.d(TAG, "onResponse:mdate size"+mdate.size());
                         recyclerViewAdater.notifyDataSetChanged();
                         isNextBusy = false;
                     } catch (JSONException e) {
@@ -429,8 +445,11 @@ public class pending_fragment extends Fragment {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject c = jsonArray.getJSONObject(i);
                             JSONObject adoobj = c.getJSONObject("ado");
+                            String date = c.getString("acq_date");
                             JSONObject authado = adoobj.getJSONObject("auth_user");
                             mpkado.add(authado.getString("pk"));
+                            mdate.add(date);
+                            Log.d(TAG, "onResponse: mdatesize"+mdate.size());
 
                             JSONObject ddaobj = c.getJSONObject("dda");
                             JSONObject authddo = ddaobj.getJSONObject("auth_user");
