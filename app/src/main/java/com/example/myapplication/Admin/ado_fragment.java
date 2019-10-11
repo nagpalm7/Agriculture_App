@@ -107,7 +107,7 @@ public class ado_fragment extends Fragment {
         Rview.addItemDecoration(divider);
         recyclerViewAdater.mShowShimmer = false;
 
-        dialog = new SpotsDialog.Builder().setContext(getActivity()).setMessage("Loading locations...")
+        dialog = new SpotsDialog.Builder().setContext(getActivity()).setMessage("Loading...")
                 .setCancelable(false).build();
 
 
