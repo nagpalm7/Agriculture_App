@@ -80,6 +80,7 @@ public class map_fragemnt_dda extends Fragment {
         villname = new ArrayList<>();
 //        pbar = view.findViewById(R.id.pbar);
         dialog = new SpotsDialog.Builder().setContext(getActivity()).setMessage("Loading locations...")
+                .setTheme(R.style.CustomDialog)
                 .setCancelable(false).build();
         dialog.show();
 

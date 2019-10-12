@@ -50,7 +50,7 @@ public class upload_fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.upload_fragment, container, false);
         CardView uploadCard = view.findViewById(R.id.card1);
-        CardView uploadcsv= view.findViewById(R.id.card2);
+//        CardView uploadcsv= view.findViewById(R.id.card2);
         SharedPreferences prefs = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = prefs.getString("token", "");
         Log.d("url", "onCreateView: " + url);
@@ -62,13 +62,13 @@ public class upload_fragment extends Fragment {
 
             }
         });
-        uploadcsv.setOnClickListener(new View.OnClickListener() {
+        /*uploadcsv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //change the url variable here
                 openCsvPicker();
             }
-        });
+        });*/
         manager = NotificationManagerCompat.from(getActivity());
         return view;
     }
@@ -86,6 +86,7 @@ public class upload_fragment extends Fragment {
                         uploadingDialog = new SpotsDialog.Builder().setContext(getActivity())
                                 .setMessage("Uploading Csv...")
                                 .setCancelable(false)
+                                .setTheme(R.style.CustomDialog)
                                 .build();
                         uploadingDialog.show();
                         uploadCsv();

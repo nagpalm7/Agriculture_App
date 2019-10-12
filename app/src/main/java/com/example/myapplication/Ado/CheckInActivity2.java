@@ -629,7 +629,9 @@ public class CheckInActivity2 extends AppCompatActivity implements
     }
 
     private void submitReport() {
-        reportSubmitLoading = new SpotsDialog.Builder().setContext(this).setMessage("Submitting Report").setCancelable(false)
+        reportSubmitLoading = new SpotsDialog.Builder().setContext(this).setMessage("Submitting Report")
+                .setTheme(R.style.CustomDialog)
+                .setCancelable(false)
                 .build();
         reportSubmitLoading.show();
         int radioButtonId = radioGroup.getCheckedRadioButtonId();

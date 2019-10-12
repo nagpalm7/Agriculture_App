@@ -88,8 +88,8 @@ public class AdminLocationAdapter extends RecyclerView.Adapter<AdminLocationAdap
                         intent.putExtra("id", mIds.get(pos));
                         intent.putExtra("isDdo", true);
                         intent.putExtra("isAdmin", true);
-                        if (isOngoing) {
-                            intent.putExtra("isOngoing", true);
+                        if (isComplete) {
+                            intent.putExtra("isComplete", true);
                         }
                         mcontext.startActivity(intent);
                     }

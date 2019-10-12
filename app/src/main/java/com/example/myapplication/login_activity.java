@@ -161,7 +161,8 @@ public class login_activity extends AppCompatActivity {
 
     private void Login(final String email, final String password) {
 
-        dialog = new SpotsDialog.Builder().setContext(login_activity.this).setMessage("Logging in").setCancelable(false).build();
+        dialog = new SpotsDialog.Builder().setContext(login_activity.this).setMessage("Logging in").setCancelable(false)
+                .setTheme(R.style.CustomDialog).build();
         dialog.show();
 
         Log.d(TAG, "onResponse: login clicked");

@@ -5,16 +5,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Outline;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewOutlineProvider;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -88,10 +84,11 @@ public class map_fragemnt extends Fragment {
 //        pbar = view.findViewById(R.id.pbar);
 
         dialog = new SpotsDialog.Builder().setContext(getActivity()).setMessage("Loading locations...")
+                .setTheme(R.style.CustomDialog)
                 .setCancelable(false).build();
         dialog.show();
         next = url_assigned;
-        final LinearLayout bottomsheetLayout = view.findViewById(R.id.map_bottom_sheet);
+        /*final LinearLayout bottomsheetLayout = view.findViewById(R.id.map_bottom_sheet);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             bottomsheetLayout.setOutlineProvider(new ViewOutlineProvider() {
                 @Override
@@ -100,7 +97,7 @@ public class map_fragemnt extends Fragment {
                 }
             });
             bottomsheetLayout.setClipToOutline(true);
-        }
+        }*/
         getMarkers(next);
 
 

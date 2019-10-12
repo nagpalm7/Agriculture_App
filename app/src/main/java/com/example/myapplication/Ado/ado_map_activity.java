@@ -567,6 +567,7 @@ public class ado_map_activity extends AppCompatActivity
         if (true) {
             if (true) {
                 dialog = new SpotsDialog.Builder().setContext(this).setMessage("Connecting...")
+                        .setTheme(R.style.CustomDialog)
                         .setCancelable(false).build();
                 dialog.show();
                 Log.d(TAG, "onResume: here");

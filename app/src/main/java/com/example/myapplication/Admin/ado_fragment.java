@@ -108,6 +108,7 @@ public class ado_fragment extends Fragment {
         recyclerViewAdater.mShowShimmer = false;
 
         dialog = new SpotsDialog.Builder().setContext(getActivity()).setMessage("Loading...")
+                .setTheme(R.style.CustomDialog)
                 .setCancelable(false).build();
 
 

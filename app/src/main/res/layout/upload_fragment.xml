@@ -48,7 +48,7 @@
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
+    <!--<androidx.cardview.widget.CardView
         android:layout_below="@id/card1"
         android:id="@+id/card2"
         android:layout_marginHorizontal="16dp"
@@ -91,7 +91,7 @@
 
         </RelativeLayout>
 
-    </androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>-->
 
 
 </RelativeLayout>

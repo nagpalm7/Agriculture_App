@@ -20,11 +20,9 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="Custom" parent="android:Theme.DeviceDefault.Dialog">
+    <style name="CustomDialog" parent="android:Theme.DeviceDefault.Dialog">
         <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="DialogTitleText">Logging in...</item>
-        <item name="DialogSpotColor">@android:color/holo_orange_dark</item>
-        <item name="DialogSpotCount">4</item>
+        <item name="DialogSpotColor">@android:color/holo_blue_dark</item>
+        <item name="DialogSpotCount">5</item>
     </style>
-
 </resources>
