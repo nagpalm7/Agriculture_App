@@ -41,6 +41,7 @@ public class assignedfragment extends Fragment {
     private ArrayList<String> Name;
     private ArrayList<String> Address;
     private ArrayList<String> mAdoIds;
+    private ArrayList<String> mDate;
     private DdapendingassignedAdapter ddaassignedAdapter;
     private String urlget = "http://18.224.202.135/api/locations/dda/assigned";
     private String token;
@@ -65,6 +66,7 @@ public class assignedfragment extends Fragment {
         Name = new ArrayList<String>();
         Address = new ArrayList<String>();
         mAdoIds = new ArrayList<>();
+        mDate = new ArrayList<>();
         isReferesh = false;
         swipeRefreshLayout = view.findViewById(R.id.refreshpull_dda);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -73,7 +75,7 @@ public class assignedfragment extends Fragment {
                 getFragmentManager().beginTransaction().detach(assignedfragment.this).attach(assignedfragment.this).commit();
             }
         });
-        ddaassignedAdapter = new DdapendingassignedAdapter(getActivity(), Id, Name, Address, mAdoIds);
+        ddaassignedAdapter = new DdapendingassignedAdapter(getActivity(), Id, Name, Address, mAdoIds,mDate);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddaassignedAdapter);
@@ -103,6 +105,7 @@ public class assignedfragment extends Fragment {
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject singleObject = jsonArray.getJSONObject(i);
                         Id.add(singleObject.getString("id"));
+                        mDate.add(singleObject.getString("acq_date"));
                         villagename = singleObject.getString("village_name");
                         blockname = singleObject.getString("block_name");
                         district = singleObject.getString("district");
@@ -217,6 +220,7 @@ public class assignedfragment extends Fragment {
                     }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject singleObject = jsonArray.getJSONObject(i);
+                        mDate.add(singleObject.getString("acq_date"));
                         Id.add(singleObject.getString("id"));
                         villagename = singleObject.getString("village_name");
                         blockname = singleObject.getString("block_name");

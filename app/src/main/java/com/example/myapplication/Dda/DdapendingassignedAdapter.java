@@ -24,6 +24,7 @@ public class DdapendingassignedAdapter extends RecyclerView.Adapter<Ddapendingas
     ArrayList<String> mtextview1;
     ArrayList<String> mtextview2;
     ArrayList<String> mtextview3;
+    ArrayList<String> mDates;
     private ArrayList<String> mAdoIds;
     Context mcontext;
     public boolean showassignedshimmer = true;
@@ -31,12 +32,13 @@ public class DdapendingassignedAdapter extends RecyclerView.Adapter<Ddapendingas
     private AlertDialog dialog;
     private String adoId;
 
-    public DdapendingassignedAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3, ArrayList<String> mAdoIds) {
+    public DdapendingassignedAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mtextview3, ArrayList<String> mAdoIds,ArrayList<String> mDates) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         this.mtextview3 = mtextview3;
         this.mAdoIds = mAdoIds;
+        this.mDates = mDates;
     }
 
     @NonNull
@@ -85,9 +87,11 @@ public class DdapendingassignedAdapter extends RecyclerView.Adapter<Ddapendingas
 
             holder.tv2.setBackground(null);
             holder.tv3.setBackground(null);
+            holder.Dates.setBackground(null);
 
             holder.tv2.setText(mtextview3.get(position).toUpperCase());
             holder.tv3.setText(mtextview2.get(position).toUpperCase());
+            holder.Dates.setText(mDates.get(position));
         }
     }
 
@@ -116,6 +120,7 @@ public class DdapendingassignedAdapter extends RecyclerView.Adapter<Ddapendingas
 
         TextView tv2;
         TextView tv3;
+        TextView Dates;
         RelativeLayout parent;
         ShimmerFrameLayout shimmerassigned;
 
@@ -125,6 +130,7 @@ public class DdapendingassignedAdapter extends RecyclerView.Adapter<Ddapendingas
             parent = itemView.findViewById(R.id.card_assigned);
             tv2 = itemView.findViewById(R.id.adoassignedname);
             tv3 = itemView.findViewById(R.id.adoassignedaddress);
+            Dates = itemView.findViewById(R.id.adoassigneddate);
             shimmerassigned = itemView.findViewById(R.id.shimmer_assigned);
 
         }

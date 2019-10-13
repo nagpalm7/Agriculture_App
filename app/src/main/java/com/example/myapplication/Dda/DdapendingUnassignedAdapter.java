@@ -21,16 +21,18 @@ public class DdapendingUnassignedAdapter extends RecyclerView.Adapter<Ddapending
     private static final String TAG = "DdaUnassignedAdapter";
     private ArrayList<String> mtextview1;
     private ArrayList<String> mtextview2;
+    private ArrayList<String> mDates;
     private Context mcontext;
     private ArrayList<String> id;
     public boolean showunassignedshimmer = true;
     private int shimmer_item_count = 6;
 
-    public DdapendingUnassignedAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2) {
+    public DdapendingUnassignedAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2,ArrayList<String> mDates ) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         this.id = new ArrayList<>();
+        this.mDates = mDates;
     }
 
     @NonNull
@@ -64,8 +66,10 @@ public class DdapendingUnassignedAdapter extends RecyclerView.Adapter<Ddapending
                 holder.shimmerunassigned.setShimmer(null);
                 holder.tv1.setBackground(null);
                 holder.tv2.setBackground(null);
-                holder.tv1.setText(mtextview1.get(position));
-                holder.tv2.setText(mtextview2.get(position));
+                holder.Dates.setBackground(null);
+                holder.Dates.setText(mDates.get(position));
+                holder.tv1.setText(mtextview1.get(position).toUpperCase());
+                holder.tv2.setText(mtextview2.get(position).toUpperCase());
             }
     }
 
@@ -78,6 +82,7 @@ public class DdapendingUnassignedAdapter extends RecyclerView.Adapter<Ddapending
 
         TextView tv1;
         TextView tv2;
+        TextView Dates;
         RelativeLayout parent;
         ShimmerFrameLayout shimmerunassigned;
 
@@ -87,6 +92,7 @@ public class DdapendingUnassignedAdapter extends RecyclerView.Adapter<Ddapending
             parent = itemView.findViewById(R.id.card_unassigned);
             tv1 = itemView.findViewById(R.id.lid);
             tv2 = itemView.findViewById(R.id.address);
+            Dates = itemView.findViewById(R.id.dates_unassigned);
             shimmerunassigned = itemView.findViewById(R.id.shimmer_unassigned);
         }
 

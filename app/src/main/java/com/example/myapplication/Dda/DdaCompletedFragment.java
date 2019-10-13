@@ -46,6 +46,7 @@ public class DdaCompletedFragment extends Fragment {
     private String blockname;
     private String district;
     private String nextUrl;
+    private ArrayList<String> mDates;
     private boolean isNextBusy = false;
     private View view;
     private int length_of_array;
@@ -59,7 +60,8 @@ public class DdaCompletedFragment extends Fragment {
         mAdoNames = new ArrayList<String>();
         Address = new ArrayList<String>();
         mIdLsit = new ArrayList<>();
-        ddacompletedAdapter = new DdacompletedAdapter(getContext(), mAdoNames, Address, mIdLsit);
+        mDates = new ArrayList<>();
+        ddacompletedAdapter = new DdacompletedAdapter(getContext(), mAdoNames, Address, mIdLsit,mDates);
         RecyclerView review = view.findViewById(R.id.recyclerViewongoing);
         review.setAdapter(ddacompletedAdapter);
 
@@ -97,6 +99,7 @@ public class DdaCompletedFragment extends Fragment {
                     }
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
+                        mDates.add(c.getString("acq_date"));
                         JSONObject ob = c.getJSONObject("ado");
                         String ado_name= ob.getString("name");
                         mAdoNames.add(ado_name);
@@ -185,6 +188,7 @@ public class DdaCompletedFragment extends Fragment {
                     }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
+                        mDates.add(c.getString("acq_date"));
                         JSONObject ob = c.getJSONObject("ado");
                         String ado_name= ob.getString("name");
                         dda = c.getString("dda");

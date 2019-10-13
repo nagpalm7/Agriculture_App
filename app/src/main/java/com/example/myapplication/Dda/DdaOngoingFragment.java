@@ -40,6 +40,7 @@ public class DdaOngoingFragment extends Fragment {
     private ArrayList<String> Id;
     private ArrayList<String> Name;
     private ArrayList<String> Address;
+    private ArrayList<String> mDates;
     private DdaongoingAdapter ddaongoingAdapter;
     private String url_get_ongoing = "http://18.224.202.135/api/locations/dda/ongoing";
     private String next_url_get_ongoing;
@@ -68,6 +69,7 @@ public class DdaOngoingFragment extends Fragment {
         Id = new ArrayList<String>();
         Name = new ArrayList<String>();
         Address = new ArrayList<String>();
+        mDates = new ArrayList<>();
         isRefresh = false;
 
         view = inflater.inflate(R.layout.fragment_ongoing,container,false);
@@ -81,7 +83,7 @@ public class DdaOngoingFragment extends Fragment {
 
         review = view.findViewById(R.id.recyclerViewongoing);
 
-        ddaongoingAdapter = new DdaongoingAdapter(getActivity(),Id,Name,Address);
+        ddaongoingAdapter = new DdaongoingAdapter(getActivity(),Id,Name,Address,mDates);
         review.setAdapter(ddaongoingAdapter);
         layoutManager = new LinearLayoutManager(getActivity());
         DividerItemDecoration divider = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
@@ -131,6 +133,7 @@ public class DdaOngoingFragment extends Fragment {
                     }
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
+                        mDates.add(c.getString("acq_date"));
                         JSONObject a = c.getJSONObject("ado");
                         Name.add(a.getString("name"));
                         Id.add(c.getString("id"));
@@ -200,6 +203,7 @@ public class DdaOngoingFragment extends Fragment {
                                 }
                                 for (int i = 0; i < resultsArray.length(); i++) {
                                     JSONObject singleObject = resultsArray.getJSONObject(i);
+                                    mDates.add(singleObject.getString("acq_date"));
                                     JSONObject a = singleObject.getJSONObject("ado");
                                     Name.add(a.getString("name"));
                                     Id.add(singleObject.getString("id"));

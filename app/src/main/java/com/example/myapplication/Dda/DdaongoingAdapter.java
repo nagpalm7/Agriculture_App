@@ -21,15 +21,17 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
     private ArrayList<String> mtextview1;
     private ArrayList<String> mtextview2;
     private ArrayList<String> mtextview3;
+    private ArrayList<String> mDates;
     private Context mcontext;
     public boolean showongoingshimmer = true;
     private int shimmer_item_count = 4;
 
-    public DdaongoingAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2,ArrayList<String> mtextview3) {
+    public DdaongoingAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2,ArrayList<String> mtextview3,ArrayList<String> mDtaes) {
         this.mcontext = mcontext;
         this.mtextview1 = mtextview1;
         this.mtextview2 = mtextview2;
         this.mtextview3 = mtextview3;
+        this.mDates = mDtaes;
     }
 
     @NonNull
@@ -63,8 +65,10 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
             holder.shimmerongoing.setShimmer(null);
             holder.tv2.setBackground(null);
             holder.tv3.setBackground(null);
-            holder.tv2.setText(mtextview3.get(position));
-            holder.tv3.setText(mtextview2.get(position));
+            holder.Dates.setBackground(null);
+            holder.tv2.setText(mtextview3.get(position).toUpperCase());
+            holder.tv3.setText(mtextview2.get(position).toUpperCase());
+            holder.Dates.setText(mDates.get(position));
         }
     }
 
@@ -77,6 +81,7 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
 
         TextView tv2;
         TextView tv3;
+        TextView Dates;
         ShimmerFrameLayout shimmerongoing;
         RelativeLayout relativeLayout;
 
@@ -87,6 +92,7 @@ public class DdaongoingAdapter extends RecyclerView.Adapter<DdaongoingAdapter.Vi
             tv3 = itemView.findViewById(R.id.adoongoingaddress);
             shimmerongoing = itemView.findViewById(R.id.shimmer_ongoing);
             relativeLayout = itemView.findViewById(R.id.ongoing_parent);
+            Dates = itemView.findViewById(R.id.adoongoingdates);
         }
 
     }

@@ -39,6 +39,7 @@ public class notassignedfragment extends Fragment {
     private static final String TAG = "notassignedfragment";
     private ArrayList<String> mHeading;
     private ArrayList<String> Address;
+    private ArrayList<String> mDates;
     private DdapendingUnassignedAdapter ddapendingUnassignedAdapter;
     private String urlget = "http://18.224.202.135/api/locations/dda/unassigned";
     private String villagename;
@@ -64,8 +65,9 @@ public class notassignedfragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_notassignedfragment, container, false);
         isRefresh = false;
-        mHeading = new ArrayList<String>();
-        Address = new ArrayList<String>();
+        mHeading = new ArrayList<>();
+        Address = new ArrayList<>();
+        mDates = new ArrayList<>();
         swipeRefreshLayout = view.findViewById(R.id.refreshpullDda);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -73,7 +75,7 @@ public class notassignedfragment extends Fragment {
                 getFragmentManager().beginTransaction().detach(notassignedfragment.this).attach(notassignedfragment.this).commit();
             }
         });
-        ddapendingUnassignedAdapter = new DdapendingUnassignedAdapter(getActivity(), mHeading, Address);
+        ddapendingUnassignedAdapter = new DdapendingUnassignedAdapter(getActivity(), mHeading, Address,mDates);
         RecyclerView notassignedreview = view.findViewById(R.id.recyclerViewnotassigned);
         notassignedreview.setAdapter(ddapendingUnassignedAdapter);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -105,6 +107,7 @@ public class notassignedfragment extends Fragment {
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject c = jsonArray.getJSONObject(i);
                         locationid = c.getString("id");
+                        mDates.add(c.getString("acq_date"));
                         ddapendingUnassignedAdapter.sendlocationId(locationid);
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
@@ -219,6 +222,7 @@ public class notassignedfragment extends Fragment {
                     }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
+                        mDates.add(c.getString("acq_date"));
                         villagename = c.getString("village_name");
                         blockname = c.getString("block_name");
                         district = c.getString("district");
