@@ -4,8 +4,7 @@
     android:id="@+id/map_bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:background="#ffffff"
+    android:background="#CBCBCB"
     android:baselineAligned="false"
     android:elevation="10dp"
     android:orientation="vertical"
@@ -13,6 +12,31 @@
     app:behavior_hideable="false"
     app:behavior_peekHeight="48dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <View
+            android:layout_width="80dp"
+            android:layout_height="8dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/bottom_sheet_shape" />
+    </RelativeLayout>
+
+    <TextView
+        android:textColor="#6A6969"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="22sp"
+        android:textAllCaps="true"
+        android:text="information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,19 +51,22 @@
             android:padding="8dp">
 
             <TextView
+                android:textSize="18sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="PENDING"
                 android:textAlignment="center"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/colorPrimaryDark" />
 
             <TextView
+                android:textColor="#6A6969"
+                android:textStyle="bold"
+                android:textSize="35sp"
                 android:id="@+id/pending_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:padding="4dp"
                 android:text="20" />
         </LinearLayout>
 
@@ -51,19 +78,22 @@
             android:padding="8dp">
 
             <TextView
+                android:textSize="18sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="ONGOING"
                 android:textAlignment="center"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/colorPrimaryDark" />
 
             <TextView
+                android:textStyle="bold"
+                android:textSize="35sp"
+                android:textColor="#6A6969"
                 android:id="@+id/ongoing_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:padding="4dp"
                 android:text="20" />
         </LinearLayout>
 
@@ -75,19 +105,22 @@
             android:padding="8dp">
 
             <TextView
+                android:textSize="18sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="COMPLETED"
                 android:textAlignment="center"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/colorPrimaryDark" />
 
             <TextView
+                android:textColor="#6A6969"
+                android:textSize="35sp"
+                android:textStyle="bold"
                 android:id="@+id/completed_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:padding="4dp"
                 android:text="20" />
         </LinearLayout>
 
@@ -105,17 +138,5 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="32dp">
-
-        <View
-            android:layout_width="100dp"
-            android:layout_height="8dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/bottom_sheet_shape" />
-    </RelativeLayout>
 
 </LinearLayout>
