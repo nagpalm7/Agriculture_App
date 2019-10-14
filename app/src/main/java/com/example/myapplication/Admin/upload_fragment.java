@@ -38,7 +38,8 @@ import static com.example.myapplication.AppNotificationChannels.CHANNEL_2_ID;
 
 public class upload_fragment extends Fragment {
 
-    private String url = "http://18.224.202.135/api/upload/locations/";
+    private String url_location = "http://18.224.202.135/api/upload/locations/";
+    private String url_bulk = "http://18.224.202.135/api/upload/mail/";
     private String token;
     private static final String TAG = "UploadFragment";
     private File csvFile;
@@ -50,31 +51,31 @@ public class upload_fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.upload_fragment, container, false);
         CardView uploadCard = view.findViewById(R.id.card1);
-//        CardView uploadcsv= view.findViewById(R.id.card2);
+        CardView uploadcsv= view.findViewById(R.id.card2);
         SharedPreferences prefs = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = prefs.getString("token", "");
-        Log.d("url", "onCreateView: " + url);
+        Log.d("url", "onCreateView: " );
         uploadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //change the url  variable here
-                openCsvPicker();
+                openCsvPicker(url_location);
 
             }
         });
-        /*uploadcsv.setOnClickListener(new View.OnClickListener() {
+        uploadcsv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //change the url variable here
-                openCsvPicker();
+                openCsvPicker(url_bulk);
             }
-        });*/
+        });
         manager = NotificationManagerCompat.from(getActivity());
         return view;
     }
 
 
-    private void openCsvPicker() {
+    private void openCsvPicker(final String url) {
         File file = Environment.getExternalStorageDirectory();
         String start = file.getAbsolutePath();
         new ChooserDialog(getActivity())
@@ -89,7 +90,7 @@ public class upload_fragment extends Fragment {
                                 .setTheme(R.style.CustomDialog)
                                 .build();
                         uploadingDialog.show();
-                        uploadCsv();
+                        uploadCsv(url);
                     }
                 })
                 .withOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -102,7 +103,7 @@ public class upload_fragment extends Fragment {
                 .show();
     }
 
-    private void uploadCsv() {
+    private void uploadCsv(String url) {
         final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getActivity(), CHANNEL_2_ID)
                 .setSmallIcon(R.drawable.ic_upload)
                 .setContentTitle("Uploading Csv")

@@ -172,7 +172,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
         Intent intent = getIntent();
         latitude = intent.getDoubleExtra("lat", 0);
         longitude = intent.getDoubleExtra("long", 0);
-        Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Locati  on").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
         String id = intent.getStringExtra("id");
         locationId = id;
