@@ -1,6 +1,7 @@
 package com.example.myapplication.Admin;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -308,11 +309,16 @@ public class pending_fragment extends Fragment {
         notificationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isSendingNotifications)
+                /*if (!isSendingNotifications)
                     sendNotifications();
                 else
                     Toast.makeText(getActivity(), "Please wait, Notifications request in progress",
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_SHORT).show();*/
+
+                Intent intent = new Intent(getActivity(),NotificationActivity.class);
+                startActivity(intent);
+
+
             }
         });
         return view;

@@ -12,12 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Dda.SearchResultsActivity"></activity>
-
+        <activity android:name=".Admin.NotificationActivity"></activity>
+        <activity android:name=".Dda.SearchResultsActivity" />
         <activity
             android:name=".Admin.detailsActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Dda.VillagesUnderAdo"
             android:screenOrientation="portrait" />
@@ -122,6 +121,9 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="AIzaSyCATCd-YCRK6oEcS5rb140NuBve8g6uJqo" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -132,22 +134,20 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
         <provider
             android:name="br.com.mauker.materialsearchview.db.HistoryProvider"
             android:authorities="br.com.mauker.materialsearchview.searchhistorydatabase"
             android:exported="false"
             android:protectionLevel="signature"
             android:syncable="true" />
-        <service android:name=".Ado.GeofenceTransitionService" />
 
+        <service android:name=".Ado.GeofenceTransitionService" />
         <service android:name=".Ado.GeofenceTransitionService2" />
     </application>
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

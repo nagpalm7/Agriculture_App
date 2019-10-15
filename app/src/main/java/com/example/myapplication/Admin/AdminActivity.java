@@ -6,8 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
@@ -32,11 +35,15 @@ import com.androidnetworking.AndroidNetworking;
 import com.example.myapplication.R;
 import com.example.myapplication.login_activity;
 import com.google.android.material.navigation.NavigationView;
+import com.obsez.android.lib.filechooser.ChooserDialog;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdminActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -49,6 +56,9 @@ public class AdminActivity extends AppCompatActivity
     private final int RESULT_CODE = 786;
     private NavigationView navigationView;
     private boolean doubleBackToExitPressedOnce = false;
+    private View header;
+    private CircleImageView profile_pic;
+    private String imagePath;
 
 
     @Override
@@ -59,6 +69,10 @@ public class AdminActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         navigationView = findViewById(R.id.nav_view);
+        header = navigationView.getHeaderView(0);
+        profile_pic = header.findViewById(R.id.profile_pic);
+
+
         if (getPermission()) {
             navigationView.setCheckedItem(R.id.nav_home);
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new map_fragemnt(), "MAP FRAGMENT").commit();
@@ -248,7 +262,40 @@ public class AdminActivity extends AppCompatActivity
             return true;
         }
 
+        if(id == R.id.set_profilepic){
+            openimagepicker();
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openimagepicker() {
+        File file = Environment.getExternalStorageDirectory();
+        String start = file.getAbsolutePath();
+        new ChooserDialog(this)
+                .withStartFile(start)
+                .withChosenListener(new ChooserDialog.Result() {
+                    @Override
+                    public void onChoosePath(String s, File file) {
+                        imagePath = file.getAbsolutePath();
+                        setProfileImage();
+                    }
+                })
+                .withOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        dialogInterface.cancel();
+                    }
+                })
+                .build()
+                .show();
+
+    }
+
+    private void setProfileImage() {
+
+        Bitmap myBitmap = BitmapFactory.decodeFile(imagePath);
+        profile_pic.setImageBitmap(myBitmap);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

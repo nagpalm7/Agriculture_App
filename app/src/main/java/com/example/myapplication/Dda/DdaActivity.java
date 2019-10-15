@@ -82,7 +82,7 @@ public class DdaActivity extends AppCompatActivity implements NavigationView.OnN
         //setting header dynamically
         View header = navigationView.getHeaderView(0);
         textView = (TextView) header.findViewById(R.id.nameOfUserLoggedIn);
-        imageView = (ImageView) header.findViewById(R.id.imageView);
+        imageView = (ImageView) header.findViewById(R.id.profile_pic);
         imageView.setImageResource(R.mipmap.white_logo);
 
         final SharedPreferences preferences = getSharedPreferences("tokenFile",Context.MODE_PRIVATE);
