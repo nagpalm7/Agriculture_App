@@ -141,6 +141,15 @@
             android:text="@string/login"
             android:textColor="#ffffff" />
 
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:textSize="14sp"
+            android:layout_marginTop="16dp"
+            android:text="@string/forget_password"
+            android:onClick="onClickForgetPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <!--  <Button
               android:onClick="onClickregister"
               android:id="@+id/login_button2"

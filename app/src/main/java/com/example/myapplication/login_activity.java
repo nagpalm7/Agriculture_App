@@ -325,4 +325,9 @@ public class login_activity extends AppCompatActivity {
         intent.putExtra("isAdo", isAdo);
         startActivity(intent);
     }
+
+    public void onClickForgetPassword(View view) {
+        Intent intent = new Intent(login_activity.this,ForgetPasswordActivity.class);
+        startActivity(intent);
+    }
 }

@@ -10,13 +10,24 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:visibility="gone"
         android:elevation="8dp"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:layout_gravity="center_horizontal"
         android:id="@+id/profile_pic"
         android:contentDescription="@string/nav_header_desc" />
+
+    <ImageView
+        android:src="@mipmap/white_logo"
+        android:contentDescription="Navigation header"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp"
+        android:elevation="8dp"
+        android:layout_width="80dp"
+        android:layout_height="100dp"/>
+
 
 
     <TextView
