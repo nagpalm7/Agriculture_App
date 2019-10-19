@@ -68,6 +68,9 @@ public class ado_fragment extends Fragment {
     private ProgressBar spinner_probar;
     private RecyclerView Rview;
     private AlertDialog dialog;
+    private String mdistrict;
+    private Integer district_counter;
+
 
 
     public ado_fragment() {
@@ -93,6 +96,8 @@ public class ado_fragment extends Fragment {
         spinner = view.findViewById(R.id.spinner);
         spinner_probar = view.findViewById(R.id.spinner_probar);
         spinner_probar.setVisibility(View.VISIBLE);
+
+
 
         progressBar = view.findViewById(R.id.ado_list_progressbar);
         recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, mUserId, false,
@@ -135,6 +140,8 @@ public class ado_fragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    district_counter = spinner.getSelectedItemPosition();
                     if(spinner.getSelectedItem().toString().equals("Select District")){
 
                     }
@@ -213,6 +220,7 @@ public class ado_fragment extends Fragment {
 
     void getadolist(String district){
 
+        mdistrict = district;
         ado_list="http://18.224.202.135/api/users-list/ado/?search="+district;
 
         final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
@@ -441,6 +449,11 @@ public class ado_fragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        final AlertDialog spotdialog = new SpotsDialog.Builder().setContext(getActivity()).setMessage("Loading...")
+                .setTheme(R.style.CustomDialog)
+                .setCancelable(false).build();
+
+
         Log.d(TAG, "onResume: ");
         if (isRefresh) {
             getFragmentManager().beginTransaction().detach(ado_fragment.this)
@@ -448,7 +461,122 @@ public class ado_fragment extends Fragment {
             Log.d(TAG, "onResume: REFRESH");
             isRefresh = false;
         }
-    }
+
+        if(mdistrict != null && district_counter != null){
+            //dialog.show();
+            spotdialog.show();
+            Log.d(TAG, "onResume: district_counter"+district_counter);
+
+            spinner.setSelection(district_counter,true);
+            ado_list="http://18.224.202.135/api/users-list/ado/?search="+mdistrict;
+
+            final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
+            final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, ado_list, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    view.setBackground(getResources().getDrawable(R.drawable.data_background));
+
+
+                    Log.d(TAG, "onResponse: sizes"+username.size()+userinfo.size());
+
+                    try {
+                        JSONObject rootObject = new JSONObject(String.valueOf(response));
+                        nextUrl = rootObject.getString("next");
+                        Log.d(TAG, "onResponse: " + nextUrl);
+                        JSONArray resultsArray = rootObject.getJSONArray("results");
+                        if(resultsArray.length()== 0){
+                            recyclerViewAdater.mShowShimmer = false;
+                            recyclerViewAdater.notifyDataSetChanged();
+
+                            view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
+                            //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                        }
+                        for (int i = 0; i < resultsArray.length(); i++) {
+                            JSONObject singleObject = resultsArray.getJSONObject(i);
+                            username.add(singleObject.getString("name").toUpperCase());
+                            JSONArray villageArray = singleObject.getJSONArray("village");
+                            Log.d(TAG, "onResponse: LENGTH " + villageArray.length());
+                            if (villageArray.length() == 0)
+                                userinfo.add("NOT ASSIGNED");
+                            for (int j = 0; j < 1; j++) {
+                                try {
+                                    JSONObject villageObject = villageArray.getJSONObject(i);
+                                    userinfo.add(villageObject.getString("village").toUpperCase());
+                                } catch (JSONException e) {
+                                    userinfo.add("NOT ASSIGNED");
+                                }
+                            }
+                            JSONObject authObject = singleObject.getJSONObject("auth_user");
+                            String pk = authObject.getString("pk");
+                            mPkList.add(pk);
+                            String id = singleObject.getString("id");
+                            mUserId.add(id);
+                            try {
+                                JSONObject ddaObject = singleObject.getJSONObject("dda");
+                                String ddaName = ddaObject.getString("name");
+                                mDdoNames.add(ddaName);
+                                try {
+                                    JSONObject districtObject = ddaObject.getJSONObject("district");
+                                    String districtName = districtObject.getString("district");
+                                    mDistrictNames.add(districtName.toUpperCase());
+                                } catch (JSONException e) {
+                                    mDistrictNames.add("NOT ASSIGNED");
+                                }
+                            } catch (JSONException e) {
+                                mDdoNames.add("Not Assigned");
+                            }
+                        }
+
+                        recyclerViewAdater.mShowShimmer = false;
+                        recyclerViewAdater.notifyDataSetChanged();
+                        spotdialog.dismiss();
+
+                    } catch (JSONException e) {
+                        Log.e(TAG, "onResponse: JSON" + e);
+                        e.printStackTrace();
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (error instanceof NoConnectionError)
+                        Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onErrorResponse: " + error);
+                }
+            }) {
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("Authorization", "Token " + token);
+                    return map;
+                }
+            };
+
+            requestQueue.add(jsonObjectRequest);
+
+            jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 50000;
+                }
+
+                @Override
+                public int getCurrentRetryCount() {
+                    return 50000;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+
+                }
+            });
+        }
+
+        }
+
 
     @Override
     public void onPause() {
