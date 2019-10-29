@@ -122,9 +122,9 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-        <meta-data
+        <!--<meta-data
             android:name="io.fabric.ApiKey"
-            android:value="AIzaSyCATCd-YCRK6oEcS5rb140NuBve8g6uJqo" />
+            android:value="AIzaSyCk1C7rwf-pVh3bf3AEdoRLcROr87t5TgI" />-->
 
         <provider
             android:name="androidx.core.content.FileProvider"
