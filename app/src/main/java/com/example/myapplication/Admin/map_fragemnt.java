@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.gson.JsonArray;
 import com.google.maps.android.clustering.ClusterManager;
 
 import org.json.JSONArray;
@@ -105,7 +106,7 @@ public class map_fragemnt extends Fragment {
             bottomsheetLayout.setOutlineProvider(new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
-                    outline.setRoundRect(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight() + 40, 40f);
+                    outline.setRoundRect(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight() + 30, 40f);
                 }
             });
             bottomsheetLayout.setClipToOutline(true);
@@ -185,6 +186,17 @@ public class map_fragemnt extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }*/
+/*
+                try {
+                    JSONArray result = response.getJSONArray("results");
+                    for (int i=0;i<result.length();i++){
+                        JSONObject singleObject = result.getJSONObject(i);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }*/
+
+
 
                 try {
                     pendingView.setText(response.getString("pending_count"));
