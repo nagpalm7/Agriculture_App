@@ -11,7 +11,7 @@
         tools:context=".MapsActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
 
-    <!--<include layout="@layout/maps_bottomsheet" />-->
+    <include layout="@layout/maps_bottomsheet" />
     <!--
         <ProgressBar
             android:id="@+id/pbar"
