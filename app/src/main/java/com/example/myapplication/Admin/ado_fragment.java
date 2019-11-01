@@ -142,20 +142,17 @@ public class ado_fragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                     district_counter = spinner.getSelectedItemPosition();
-                    if(spinner.getSelectedItem().toString().equals("Select District")){
-
-                    }
-                    else {
-                        dialog.show();
-                        Log.d(TAG, "onItemSelected: yoyo");
-                        username.clear();
-                        userinfo.clear();
-                        mUserId.clear();
-                        mPkList.clear();
-                        mDdoNames.clear();
-                        mDistrictNames.clear();
-                        getadolist(spinner.getSelectedItem().toString());
-                    }
+                if (!spinner.getSelectedItem().toString().equals("Select District")) {
+                    dialog.show();
+                    Log.d(TAG, "onItemSelected: yoyo");
+                    username.clear();
+                    userinfo.clear();
+                    mUserId.clear();
+                    mPkList.clear();
+                    mDdoNames.clear();
+                    mDistrictNames.clear();
+                    getadolist(spinner.getSelectedItem().toString());
+                }
             }
 
             @Override
@@ -576,7 +573,6 @@ public class ado_fragment extends Fragment {
         }
 
         }
-
 
     @Override
     public void onPause() {

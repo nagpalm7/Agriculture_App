@@ -318,12 +318,56 @@
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cardview6"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:elevation="8dp"
+            app:cardCornerRadius="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioGroup
+                    android:id="@+id/radio_group2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/fire_radio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="15dp"
+                        android:onClick="FireRadioButtonClicked"
+                        android:text="FIRE"
+                        android:textColor="@color/colorPrimaryDark" />
+
+                    <RadioButton
+                        android:id="@+id/no_fire_radio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:onClick="FireRadioButtonClicked"
+                        android:text="NO FIRE"
+                        android:textColor="@color/colorPrimaryDark" />
+
+                </RadioGroup>
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardview7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cardview6"
+            android:layout_below="@id/cardview16"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
             android:elevation="8dp"

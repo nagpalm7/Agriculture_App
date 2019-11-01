@@ -46,6 +46,7 @@ public class AdoDdoOngoing extends Fragment {
     private ArrayList<String> locationNames;
     private ArrayList<String> locationAddresses;
     private ArrayList<String> mAdoNames;
+    private ArrayList<String> mIds;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private LinearLayoutManager layoutManager;
@@ -96,7 +97,9 @@ public class AdoDdoOngoing extends Fragment {
         locationNames = new ArrayList<>();
         locationAddresses = new ArrayList<>();
         mAdoNames = new ArrayList<>();
-        adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses, mAdoNames, true);
+        mIds = new ArrayList<>();
+        adapter = new AdoListAdapter(getActivity(), locationNames, locationAddresses, mAdoNames, mIds,
+                true, 2);
         recyclerView.setAdapter(adapter);
         getData(mUrl);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -145,6 +148,8 @@ public class AdoDdoOngoing extends Fragment {
                                     } catch (JSONException e) {
                                         mAdoNames.add("Not Assigned");
                                     }
+                                    String id = singleObject.getString("id");
+                                    mIds.add(id);
                                 }
                                 String locName = singleObject.getString("village_name");
                                 String locAdd = singleObject.getString("block_name") +
@@ -211,6 +216,8 @@ public class AdoDdoOngoing extends Fragment {
                                         } catch (JSONException e) {
                                             mAdoNames.add("Not Assigned");
                                         }
+                                        String id = singleObject.getString("id");
+                                        mIds.add(id);
                                     }
                                     String locName = singleObject.getString("village_name");
                                     String locAdd = singleObject.getString("block_name") +

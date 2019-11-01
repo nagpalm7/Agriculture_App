@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ForgetPasswordActivity"></activity>
+        <activity android:name=".Admin.DownloadReportActivity"></activity>
+        <activity android:name=".ForgetPasswordActivity" />
         <activity android:name=".Admin.NotificationActivity" />
         <activity android:name=".Dda.SearchResultsActivity" />
         <activity

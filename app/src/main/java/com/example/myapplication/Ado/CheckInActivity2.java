@@ -110,6 +110,8 @@ public class CheckInActivity2 extends AppCompatActivity implements
     private ReportImageRecyAdapter adapter;
     private Button pickPhotoButton;
     private Button submitReportButton;
+    private RadioGroup isFireRadioGroup;
+    private String fireParam = "";
     private String reportSubmitUrl = "http://18.224.202.135/api/report-ado/add/";
     private String imageUploadUrl = "http://18.224.202.135/api/upload/images/";
     private String villageListUrl = "http://18.224.202.135/api/user/";
@@ -141,6 +143,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
     private NotificationManagerCompat notificationManager;
     private NotificationCompat.Builder notificationBuilder;
     private Context loctionContext;
+    private boolean isFirstPic = true;
 
     public static void getStatus(Boolean status) {
         Log.d("getStatus2", "getStatus: comehere" + status);
@@ -168,6 +171,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
         recyclerView = findViewById(R.id.rvimages);
         pickPhotoButton = findViewById(R.id.pick_photo);
         submitReportButton = findViewById(R.id.submit_report_ado);
+        isFireRadioGroup = findViewById(R.id.radio_group2);
         notificationManager = NotificationManagerCompat.from(this);
         Intent intent = getIntent();
         latitude = intent.getDoubleExtra("lat", 0);
@@ -176,6 +180,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
 
         String id = intent.getStringExtra("id");
         locationId = id;
+        Log.d(TAG, "onCreate: LOCATION ID " + id);
         destVillageName = intent.getStringExtra("village_name");
         SharedPreferences prefs = getSharedPreferences("tokenFile", MODE_PRIVATE);
         pk = prefs.getString("pk", "");
@@ -283,14 +288,27 @@ public class CheckInActivity2 extends AppCompatActivity implements
         pickPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openCameraIntent();
+                if (isFirstPic) {
+                    showdialogbox("Attention", "Only 4 Photos are allowed to be taken", "Ok",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    openCameraIntent();
+                                }
+                            }, "", null, true);
+                    isFirstPic = false;
+                } else if (mImages.size() < 4)
+                    openCameraIntent();
+                else
+                    Toast.makeText(CheckInActivity2.this, "Max Photos Reached...",
+                            Toast.LENGTH_SHORT).show();
             }
         });
 
         submitReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isEntered) {
+                if (true) {
                     Log.d(TAG, "onClick: inside it damn!");
 
 //                    if (actionTaken.equals("Chalaan")) {
@@ -332,6 +350,9 @@ public class CheckInActivity2 extends AppCompatActivity implements
                                             else if (murrabbaEditText.getText().toString().trim().isEmpty())
                                                 Toast.makeText(CheckInActivity2.this, "Please fill Murrabba Number",
                                                         Toast.LENGTH_SHORT).show();
+                                            else if (fireParam.equals(""))
+                                                Toast.makeText(CheckInActivity2.this, "Please select an option " +
+                                                        "Fire or No Fire", Toast.LENGTH_SHORT).show();
                                             else
                                                 submitReport();
                                         }
@@ -344,6 +365,9 @@ public class CheckInActivity2 extends AppCompatActivity implements
                                         else if (murrabbaEditText.getText().toString().trim().isEmpty())
                                             Toast.makeText(CheckInActivity2.this, "Please fill Murrabba Number",
                                                     Toast.LENGTH_SHORT).show();
+                                        else if (fireParam.equals(""))
+                                            Toast.makeText(CheckInActivity2.this, "Please select an option " +
+                                                    "Fire or No Fire", Toast.LENGTH_SHORT).show();
                                         else
                                             submitReport();
                                     }
@@ -676,6 +700,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
                 postParams.put("murrabba_num", murrabbbaNum);
                 postParams.put("longitude", longitude);
                 postParams.put("latitude", latitude);
+                postParams.put("fire", fireParam);
                 //postParams.put("action", "chalaan");
                 //postParams.put("number", mobile);
 
@@ -806,7 +831,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
                                              finish();
                                          } else {
                                              notificationBuilder.setProgress(0, 0, false)
-                                                     .setContentText((photosUploadedCount + 1) + "/" + (int) mImages.get(photosUploadedCount + 1).length());
+                                                     .setContentText((photosUploadedCount + 1) + "/" + (int) mImages.get(photosUploadedCount).length());
                                              notificationManager.notify(1, notificationBuilder.build());
                                              uploadingPhotos();
                                          }
@@ -940,4 +965,14 @@ public class CheckInActivity2 extends AppCompatActivity implements
         return alert;
     }
 
+    public void FireRadioButtonClicked(View view) {
+        switch (view.getId()) {
+            case R.id.fire_radio:
+                fireParam = "Fire";
+                break;
+            case R.id.no_fire_radio:
+                fireParam = "No Fire";
+                break;
+        }
+    }
 }

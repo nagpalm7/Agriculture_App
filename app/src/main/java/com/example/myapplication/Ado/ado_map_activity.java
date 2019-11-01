@@ -461,7 +461,7 @@ public class ado_map_activity extends AppCompatActivity
     public void onClickCheckIn(View view) {
         Log.d(TAG, "onClickCheckIn: is "+isEntered);
 
-        if (isEntered) {
+        if (true) {
             Intent intent = new Intent(this, CheckInActivity2.class);
             intent.putExtra("id", id);
             intent.putExtra("lat",latitude);

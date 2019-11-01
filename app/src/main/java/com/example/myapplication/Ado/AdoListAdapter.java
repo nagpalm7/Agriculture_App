@@ -31,6 +31,7 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
     private boolean isDDoAdo;
     private boolean isDDo;
     private boolean isAdoComplete = false;
+    private int isDdoTabNo;
     private int shimmer_count = 5;
     Context mcontext;
 
@@ -59,6 +60,18 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
         this.isDDo = isDDo;
         isDDoAdo = true;
         this.mcontext = mcontext;
+        isDdoTabNo = 1;
+    }
+
+    public AdoListAdapter(Context mcontext, ArrayList<String> mtextview1, ArrayList<String> mtextview2, ArrayList<String> mAdoName, ArrayList<String> mIds, boolean isDDo, int isDdoTabNo) {
+        this.mtextview1 = mtextview1;
+        this.mtextview2 = mtextview2;
+        this.mAdoName = mAdoName;
+        this.isDDo = isDDo;
+        isDDoAdo = true;
+        this.mcontext = mcontext;
+        idList = mIds;
+        this.isDdoTabNo = isDdoTabNo;
     }
 
     @NonNull
@@ -70,6 +83,7 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
             @Override
             public void onClick(View view) {
                 if (!mshowshimmer) {
+                    //FOR ADO -> PENDING
                     if (!isDDoAdo) {
                         Intent intent = new Intent(mcontext, ado_map_activity.class);
                         int position = adoListHolder.getAdapterPosition();
@@ -82,6 +96,32 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
                         mcontext.startActivity(intent);
                     }
 
+                    //FOR ADMIN -> DDA -> ONGOING AND COMPLETED
+                    if (isDDo) {
+                        switch (isDdoTabNo) {
+                            case 1:
+                                break;
+                            case 2:
+                            case 3:
+                                Intent intent = new Intent(mcontext, ReviewReport.class);
+                                int position = adoListHolder.getAdapterPosition();
+                                String id = idList.get(position);
+                                intent.putExtra("id", id);
+                                intent.putExtra("isDdo", true);
+                                mcontext.startActivity(intent);
+                                break;
+                        }
+                    }
+                    //FOR ADMIN -> ADO -> COMPLETED
+                    if (!isDDo && isDdoTabNo == 3) {
+                        Intent intent = new Intent(mcontext, ReviewReport.class);
+                        int position = adoListHolder.getAdapterPosition();
+                        String id = idList.get(position);
+                        intent.putExtra("id", id);
+                        intent.putExtra("isDdo", false);
+                        mcontext.startActivity(intent);
+                    }
+                    //FOR ADO -> COMPLETED
                     if (isAdoComplete) {
                         Intent intent = new Intent(mcontext, ReviewReport.class);
                         int position = adoListHolder.getAdapterPosition();
@@ -93,9 +133,6 @@ public class AdoListAdapter extends RecyclerView.Adapter<AdoListAdapter.AdoListH
                 }
             }
         });
-
-
-
         return adoListHolder;
     }
 

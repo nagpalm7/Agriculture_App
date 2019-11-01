@@ -266,6 +266,11 @@ public class AdminActivity extends AppCompatActivity
             openimagepicker();
         }
 
+        if (id == R.id.download_report) {
+            Intent intent = new Intent(this, DownloadReportActivity.class);
+            startActivity(intent);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

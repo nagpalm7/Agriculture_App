@@ -30,13 +30,11 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,14 +56,11 @@ public class pending_fragment extends Fragment {
 
     //tags
     private static final String TAG = "pending_fragment";
-    private String url_unassigned = "http://18.224.202.135/api/locations/unassigned";
-    private String url_assigned = "http://18.224.202.135/api/locations/assigned";
-    private String next_unassigned_url = "null";
-    private String next_assigned_url = "null";
+    private String pendingUrl = "http://18.224.202.135/api/locations/pending";
+    private String nextPendingUrl = "null";
     private LinearLayoutManager layoutManager;
     private AdminLocationAdapter recyclerViewAdater;
     private ProgressBar progressBar;
-    private int NEXT_LOCATION_COUNT = 1;
     private boolean isNextBusy;
     private boolean isSendingNotifications = false;
     private View view;
@@ -107,86 +102,13 @@ public class pending_fragment extends Fragment {
         Log.d(TAG, "onCreateView: inflated fragment_ongoing");
 
         final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-
-        final JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.GET, url_assigned, null, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, pendingUrl, null,
+                new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
-                    next_assigned_url = jsonObject.getString("next");
-                    JSONArray jsonArray = jsonObject.getJSONArray("results");
-                    if (jsonArray.length() == 0 && mDdaName.isEmpty()) {
-                        recyclerViewAdater.mShowShimmer = false;
-                        recyclerViewAdater.notifyDataSetChanged();
-                        view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
-                    }
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject c = jsonArray.getJSONObject(i);
-                        String date = c.getString("acq_date");
-                        JSONObject adoobj = c.getJSONObject("ado");
-                        JSONObject authado = adoobj.getJSONObject("auth_user");
-                        mpkado.add(authado.getString("pk"));
-                        mdate.add(date);
-
-                        JSONObject ddaobj = c.getJSONObject("dda");
-                        JSONObject authddo = ddaobj.getJSONObject("auth_user");
-                        mpkdda.add(authddo.getString("pk"));
-                        Log.d(TAG, "onResponse: DDA " + authddo.getString("pk"));
-                        villagename = c.getString("village_name");
-                        blockname = c.getString("block_name");
-                        district = c.getString("district");
-
-                        try {
-                            JSONObject mDdaObject = c.getJSONObject("dda");
-                            String ddaName = mDdaObject.getString("name");
-                            mDdaName.add(ddaName);
-                        } catch (JSONException e) {
-                            mDdaName.add("Not Assigned");
-                        }
-                        try {
-                            JSONObject mAdoObject = c.getJSONObject("ado");
-                            Log.d(TAG, "onResponse: try block");
-                            String adoName = mAdoObject.getString("name");
-                            Log.d(TAG, "onResponse: adoname " + adoName);
-                            mAdaName.add(adoName);
-                        } catch (JSONException e) {
-                            mAdaName.add("Not Assigned");
-                            Log.d(TAG, "exception: ");
-                        }
-                        mAddress.add(villagename.toUpperCase() + ", " + blockname.toUpperCase() +
-                                ", " + district.toUpperCase());
-                        Log.d(TAG, "onResponse: next");
-                    }
-                    recyclerViewAdater.mShowShimmer = false;
-                    recyclerViewAdater.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
-                    e.printStackTrace();
-                    recyclerViewAdater.mShowShimmer = false;
-                    recyclerViewAdater.notifyDataSetChanged();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "onErrorResponse: " + error);
-            }
-        }) {
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> map = new HashMap<>();
-                map.put("Authorization", "Token " + token);
-                return map;
-            }
-        };
-
-        final JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, url_unassigned, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(String.valueOf(response));
-                    next_unassigned_url = jsonObject.getString("next");
+                    nextPendingUrl = jsonObject.getString("next");
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
@@ -229,18 +151,19 @@ public class pending_fragment extends Fragment {
                                 blockname.toUpperCase() + ", " + district.toUpperCase());
                     }
                     Log.d(TAG, "onResponse: SIZE " + mdate.size() + "hgfh"+ mDdaName.size());
-                    requestQueue.add(jsonObjectRequest2);
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                     e.printStackTrace();
-                    requestQueue.add(jsonObjectRequest2);
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NoConnectionError)
-                    Toast.makeText(getActivity(), "Check Your Internet Connection Please!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Check Your Internet Connection Please!",
+                            Toast.LENGTH_LONG).show();
+                else Toast.makeText(getActivity(), "Something went wrong, Please try again later!",
+                        Toast.LENGTH_LONG).show();
                 Log.e(TAG, "onErrorResponse: " + error);
             }
         }) {
@@ -256,23 +179,6 @@ public class pending_fragment extends Fragment {
 
         requestQueue.add(jsonObjectRequest1);
         jsonObjectRequest1.setRetryPolicy(new RetryPolicy() {
-            @Override
-            public int getCurrentTimeout() {
-                return 50000;
-            }
-
-            @Override
-            public int getCurrentRetryCount() {
-                return 50000;
-            }
-
-            @Override
-            public void retry(VolleyError error) throws VolleyError {
-
-            }
-        });
-
-        jsonObjectRequest2.setRetryPolicy(new RetryPolicy() {
             @Override
             public int getCurrentTimeout() {
                 return 50000;
@@ -325,38 +231,23 @@ public class pending_fragment extends Fragment {
     }
 
     private void loadNextLocations() {
-        /*switch (NEXT_LOCATION_COUNT) {
-            case 1:
-                if (!next_unassigned_url.equals("null"))
-                    get_Unassigned();
-                NEXT_LOCATION_COUNT = 2;
-                break;
-            case 2:
-                if (!next_assigned_url.equals("null"))
-                    get_Assigned();
-                NEXT_LOCATION_COUNT = 1;
-                break;
-        }*/
-        if (!next_unassigned_url.equals("null")) {
-            get_Unassigned();
-        } else if (!next_assigned_url.equals("null")) {
-            get_Assigned();
+        if (!nextPendingUrl.equals("null")) {
+            getNextPendingLocations();
         }
-
     }
 
-    private void get_Unassigned() {
-        Log.d(TAG, "get_Unassigned: inside");
+    private void getNextPendingLocations() {
+        Log.d(TAG, "getNextPendingLocations: inside");
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         progressBar.setVisibility(View.VISIBLE);
         isNextBusy = true;
-            final JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, next_unassigned_url, null, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, nextPendingUrl, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
                         JSONObject jsonObject = new JSONObject(String.valueOf(response));
                         JSONArray jsonArray = jsonObject.getJSONArray("results");
-                        next_unassigned_url = jsonObject.getString("next");
+                        nextPendingUrl = jsonObject.getString("next");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject c = jsonArray.getJSONObject(i);
                             String date = c.getString("acq_date");
@@ -404,7 +295,11 @@ public class pending_fragment extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     if (error instanceof NoConnectionError)
-                        Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Check Your Internt Connection Please!",
+                                Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getActivity(), "Something went wrong, Please try again later!",
+                                Toast.LENGTH_LONG).show();
                     Log.e(TAG, "onErrorResponse: " + error);
                 }
             }) {
@@ -432,93 +327,9 @@ public class pending_fragment extends Fragment {
 
             }
         });
-            requestQueue.add(jsonObjectRequest1);
+        requestQueue.add(jsonObjectRequest1);
         requestFinished(requestQueue);
 
-    }
-
-    private void get_Assigned() {
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        isNextBusy = true;
-        progressBar.setVisibility(View.VISIBLE);
-            final JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.GET, next_assigned_url, null, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(String.valueOf(response));
-                        JSONArray jsonArray = jsonObject.getJSONArray("results");
-                        next_assigned_url = jsonObject.getString("next");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject c = jsonArray.getJSONObject(i);
-                            JSONObject adoobj = c.getJSONObject("ado");
-                            String date = c.getString("acq_date");
-                            JSONObject authado = adoobj.getJSONObject("auth_user");
-                            mpkado.add(authado.getString("pk"));
-                            mdate.add(date);
-                            Log.d(TAG, "onResponse: mdatesize"+mdate.size());
-
-                            JSONObject ddaobj = c.getJSONObject("dda");
-                            JSONObject authddo = ddaobj.getJSONObject("auth_user");
-                            mpkdda.add(authddo.getString("pk"));
-                            villagename = c.getString("village_name");
-                            blockname = c.getString("block_name");
-                            district = c.getString("district");
-                            JSONObject mDdaObject = c.getJSONObject("dda");
-                            String ddaName = mDdaObject.getString("name");
-                            mDdaName.add(ddaName);
-                            try {
-                                JSONObject mAdoObject = c.getJSONObject("ado");
-                                String adoName = mAdoObject.getString("name");
-                                mAdaName.add(adoName);
-                            } catch (JSONException e) {
-                                mAdaName.add("Not Assigned");
-                            }
-                            mAddress.add(villagename.toUpperCase() + ", " +
-                                    blockname.toUpperCase() + ", " + district.toUpperCase());
-                        }
-                        recyclerViewAdater.notifyDataSetChanged();
-                        isNextBusy = false;
-                    } catch (JSONException e) {
-                        Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    if (error instanceof NoConnectionError)
-                        Toast.makeText(getActivity(), "Check Your Internt Connection Please!",
-                                Toast.LENGTH_SHORT).show();
-                    isNextBusy = false;
-                    Log.e(TAG, "onErrorResponse: " + error);
-                }
-            }) {
-
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put("Authorization", "Token " + token);
-                    return map;
-                }
-            };
-        jsonObjectRequest2.setRetryPolicy(new RetryPolicy() {
-            @Override
-            public int getCurrentTimeout() {
-                return 50000;
-            }
-
-            @Override
-            public int getCurrentRetryCount() {
-                return 50000;
-            }
-
-            @Override
-            public void retry(VolleyError error) throws VolleyError {
-
-            }
-        });
-            requestQueue.add(jsonObjectRequest2);
-        requestFinished(requestQueue);
     }
 
     private void requestFinished(RequestQueue queue) {
