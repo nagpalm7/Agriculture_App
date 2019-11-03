@@ -2,27 +2,29 @@ package com.example.myapplication.Admin;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
 
@@ -31,41 +33,39 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ado_fragment extends Fragment {
+import dmax.dialog.SpotsDialog;
+
+
+public class adoListofDistrict extends AppCompatActivity {
     private ArrayList<String> username;
     private ArrayList<String> userinfo;
     private ArrayList<String> mUserId;
     private ArrayList<String> mPkList;
     private ArrayList<String> mDdoNames;
     private ArrayList<String> mDistrictNames;
-    private ArrayList<String> mdistrictlist;
-
+    private String ado_list;
+    private String curr_dist;
     private String district_list_url;
 
+    private RecyclerViewAdater recyclerViewAdater;
     private String token;
+    private String nextUrl;
+    private ProgressBar progressBar;
+    private LinearLayoutManager layoutManager;
     private GridLayoutManager gridlayout;
+    private boolean isNextBusy = false;
     private View view;
-    private final String TAG = "ado_fragment";
+    private final String TAG = "ado_info_fragment";
     private RecyclerView Rview;
     private AlertDialog dialog;
-
-    private RecyclerView adolist;
-    private RecyclerViewAdapter_district customadapter;
-
-
-    public ado_fragment() {
-    }
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.ado_fragment, container, false);
-        Log.d(TAG, "onCreateView: ");
-        adolist=view.findViewById(R.id.adolist);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_ado_listof_district);
+        ado_list="";
         district_list_url ="http://18.224.202.135/api/district/";
         username = new ArrayList<>();
         userinfo = new ArrayList<>();
@@ -73,29 +73,31 @@ public class ado_fragment extends Fragment {
         mPkList = new ArrayList<>();
         mDdoNames = new ArrayList<>();
         mDistrictNames = new ArrayList<>();
-        mdistrictlist = new ArrayList<>();
-        //   mdistrictlist.add("Select District");
-
-
-        //  progressBar = view.findViewById(R.id.ado_list_progressbar);
-    /*    recyclerViewAdater = new RecyclerViewAdater(getActivity(), username, userinfo, mUserId, false,
+        try {
+            Intent intent = getIntent();
+            curr_dist = intent.getStringExtra("district");
+        }
+        catch (Exception e)
+        {
+            Log.d(TAG, "onCreate: INTENT EXTRA " + e);
+        }
+        getSupportActionBar().setTitle(curr_dist + "ADOs");
+        progressBar = findViewById(R.id.ado_list_progressbar);
+        recyclerViewAdater = new RecyclerViewAdater(this, username, userinfo, mUserId, false,
                 mPkList, mDdoNames, mDistrictNames);
-       // Rview = view.findViewById(R.id.recyclerViewado);
+        Rview = findViewById(R.id.recyclerViewado);
         Rview.setAdapter(recyclerViewAdater);
-        SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
-        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new LinearLayoutManager(this);
         Rview.setLayoutManager(layoutManager);
-        DividerItemDecoration divider = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
+        DividerItemDecoration divider = new DividerItemDecoration(this, layoutManager.getOrientation());
         Rview.addItemDecoration(divider);
         recyclerViewAdater.mShowShimmer = false;
 
-        dialog = new SpotsDialog.Builder().setContext(getActivity()).setMessage("Loading...")
+        dialog = new SpotsDialog.Builder().setContext(this).setMessage("Loading...")
                 .setTheme(R.style.CustomDialog)
                 .setCancelable(false).build();
-
-
-
 
         Rview.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -113,110 +115,20 @@ public class ado_fragment extends Fragment {
                 }
                 super.onScrolled(recyclerView, dx, dy);
             }
-        }); */
-
-   /*     spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    if(spinner.getSelectedItem().toString().equals("Select District")){
-
-                    }
-                    else {
-                        dialog.show();
-                        Log.d(TAG, "onItemSelected: yoyo");
-                        username.clear();
-                        userinfo.clear();
-                        mUserId.clear();
-                        mPkList.clear();
-                        mDdoNames.clear();
-                        mDistrictNames.clear();
-                        getadolist(spinner.getSelectedItem().toString());
-                    }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        }); */
-        SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
-        token = preferences.getString("token", "");
-
-        adolist.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.HORIZONTAL));
-        adolist.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
-        gridlayout=new GridLayoutManager(getActivity(),3);
-        adolist.setLayoutManager(gridlayout);
-
-
-        RequestQueue district_requestQueue= Volley.newRequestQueue(getActivity());
-
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, district_list_url, null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-
-                for(int i=0;i<response.length();i++){
-                    try {
-                        JSONObject singleObject = response.getJSONObject(i);
-                        mdistrictlist.add(singleObject.getString("district"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                Collections.sort(mdistrictlist);
-
-                customadapter = new RecyclerViewAdapter_district(getActivity(),mdistrictlist);
-                adolist.setAdapter(customadapter);
-                // loadSpinnerData();
-
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(),"something went wrong",Toast.LENGTH_LONG);
-
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> map = new HashMap<>();
-                map.put("Authorization","Token "+token);
-                return map;
-            }
-        };
-
-        district_requestQueue.add(jsonArrayRequest);
-
-
-
-
-
-        return view;
-    }
-
-
-
-   /* void loadSpinnerData(){
-
-
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(getActivity(),  android.R.layout.simple_spinner_dropdown_item, mdistrictlist);
-        adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        spinner_probar.setVisibility(View.GONE);
+        });
+        getadolist(curr_dist);
     }
 
     void getadolist(String district){
 
         ado_list="http://18.224.202.135/api/users-list/ado/?search="+district;
 
-        final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, ado_list, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                view.setBackground(getResources().getDrawable(R.drawable.data_background));
+                //view.setBackground(getResources().getDrawable(R.drawable.data_background));
 
 
                 Log.d(TAG, "onResponse: sizes"+username.size()+userinfo.size());
@@ -230,7 +142,7 @@ public class ado_fragment extends Fragment {
                         recyclerViewAdater.mShowShimmer = false;
                         recyclerViewAdater.notifyDataSetChanged();
 
-                        view.setBackground(getActivity().getResources().getDrawable(R.mipmap.no_entry_background));
+                        view.setBackground(getResources().getDrawable(R.mipmap.no_entry_background));
                         //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
                     }
                     for (int i = 0; i < resultsArray.length(); i++) {
@@ -283,7 +195,7 @@ public class ado_fragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NoConnectionError)
-                    Toast.makeText(getActivity(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(adoListofDistrict.this, "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onErrorResponse: " + error);
             }
         }) {
@@ -317,7 +229,7 @@ public class ado_fragment extends Fragment {
     }
 
     private void getNextAdos() {
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
         isNextBusy = true;
         Log.d(TAG, "getNextAdos: count ");
         progressBar.setVisibility(View.VISIBLE);
@@ -378,7 +290,7 @@ public class ado_fragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NoConnectionError)
-                    Toast.makeText(getActivity(), "Check Your Internt Connection Please!",
+                    Toast.makeText(adoListofDistrict.this, "Check Your Internt Connection Please!",
                             Toast.LENGTH_SHORT).show();
                 isNextBusy = false;
             }
@@ -425,6 +337,5 @@ public class ado_fragment extends Fragment {
             }
         });
 
-    } */
-
+    }
 }

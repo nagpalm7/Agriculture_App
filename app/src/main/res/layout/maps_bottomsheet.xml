@@ -16,17 +16,17 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:padding="8dp">
 
         <View
             android:layout_width="80dp"
             android:layout_height="8dp"
-            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
             android:background="@drawable/bottom_sheet_shape" />
     </RelativeLayout>
 
-    <TextView
+  <!--  <TextView
         android:textColor="#6A6969"
         android:textStyle="bold"
         android:layout_marginTop="16dp"
@@ -36,7 +36,7 @@
         android:text="information"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-
+-->
 
     <LinearLayout
         android:layout_width="match_parent"

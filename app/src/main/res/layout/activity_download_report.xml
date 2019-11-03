@@ -25,6 +25,17 @@
         android:layout_marginTop="16dp"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/end_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cardview"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="16dp"
+            android:text="TO :"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
         <Button
             android:id="@+id/end_date"
             android:layout_width="130dp"
@@ -37,16 +48,6 @@
             android:maxLength="10"
             android:text="01-01-20XX" />
 
-        <TextView
-            android:id="@+id/end_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cardview"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="16dp"
-            android:text="TO :"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
