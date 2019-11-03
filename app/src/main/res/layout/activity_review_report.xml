@@ -60,7 +60,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="#f1f1f1"
-
                 />
         </HorizontalScrollView>
 
@@ -372,7 +371,7 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <LinearLayout
+        <!--<LinearLayout
             android:id="@+id/statusRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -397,7 +396,7 @@
                 android:layout_weight="1"
                 android:textAlignment="viewStart"
                 android:textSize="18sp" />
-        </LinearLayout>
+        </LinearLayout>-->
 
         <LinearLayout
             android:id="@+id/view1"
@@ -448,7 +447,7 @@
             android:id="@+id/review_pics_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/statusRow"
+            android:layout_below="@id/view9"
             android:layout_marginTop="8dp"
             android:overScrollMode="never" />
     </RelativeLayout>

@@ -276,47 +276,81 @@
         </androidx.cardview.widget.CardView>
 
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardview6"
+        <RelativeLayout
+            android:id="@+id/fine_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cardview5"
+            android:layout_below="@id/cardview16"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
-            android:elevation="8dp"
-            app:cardCornerRadius="3dp">
+            android:visibility="gone">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:elevation="8dp"
+                app:cardCornerRadius="3dp">
 
-                <RadioGroup
-                    android:id="@+id/radio_group"
+                <LinearLayout
+                    android:id="@+id/checkboxes_linearlayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:orientation="horizontal">
+                    android:layout_marginHorizontal="8dp"
+                    android:orientation="vertical">
 
-                    <RadioButton
-                        android:id="@+id/rbowner"
+                    <CheckBox
+                        android:id="@+id/chalaan_checkbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="15dp"
-                        android:text="OWNERSHIP"
+                        android:onClick="onCheckboxesClicked"
+                        android:text="CHALAAN"
                         android:textColor="@color/colorPrimaryDark" />
 
-                    <RadioButton
-                        android:id="@+id/rblease"
+                    <CheckBox
+                        android:id="@+id/fir_checkbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:text="LEASE"
+                        android:onClick="onCheckboxesClicked"
+                        android:text="FIR"
                         android:textColor="@color/colorPrimaryDark" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-                </RadioGroup>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:layout_toRightOf="@id/cardview15"
+                android:elevation="8dp"
+                app:cardCornerRadius="3dp">
 
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/amount_edittext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:background="@android:color/transparent"
+                        android:inputType="number" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16dp"
+                        android:text="AMOUNT"
+                        android:textColor="@color/colorPrimaryDark" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
+        </RelativeLayout>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardview16"
@@ -334,40 +368,101 @@
 
                 <RadioGroup
                     android:id="@+id/radio_group2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:weightSum="2"
                     android:orientation="horizontal">
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
                     <RadioButton
                         android:id="@+id/fire_radio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="15dp"
+                        android:layout_centerHorizontal="true"
                         android:onClick="FireRadioButtonClicked"
                         android:text="FIRE"
                         android:textColor="@color/colorPrimaryDark" />
+                    </RelativeLayout>
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
                     <RadioButton
                         android:id="@+id/no_fire_radio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:onClick="FireRadioButtonClicked"
+                        android:layout_centerHorizontal="true"
                         android:text="NO FIRE"
+                        android:onClick="FireRadioButtonClicked"
                         android:textColor="@color/colorPrimaryDark" />
-
+                    </RelativeLayout>
                 </RadioGroup>
 
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cardview5"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:elevation="8dp"
+            app:cardCornerRadius="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioGroup
+                    android:id="@+id/radio_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <RadioButton
+                            android:id="@+id/rbowner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:text="OWNERSHIP"
+                            android:textColor="@color/colorPrimaryDark" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <RadioButton
+                            android:id="@+id/rblease"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:text="LEASE"
+                            android:textColor="@color/colorPrimaryDark" />
+                    </RelativeLayout>
+                </RadioGroup>
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardview7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cardview16"
+            android:layout_below="@id/fine_layout"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
             android:elevation="8dp"

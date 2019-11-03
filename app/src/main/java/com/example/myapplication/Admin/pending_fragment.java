@@ -150,6 +150,8 @@ public class pending_fragment extends Fragment {
                         mAddress.add(villagename.toUpperCase() + ", " +
                                 blockname.toUpperCase() + ", " + district.toUpperCase());
                     }
+                    recyclerViewAdater.mShowShimmer = false;
+                    recyclerViewAdater.notifyDataSetChanged();
                     Log.d(TAG, "onResponse: SIZE " + mdate.size() + "hgfh"+ mDdaName.size());
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: " + e.getLocalizedMessage());

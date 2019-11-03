@@ -111,6 +111,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
     private Button pickPhotoButton;
     private Button submitReportButton;
     private RadioGroup isFireRadioGroup;
+    private EditText amountEditText;
     private String fireParam = "";
     private String reportSubmitUrl = "http://18.224.202.135/api/report-ado/add/";
     private String imageUploadUrl = "http://18.224.202.135/api/upload/images/";
@@ -144,6 +145,9 @@ public class CheckInActivity2 extends AppCompatActivity implements
     private NotificationCompat.Builder notificationBuilder;
     private Context loctionContext;
     private boolean isFirstPic = true;
+    private RelativeLayout fineLayout;
+    private boolean isChalaan = false;
+    private boolean isFir = false;
 
     public static void getStatus(Boolean status) {
         Log.d("getStatus2", "getStatus: comehere" + status);
@@ -172,6 +176,8 @@ public class CheckInActivity2 extends AppCompatActivity implements
         pickPhotoButton = findViewById(R.id.pick_photo);
         submitReportButton = findViewById(R.id.submit_report_ado);
         isFireRadioGroup = findViewById(R.id.radio_group2);
+        amountEditText = findViewById(R.id.amount_edittext);
+        fineLayout = findViewById(R.id.fine_layout);
         notificationManager = NotificationManagerCompat.from(this);
         Intent intent = getIntent();
         latitude = intent.getDoubleExtra("lat", 0);
@@ -308,7 +314,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
         submitReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (true) {
+                if (isEntered) {
                     Log.d(TAG, "onClick: inside it damn!");
 
 //                    if (actionTaken.equals("Chalaan")) {
@@ -353,7 +359,14 @@ public class CheckInActivity2 extends AppCompatActivity implements
                                             else if (fireParam.equals(""))
                                                 Toast.makeText(CheckInActivity2.this, "Please select an option " +
                                                         "Fire or No Fire", Toast.LENGTH_SHORT).show();
-                                            else
+                                            else if (fireParam.equalsIgnoreCase("fire")) {
+                                                if (amountEditText.getText().toString().isEmpty())
+                                                    Toast.makeText(CheckInActivity2.this, "Please enter an amount"
+                                                            , Toast.LENGTH_SHORT).show();
+                                                else if (!isChalaan && !isFir)
+                                                    Toast.makeText(CheckInActivity2.this, "Please select an action" +
+                                                            "Chalaan/FIR", Toast.LENGTH_SHORT).show();
+                                            } else
                                                 submitReport();
                                         }
                                         else if (remarksEditText.getText().toString().isEmpty())
@@ -701,6 +714,11 @@ public class CheckInActivity2 extends AppCompatActivity implements
                 postParams.put("longitude", longitude);
                 postParams.put("latitude", latitude);
                 postParams.put("fire", fireParam);
+                if (fireParam.equalsIgnoreCase("fire")) {
+                    postParams.put("fir", isFir);
+                    postParams.put("challan", isChalaan);
+                    postParams.put("amount", amountEditText.getText().toString());
+                }
                 //postParams.put("action", "chalaan");
                 //postParams.put("number", mobile);
 
@@ -969,9 +987,22 @@ public class CheckInActivity2 extends AppCompatActivity implements
         switch (view.getId()) {
             case R.id.fire_radio:
                 fireParam = "Fire";
+                fineLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.no_fire_radio:
                 fireParam = "No Fire";
+                fineLayout.setVisibility(View.GONE);
+                break;
+        }
+    }
+
+    public void onCheckboxesClicked(View view) {
+        switch (view.getId()) {
+            case R.id.chalaan_checkbox:
+                isChalaan = !isChalaan;
+                break;
+            case R.id.fir_checkbox:
+                isFir = !isFir;
                 break;
         }
     }

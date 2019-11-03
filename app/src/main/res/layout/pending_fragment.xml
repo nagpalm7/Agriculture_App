@@ -36,6 +36,7 @@
             android:contentDescription="Send Message Notifications"
             android:src="@drawable/ic_message"
             app:borderWidth="0dp"
+            android:visibility="gone"
             app:fabSize="normal" />
     </RelativeLayout>
 

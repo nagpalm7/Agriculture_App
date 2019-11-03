@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -153,7 +154,7 @@ public class DownloadReportActivity extends AppCompatActivity {
                         .setTheme(R.style.CustomDialog)
                         .setCancelable(false)
                         .build();
-                if (isValidate())
+                if (isValid())
                     downloadReport();
                 else {
                     processingDialog.dismiss();
@@ -224,6 +225,13 @@ public class DownloadReportActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, "onErrorResponse: " + error);
+                        if (error instanceof NoConnectionError)
+                            Toast.makeText(DownloadReportActivity.this,
+                                    "Check your internet connection!", Toast.LENGTH_LONG).show();
+                        else {
+                            Toast.makeText(DownloadReportActivity.this,
+                                    "Something went wrong, Please try again!", Toast.LENGTH_SHORT).show();
+                        }
                         processingDialog.dismiss();
                     }
                 }) {
@@ -237,7 +245,7 @@ public class DownloadReportActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
-    private boolean isValidate() {
+    private boolean isValid() {
         if (status.isEmpty()) {
             Toast.makeText(this, "Please select status for report",
                     Toast.LENGTH_LONG).show();
@@ -254,7 +262,17 @@ public class DownloadReportActivity extends AppCompatActivity {
             Toast.makeText(this, "Please select a valid end date",
                     Toast.LENGTH_LONG).show();
             return false;
-        } else if (startYear > endYear) {
+        } else if (startDay > endDay && startMonth >= endMonth && startYear >= endYear) {
+            showDialogBox("Notice", "Start Date cannot be greater than End Date",
+                    "Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }, "", null, true);
+            return false;
+        }
+        /*else if (startYear > endYear) {
             showDialogBox("Notice", "Start Year cannot be greater than End Year",
                     "Ok", new DialogInterface.OnClickListener() {
                         @Override
@@ -281,7 +299,7 @@ public class DownloadReportActivity extends AppCompatActivity {
                         }
                     }, "", null, true);
             return false;
-        }
+        }*/
         return true;
     }
 

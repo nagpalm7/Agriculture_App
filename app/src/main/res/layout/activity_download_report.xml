@@ -35,7 +35,7 @@
             android:drawableRight="@drawable/ic_arrow_drop_down"
             android:gravity="center"
             android:maxLength="10"
-            android:text="01-01-19XX" />
+            android:text="01-01-20XX" />
 
         <TextView
             android:id="@+id/end_textview"
@@ -57,6 +57,14 @@
         android:layout_marginTop="16dp"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/start_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="FROM :"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
         <Button
             android:id="@+id/start_date"
             android:layout_width="130dp"
@@ -67,14 +75,7 @@
             android:maxLength="10"
             android:text="01-01-19XX" />
 
-        <TextView
-            android:id="@+id/start_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="FROM :"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
+
     </LinearLayout>
 
     <RadioGroup

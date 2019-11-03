@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -56,9 +55,9 @@ public class ReviewReport extends AppCompatActivity {
     private TextView remarksRight;
     private TextView reasonLeft;
     private TextView reasonRight;
-    private LinearLayout statusRow;
+    /*private LinearLayout statusRow;
     private TextView statusLeft;
-    private TextView statusRight;
+    private TextView statusRight;*/
     private static String TAG = "ReviewReport";
     private TextView chalaanLeft;
     private ProgressBar progressBar;
@@ -111,9 +110,9 @@ public class ReviewReport extends AppCompatActivity {
         remarksRight = findViewById(R.id.remarksRight);
         reasonLeft = findViewById(R.id.reasonLeft);
         reasonRight = findViewById(R.id.reasonRight);
-        statusRow = findViewById(R.id.statusRow);
+        /*statusRow = findViewById(R.id.statusRow);
         statusLeft = findViewById(R.id.statusLeft);
-        statusRight = findViewById(R.id.statusRight);
+        statusRight = findViewById(R.id.statusRight);*/
         progressBar = findViewById(R.id.progressBar);
         noSubsidiesTextView = findViewById(R.id.noSubsidies_textview);
         schemedata = new ArrayList<>();
@@ -261,11 +260,11 @@ public class ReviewReport extends AppCompatActivity {
                             reasonLeft.setText("Incident Reason");
                             reasonRight.setText(reason);
                             if (isAdmin) {
-                                statusRow.setVisibility(View.VISIBLE);
-                                JSONObject locationObject = rootObject.getJSONObject("location");
-                                String status = locationObject.getString("status");
-                                statusLeft.setText("ADO Status");
-                                statusRight.setText(status);
+//                                statusRow.setVisibility(View.VISIBLE);
+                                /*JSONObject locationObject = rootObject.getJSONObject("location");
+                                String status = locationObject.getString("status");*/
+                                /*statusLeft.setText("ADO Status");
+                                statusRight.setText(status);*/
                             }
                             progressBar.setVisibility(View.GONE);
                             if (isDdo || isAdmin) {

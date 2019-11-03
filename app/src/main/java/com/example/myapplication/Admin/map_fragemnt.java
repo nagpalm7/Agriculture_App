@@ -2,7 +2,10 @@ package com.example.myapplication.Admin;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Outline;
@@ -41,7 +44,6 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.gson.JsonArray;
 import com.google.maps.android.clustering.ClusterManager;
 
 import org.json.JSONArray;
@@ -169,6 +171,7 @@ public class map_fragemnt extends Fragment {
 
 
         Log.d(TAG, "onCreateView: look me here " + mapFragment);
+        isUpdateAvail();
         return view;
     }
 
@@ -408,4 +411,64 @@ public class map_fragemnt extends Fragment {
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
+    private void isUpdateAvail() {
+        String url = "http://18.224.202.135/api/checkVersion";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject rootObject = new JSONObject(String.valueOf(response));
+                            double versionCode = Double.parseDouble(rootObject.getString("version"));
+                            String verName = "";
+                            try {
+                                PackageInfo pInfo = getActivity().getPackageManager()
+                                        .getPackageInfo(getActivity().getPackageName(), 0);
+                                verName = pInfo.versionName;
+                            } catch (PackageManager.NameNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            double verCode = Double.parseDouble(verName);
+                            Log.d(TAG, "onResponse: versionCode " + versionCode + "verCode" + verCode);
+                            /*if (versionCode > verCode)
+                            {
+                                showdialogbox("Update Available", "A new Update is available, " +
+                                                "please update the app!", "Close",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                getActivity().finish();
+                                            }
+                                        }, "", null, false);
+                            }*/
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "onErrorResponse: " + error);
+                    }
+                });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private AlertDialog showdialogbox(String title, String msg, String positiveLabel, DialogInterface.OnClickListener positiveOnclick,
+                                      String negativeLabel, DialogInterface.OnClickListener negativeOnclick,
+                                      boolean isCancelable) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setPositiveButton(positiveLabel, positiveOnclick);
+        builder.setNegativeButton(negativeLabel, negativeOnclick);
+        builder.setCancelable(isCancelable);
+        AlertDialog alert = builder.create();
+        alert.show();
+        return alert;
+    }
 }

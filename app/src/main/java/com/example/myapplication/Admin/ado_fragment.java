@@ -51,10 +51,8 @@ public class ado_fragment extends Fragment {
     private ArrayList<String> mDdoNames;
     private ArrayList<String> mDistrictNames;
     private ArrayList<String> mdistrictlist;
-
     private String ado_list;
     private String district_list_url;
-
     private RecyclerViewAdater recyclerViewAdater;
     private String token;
     private String nextUrl;
