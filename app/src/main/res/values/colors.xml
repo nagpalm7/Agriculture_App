@@ -9,4 +9,7 @@
     <color name="shimmer_bg">#dddddd</color>
     <color name="table_row_cells">#9696FF</color>
     <color name="white">#ffffff</color>
+    <color name="pending">#95A57C</color>
+    <color name="ongoing">#405980</color>
+    <color name="completed">#B33050</color>
 </resources>
