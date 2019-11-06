@@ -1,13 +1,17 @@
 package com.example.myapplication.Ado;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -85,6 +89,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
+        android.location.LocationListener,
         ResultCallback<Status> {
     public static boolean isEntered = false;
     private static String TAG = "CheckInActivity2";
@@ -148,6 +153,9 @@ public class CheckInActivity2 extends AppCompatActivity implements
     private RelativeLayout fineLayout;
     private boolean isChalaan = false;
     private boolean isFir = false;
+    private LocationManager locationManager;
+    private String lat;
+    private String lon;
 
     public static void getStatus(Boolean status) {
         Log.d("getStatus2", "getStatus: comehere" + status);
@@ -184,6 +192,20 @@ public class CheckInActivity2 extends AppCompatActivity implements
         longitude = intent.getDoubleExtra("long", 0);
         Dlocation = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    Activity#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for Activity#requestPermissions for more details.
+                return;
+            }
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         String id = intent.getStringExtra("id");
         locationId = id;
         Log.d(TAG, "onCreate: LOCATION ID " + id);
@@ -714,6 +736,8 @@ public class CheckInActivity2 extends AppCompatActivity implements
                 postParams.put("longitude", longitude);
                 postParams.put("latitude", latitude);
                 postParams.put("fire", fireParam);
+                postParams.put("report_latitude",lat);
+                postParams.put("report_longitude",lon);
                 if (fireParam.equalsIgnoreCase("fire")) {
                     postParams.put("fir", isFir);
                     postParams.put("challan", isChalaan);
@@ -965,6 +989,23 @@ public class CheckInActivity2 extends AppCompatActivity implements
 
     @Override
     public void onLocationChanged(Location location) {
+        lat = String.valueOf(location.getLatitude());
+        lon = String.valueOf(location.getLongitude());
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
 
     }
 

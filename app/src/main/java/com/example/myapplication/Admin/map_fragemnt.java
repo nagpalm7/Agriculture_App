@@ -117,8 +117,8 @@ public class map_fragemnt extends Fragment {
         ongoingView = view.findViewById(R.id.ongoing_count);
         completedView = view.findViewById(R.id.completed_count);
 
-        getCount(url_count);
-        getMarkers(next);
+        isUpdateAvail();
+
 
 
 
@@ -430,7 +430,7 @@ public class map_fragemnt extends Fragment {
                             }
                             double verCode = Double.parseDouble(verName);
                             Log.d(TAG, "onResponse: versionCode " + versionCode + "verCode" + verCode);
-                            /*if (versionCode > verCode)
+                            if (versionCode > verCode)
                             {
                                 showdialogbox("Update Available", "A new Update is available, " +
                                                 "please update the app!", "Close",
@@ -440,7 +440,11 @@ public class map_fragemnt extends Fragment {
                                                 getActivity().finish();
                                             }
                                         }, "", null, false);
-                            }*/
+                            }else{
+
+                                getCount(url_count);
+                                getMarkers(next);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
