@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -46,18 +49,17 @@ import java.util.Map;
 
 public class count_fragment extends Fragment {
 
-    Button btndate;
-    RecyclerView pierecycler;
-    ArrayList<String> distlist;
-    ArrayList<Integer> pending;
+    private Button btndate;
+    private RecyclerView pierecycler;
+    private ArrayList<String> distlist;
+    private ArrayList<Integer> pending;
     private String token ;
-    ArrayList<Integer> ongoing;
-    ArrayList<Integer> completed;
-    PieChart pie;
-    ArrayList<PieEntry> val;
-    ArrayList valstr;
-    String date;
-    DatePickerDialog.OnDateSetListener mlistener;
+    private ArrayList<Integer> ongoing;
+    private ArrayList<Integer> completed;
+    private PieChart pie;
+    private ArrayList<PieEntry> val;
+    private ArrayList valstr;
+    private String date;
     final String burl="http://18.224.202.135/api/count-reports/?date=";
     private String URL;
     private Count_Adapter adapter;
@@ -66,6 +68,9 @@ public class count_fragment extends Fragment {
     private TextView totalPendingTextView;
     private TextView totalOngoingTextView;
     private TextView totalCompletedTextView;
+    private PieDataSet pieDataSet;
+    private ArrayList<Integer> colors;
+    private ArrayList<LegendEntry> legendEntries;
 
     public count_fragment() {
         // Required empty public constructor
@@ -131,9 +136,15 @@ public class count_fragment extends Fragment {
                     int pen_c=Integer.valueOf(object.getString("pending_count"));
                     int ong_c=Integer.valueOf(object.getString("ongoing_count"));
                     int cp=Integer.valueOf(object.getString("completed_count"));
-                    val.add(new PieEntry(ong_c,"Ongoing"));
-                    val.add(new PieEntry(pen_c,"Pending"));
-                    val.add(new PieEntry(cp,"Completed"));
+                    if(pen_c>0) {
+                        val.add(new PieEntry(pen_c,""));
+                    }
+                    if(ong_c>0){
+                        val.add(new PieEntry(ong_c,""));
+                    }
+                    if(cp>0) {
+                        val.add(new PieEntry(cp,""));
+                    }
                     totalPendingTextView.setText(String.valueOf(pen_c));
                     totalOngoingTextView.setText(String.valueOf(ong_c));
                     totalCompletedTextView.setText(String.valueOf(cp));
@@ -176,7 +187,7 @@ public class count_fragment extends Fragment {
             }
         };
         mqueue.add(json);
-        // pie.setHoleRadius(10);
+
         pie.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e , Highlight h) {
@@ -207,13 +218,38 @@ public class count_fragment extends Fragment {
 
     private void bindUI()
     {
-        PieDataSet pieDataSet=new PieDataSet(val,"Value");
-        pie.setDrawHoleEnabled(false);
+
+        colors=new ArrayList<>();
+        colors.add(getResources().getColor(R.color.pending));
+        colors.add(getResources().getColor(R.color.ongoing));
+        colors.add(getResources().getColor(R.color.completed));
+
+        ArrayList<String> status=new ArrayList<>();
+        status.add("Pending");
+        status.add("Ongoing");
+        status.add("Completed");
+
+        legendEntries=new ArrayList<>();
+
+        for(int i=0;i<status.size();i++)
+        {
+            LegendEntry entry=new LegendEntry();
+            entry.formColor=colors.get(i);
+            entry.label=status.get(i);
+            legendEntries.add(entry);
+        }
+
+        Legend legend=pie.getLegend();
+        legend.setCustom(legendEntries);
+        pieDataSet=new PieDataSet(val,"");
+       // pie.setDrawHoleEnabled(false);
         pieDataSet.setValueTextSize(12);
-        pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+        pieDataSet.setColors(colors);
+        pie.getDescription().setText("");
+
         pieData = new PieData(pieDataSet);
         pie.setData(pieData);
-        pie.setDrawEntryLabels(false);
+      //  pie.setDrawEntryLabels(false);
         pie.animateXY(2000,2000);
 
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
@@ -241,9 +277,15 @@ public class count_fragment extends Fragment {
                     int pen_c=Integer.valueOf(object.getString("pending_count"));
                     int ong_c=Integer.valueOf(object.getString("ongoing_count"));
                     int cp=Integer.valueOf(object.getString("completed_count"));
-                    val.add(new PieEntry(ong_c,"Ongoing"));
-                    val.add(new PieEntry(pen_c,"Pending"));
-                    val.add(new PieEntry(cp,"Completed"));
+                    if(pen_c>0) {
+                        val.add(new PieEntry(pen_c,""));
+                    }
+                    if(ong_c>0){
+                        val.add(new PieEntry(ong_c,""));
+                    }
+                    if(cp>0) {
+                        val.add(new PieEntry(cp,""));
+                    }
                     totalPendingTextView.setText(String.valueOf(pen_c));
                     totalOngoingTextView.setText(String.valueOf(ong_c));
                     totalCompletedTextView.setText(String.valueOf(cp));
@@ -290,13 +332,39 @@ public class count_fragment extends Fragment {
 
     private void updateUI()
     {
-        PieDataSet pieDataSet=new PieDataSet(val,"Value");
+        colors=new ArrayList<>();
+        colors.add(getResources().getColor(R.color.pending));
+        colors.add(getResources().getColor(R.color.ongoing));
+        colors.add(getResources().getColor(R.color.completed));
+
+        ArrayList<String> status=new ArrayList<>();
+        status.add("Pending");
+        status.add("Ongoing");
+        status.add("Completed");
+
+        legendEntries=new ArrayList<>();
+
+        for(int i=0;i<status.size();i++)
+        {
+            LegendEntry entry=new LegendEntry();
+            entry.formColor=colors.get(i);
+            entry.label=status.get(i);
+            legendEntries.add(entry);
+        }
+
+        Legend legend=pie.getLegend();
+        legend.setCustom(legendEntries);
+
+        pieDataSet=new PieDataSet(val,"");
         pieDataSet.setValueTextSize(12);
-        pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+        pieDataSet.setColors(colors);
+        pie.getDescription().setText("");
+
+        pieData = new PieData(pieDataSet);
         pieData.addDataSet(pieDataSet);
         pie.setData(pieData);
         pie.animateXY(2000,2000);
-        pie.setDrawEntryLabels(false);
+        //pie.setDrawEntryLabels(false);
         adapter.notifyDataSetChanged();
         pie.notifyDataSetChanged();
         pie.invalidate();
