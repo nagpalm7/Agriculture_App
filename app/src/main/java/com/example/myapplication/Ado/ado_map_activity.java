@@ -471,7 +471,7 @@ public class ado_map_activity extends AppCompatActivity
         }
 
         else {
-            Toast.makeText(this,"visit the location to enable the button",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"visit the location to enable the button",Toast.LENGTH_LONG).show();
         }
     }
 

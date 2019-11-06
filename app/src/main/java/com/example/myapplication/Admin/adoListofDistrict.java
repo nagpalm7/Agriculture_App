@@ -195,7 +195,7 @@ public class adoListofDistrict extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NoConnectionError)
-                    Toast.makeText(adoListofDistrict.this, "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onErrorResponse: " + error);
             }
         }) {
@@ -290,7 +290,7 @@ public class adoListofDistrict extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NoConnectionError)
-                    Toast.makeText(adoListofDistrict.this, "Check Your Internt Connection Please!",
+                    Toast.makeText(getApplicationContext(), "Check Your Internt Connection Please!",
                             Toast.LENGTH_SHORT).show();
                 isNextBusy = false;
             }

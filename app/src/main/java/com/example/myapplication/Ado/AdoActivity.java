@@ -163,7 +163,7 @@ public class AdoActivity extends AppCompatActivity {
         } else
             if(!doubleBackToExitPressedOnce){
                 this.doubleBackToExitPressedOnce = true;
-                Toast.makeText(this, "Please click BACK again to exit.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Please click BACK again to exit.", Toast.LENGTH_LONG).show();
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
