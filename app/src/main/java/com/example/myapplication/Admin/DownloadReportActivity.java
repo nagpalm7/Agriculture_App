@@ -109,7 +109,7 @@ public class DownloadReportActivity extends AppCompatActivity {
         });
         mDistrictNames = new ArrayList<>();
         mDistrictNames.add("Select District");
-        mDistrictNames.add("All Districts");
+        mDistrictNames.add("ALL DISTRICTS");
         SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
         RequestQueue district_requestQueue = Volley.newRequestQueue(this);
