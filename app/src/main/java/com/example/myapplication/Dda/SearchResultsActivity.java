@@ -144,10 +144,10 @@ public class SearchResultsActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         isNextBusy = false;
                         if (error instanceof NoConnectionError)
-                            Toast.makeText(SearchResultsActivity.this, "Please check your Internet Connection!",
+                            Toast.makeText(getApplicationContext(), "Please check your Internet Connection!",
                                     Toast.LENGTH_LONG).show();
                         else
-                            Toast.makeText(SearchResultsActivity.this, "Something went wrong, please try again!",
+                            Toast.makeText(getApplicationContext(), "Something went wrong, please try again!",
                                     Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
                         nextProgressBar.setVisibility(View.GONE);
@@ -209,7 +209,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                             try {
                                 JSONObject jsonObject = new JSONObject(String.valueOf(response));
                                 Log.d(TAG, "onResponse: " + jsonObject);
-                                Toast.makeText(SearchResultsActivity.this, "Villages Successfully Assigned!",
+                                Toast.makeText(getApplicationContext(), "Villages Successfully Assigned!",
                                         Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(SearchResultsActivity.this, DdaActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -226,10 +226,10 @@ public class SearchResultsActivity extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             if (error instanceof NoConnectionError)
-                                Toast.makeText(SearchResultsActivity.this, "Please check your Internet Connection!",
+                                Toast.makeText(getApplicationContext(), "Please check your Internet Connection!",
                                         Toast.LENGTH_LONG).show();
                             else
-                                Toast.makeText(SearchResultsActivity.this, "Something went wrong, please try again!",
+                                Toast.makeText(getApplicationContext(), "Something went wrong, please try again!",
                                         Toast.LENGTH_LONG).show();
                             Log.d(TAG, "onErrorResponse: loadData " + error);
                         }
@@ -265,7 +265,7 @@ public class SearchResultsActivity extends AppCompatActivity {
             });
             requestQueue.add(jsonArrayRequest);
         } else
-            Toast.makeText(this, "No village Selected",
+            Toast.makeText(getApplicationContext(), "No village Selected",
                     Toast.LENGTH_SHORT).show();
     }
 }

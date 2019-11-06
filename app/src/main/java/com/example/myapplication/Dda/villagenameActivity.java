@@ -188,10 +188,10 @@ public class villagenameActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, "onErrorResponse: VILLAGE NAME SUGGESTION " + error);
                         if (error instanceof NoConnectionError)
-                            Toast.makeText(villagenameActivity.this, "Please check your Internet Connection!",
+                            Toast.makeText(getApplicationContext(), "Please check your Internet Connection!",
                                     Toast.LENGTH_LONG).show();
                         else
-                            Toast.makeText(villagenameActivity.this, "Something went wrong, please try again!",
+                            Toast.makeText(getApplicationContext(), "Something went wrong, please try again!",
                                     Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -253,7 +253,7 @@ public class villagenameActivity extends AppCompatActivity {
                             e.printStackTrace();
                             progressBar.setVisibility(View.GONE);
                             listNextProgressBar.setVisibility(View.GONE);
-                            Toast.makeText(villagenameActivity.this, "Please try again",
+                            Toast.makeText(getApplicationContext(), "Please try again",
                                     Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "onResponse: JSON EXCEPTION " + e);
                             isNextBusy = false;
@@ -264,10 +264,10 @@ public class villagenameActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof NoConnectionError)
-                            Toast.makeText(villagenameActivity.this, "Please check your Internet Connection!",
+                            Toast.makeText(getApplicationContext(), "Please check your Internet Connection!",
                                     Toast.LENGTH_LONG).show();
                         else
-                            Toast.makeText(villagenameActivity.this, "Something went wrong, please try again!",
+                            Toast.makeText(getApplicationContext(), "Something went wrong, please try again!",
                                     Toast.LENGTH_LONG).show();
                         Log.d(TAG, "onErrorResponse: loadData " + error);
                         isNextBusy = false;
@@ -330,7 +330,7 @@ public class villagenameActivity extends AppCompatActivity {
                             try {
                                 JSONObject jsonObject = new JSONObject(String.valueOf(response));
                                 Log.d(TAG, "onResponse: " + jsonObject);
-                                Toast.makeText(villagenameActivity.this, "Villages Successfully Assigned!",
+                                Toast.makeText(getApplicationContext(), "Villages Successfully Assigned!",
                                         Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(villagenameActivity.this, DdaActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -347,10 +347,10 @@ public class villagenameActivity extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             if (error instanceof NoConnectionError)
-                                Toast.makeText(villagenameActivity.this, "Please check your Internet Connection!",
+                                Toast.makeText(getApplicationContext(), "Please check your Internet Connection!",
                                         Toast.LENGTH_LONG).show();
                             else
-                                Toast.makeText(villagenameActivity.this, "Something went wrong, please try again!",
+                                Toast.makeText(getApplicationContext(), "Something went wrong, please try again!",
                                         Toast.LENGTH_LONG).show();
                             Log.d(TAG, "onErrorResponse: loadData " + error);
                         }
@@ -386,7 +386,7 @@ public class villagenameActivity extends AppCompatActivity {
             });
             requestQueue.add(jsonArrayRequest);
         } else
-            Toast.makeText(this, "No village Selected",
+            Toast.makeText(getApplicationContext(), "No village Selected",
                     Toast.LENGTH_SHORT).show();
     }
 

@@ -146,14 +146,14 @@ public class login_activity extends AppCompatActivity {
                     Login(mEmail, mPass);
                 } else if (!mEmail.isEmpty() && mPass.isEmpty()) {
                     editPassword.setError("Please insert password");
-                    Toast.makeText(login_activity.this, "Please insert password", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), "Please insert password", Toast.LENGTH_SHORT);
                 } else if (mEmail.isEmpty() && !mPass.isEmpty()) {
                     editEmail.setError("Please insert email.");
-                    Toast.makeText(login_activity.this, "Please insert email", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), "Please insert email", Toast.LENGTH_SHORT);
                 } else {
                     editEmail.setError("Please insert email.");
                     editPassword.setError("Please insert password");
-                    Toast.makeText(login_activity.this, "Please insert email and password", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), "Please insert email and password", Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -174,7 +174,7 @@ public class login_activity extends AppCompatActivity {
             postparams.put("password", password);
         } catch (JSONException e) {
             Log.d(TAG, "Login: Error:" + e);
-            Toast.makeText(login_activity.this, "Please try again", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Please try again", Toast.LENGTH_LONG).show();
             dialog.dismiss();
             btnLogin.setEnabled(true);
         }
@@ -221,13 +221,13 @@ public class login_activity extends AppCompatActivity {
                                 finish();
                             } else {
                                 dialog.dismiss();
-                                Toast.makeText(login_activity.this, "Invalid User", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Invalid User", Toast.LENGTH_SHORT).show();
                             }
 
 
                         } catch (JSONException e) {
                             Log.d(TAG, "onResponse: error in get catch block :" + e.getMessage());
-                            Toast.makeText(login_activity.this, "Please try again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Please try again", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                             btnLogin.setEnabled(true);
 //
@@ -238,11 +238,11 @@ public class login_activity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof NoConnectionError)
-                            Toast.makeText(login_activity.this, "Check your internet connection", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Check your internet connection", Toast.LENGTH_LONG).show();
                         else if (error instanceof ClientError)
-                            Toast.makeText(login_activity.this, "Invalid User!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Invalid User!", Toast.LENGTH_SHORT).show();
                         else
-                            Toast.makeText(login_activity.this, "Something went wrong, please try again!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Something went wrong, please try again!", Toast.LENGTH_LONG).show();
                         btnLogin.setEnabled(true);
                         dialog.dismiss();
                         Log.d(TAG, "onErrorResponse: some error in get: " + error.getLocalizedMessage());
@@ -281,11 +281,11 @@ public class login_activity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof NoConnectionError)
-                            Toast.makeText(login_activity.this, "Check your internet connection", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Check your internet connection", Toast.LENGTH_LONG).show();
                         else if (error instanceof ClientError)
-                            Toast.makeText(login_activity.this, "Invalid User!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Invalid User!", Toast.LENGTH_SHORT).show();
                         else
-                            Toast.makeText(login_activity.this, "Something went wrong, please try again!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Something went wrong, please try again!", Toast.LENGTH_LONG).show();
                         Log.d(TAG, "onErrorResponse: invalid user : " + error);
                         dialog.dismiss();
                         btnLogin.setEnabled(true);

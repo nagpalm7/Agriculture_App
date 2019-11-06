@@ -385,7 +385,7 @@ public class ReviewReport extends AppCompatActivity {
                             String message = singleObject.getString("message");
                             if (flag == 1)
                                 changeStatus();
-                            Toast.makeText(ReviewReport.this, message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                             finish();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -397,10 +397,10 @@ public class ReviewReport extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof NoConnectionError)
-                            Toast.makeText(ReviewReport.this, "Check your internet connection",
+                            Toast.makeText(getApplicationContext(), "Check your internet connection",
                                     Toast.LENGTH_LONG).show();
                         else
-                            Toast.makeText(ReviewReport.this, "Something went wrong, " +
+                            Toast.makeText(getApplicationContext(), "Something went wrong, " +
                                     "please try again!", Toast.LENGTH_LONG).show();
                         Log.d(TAG, "onErrorResponse: blockFarmerSub " + error);
                     }
@@ -437,7 +437,7 @@ public class ReviewReport extends AppCompatActivity {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, urlpatch, postbody, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Toast.makeText(ReviewReport.this, "Location assigned", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Location assigned", Toast.LENGTH_SHORT).show();
                 finish();
                 try {
                     JSONObject c = new JSONObject(String.valueOf(response));
@@ -451,7 +451,7 @@ public class ReviewReport extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "onErrorResponse: " + error);
-                Toast.makeText(ReviewReport.this, "Ado not assigned.Please try again", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Ado not assigned.Please try again", Toast.LENGTH_LONG).show();
             }
         }) {
             @Override

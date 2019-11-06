@@ -174,15 +174,15 @@ public class detailsActivity extends AppCompatActivity {
                         if (error instanceof ClientError) {
                             if (isado) {
 
-                                Toast.makeText(detailsActivity.this, "ado not assigned",
+                                Toast.makeText(getApplicationContext(), "ado not assigned",
                                         Toast.LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(detailsActivity.this, "dda not assigned",
+                                Toast.makeText(getApplicationContext(), "dda not assigned",
                                         Toast.LENGTH_LONG).show();
 
                             }
                         } else {
-                            Toast.makeText(detailsActivity.this, "Something went wrong, try again later!",
+                            Toast.makeText(getApplicationContext(), "Something went wrong, try again later!",
                                     Toast.LENGTH_LONG).show();
 
 

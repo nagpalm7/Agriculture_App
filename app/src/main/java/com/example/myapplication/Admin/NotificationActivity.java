@@ -85,7 +85,7 @@ public class NotificationActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, "onResponse: sendNotifications " + response);
-                        Toast.makeText(NotificationActivity.this, "Notifications Successfully Sent!",
+                        Toast.makeText(getApplicationContext(), "Notifications Successfully Sent!",
                                 Toast.LENGTH_SHORT).show();
 
                     }
@@ -94,10 +94,10 @@ public class NotificationActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof NoConnectionError)
-                            Toast.makeText(NotificationActivity.this, "Check Your Internt Connection Please!",
+                            Toast.makeText(getApplicationContext(), "Check Your Internt Connection Please!",
                                     Toast.LENGTH_SHORT).show();
                         else
-                            Toast.makeText(NotificationActivity.this, "Something went wrong, please try again!",
+                            Toast.makeText(getApplicationContext(), "Something went wrong, please try again!",
                                     Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onErrorResponse: sendNotifications " + error);
                     }
