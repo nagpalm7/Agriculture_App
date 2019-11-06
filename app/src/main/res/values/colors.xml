@@ -5,10 +5,11 @@
     <color name="PrimaryDark">#425903</color>
     <color name="colorAccent">#008577</color>
     <color name="peach">#EFE3AF</color>
-    <color name="default_grey">#707070</color>
+    <color name="default_grey">#8A8989</color>
     <color name="shimmer_bg">#dddddd</color>
     <color name="table_row_cells">#9696FF</color>
     <color name="white">#ffffff</color>
+    <color name="light_grey">#CCCBCB</color>
     <color name="pending">#95A57C</color>
     <color name="ongoing">#405980</color>
     <color name="completed">#B33050</color>
