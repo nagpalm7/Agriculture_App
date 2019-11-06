@@ -1,9 +1,11 @@
 package com.example.myapplication.Admin;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,6 +48,10 @@ public class Count_Adapter extends RecyclerView.Adapter<Count_Adapter.MyviewHold
         holder.pendingval2.setText(pending.get(position).toString());
         holder.ongoingval2.setText(ongoing.get(position).toString());
         holder.completedval2.setText(completed.get(position).toString());
+        if(position%2==0){
+           // holder.linearcount.setBackgroundColor(707070);
+            holder.linearcount.setBackgroundColor(context.getResources().getColor(R.color.default_grey));
+        }
 
     }
 
@@ -60,6 +66,7 @@ public class Count_Adapter extends RecyclerView.Adapter<Count_Adapter.MyviewHold
         TextView pendingval2;
         TextView ongoingval2;
         TextView completedval2;
+        View linearcount;
 
         public MyviewHolder(@NonNull View itemView) {
             super(itemView);
@@ -67,6 +74,7 @@ public class Count_Adapter extends RecyclerView.Adapter<Count_Adapter.MyviewHold
             pendingval2=itemView.findViewById(R.id.pendingval2);
             ongoingval2=itemView.findViewById(R.id.ongoingval2);
             completedval2=itemView.findViewById(R.id.completedval2);
+            linearcount=itemView.findViewById(R.id.linearcount);
         }
     }
 }
