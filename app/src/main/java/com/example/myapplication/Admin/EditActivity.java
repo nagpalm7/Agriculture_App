@@ -92,9 +92,9 @@ public class EditActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 } else*/
                 if (mobile.length() != 10) {
-                    Toast.makeText(EditActivity.this,"enter the valid mobile number",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"enter the valid mobile number",Toast.LENGTH_LONG).show();
                 }else if(!isValidEmail(email)){
-                    Toast.makeText(EditActivity.this,"enter the valid email address",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"enter the valid email address",Toast.LENGTH_LONG).show();
 
                 }
                 else
@@ -138,7 +138,7 @@ public class EditActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, "onErrorResponse: getDetails " + error);
-                        Toast.makeText(EditActivity.this, "Something went wrong, try again later!",
+                        Toast.makeText(getApplicationContext(), "Something went wrong, try again later!",
                                 Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -196,7 +196,7 @@ public class EditActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, "onResponse: " + response);
-                        Toast.makeText(EditActivity.this, "Changes Saved Successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Changes Saved Successfully!", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 },
@@ -204,7 +204,7 @@ public class EditActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, "onErrorResponse: saveChanges " + error);
-                        Toast.makeText(EditActivity.this, "Something went wrong, try again later!"+error,
+                        Toast.makeText(getApplicationContext(), "Something went wrong, try again later!"+error,
                                 Toast.LENGTH_LONG).show();
                     }
                 }) {
