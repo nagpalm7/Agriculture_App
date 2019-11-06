@@ -109,7 +109,7 @@ public class DownloadReportActivity extends AppCompatActivity {
         });
         mDistrictNames = new ArrayList<>();
         mDistrictNames.add("Select District");
-        mDistrictNames.add("All Districts");
+        mDistrictNames.add("ALL DISTRICTS");
         SharedPreferences preferences = getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
         RequestQueue district_requestQueue = Volley.newRequestQueue(this);
@@ -132,7 +132,7 @@ public class DownloadReportActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(DownloadReportActivity.this, "something went wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_LONG).show();
 
             }
         }) {
@@ -226,10 +226,10 @@ public class DownloadReportActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, "onErrorResponse: " + error);
                         if (error instanceof NoConnectionError)
-                            Toast.makeText(DownloadReportActivity.this,
+                            Toast.makeText(getApplicationContext(),
                                     "Check your internet connection!", Toast.LENGTH_LONG).show();
                         else {
-                            Toast.makeText(DownloadReportActivity.this,
+                            Toast.makeText(getApplicationContext(),
                                     "Something went wrong, Please try again!", Toast.LENGTH_SHORT).show();
                         }
                         processingDialog.dismiss();
@@ -247,19 +247,19 @@ public class DownloadReportActivity extends AppCompatActivity {
 
     private boolean isValid() {
         if (status.isEmpty()) {
-            Toast.makeText(this, "Please select status for report",
+            Toast.makeText(getApplicationContext(), "Please select status for report",
                     Toast.LENGTH_LONG).show();
             return false;
         } else if (spinner.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, "Please select a valid district",
+            Toast.makeText(getApplicationContext(), "Please select a valid district",
                     Toast.LENGTH_LONG).show();
             return false;
         } else if (startDay == -1) {
-            Toast.makeText(this, "Please select a valid start date",
+            Toast.makeText(getApplicationContext(), "Please select a valid start date",
                     Toast.LENGTH_LONG).show();
             return false;
         } else if (endDay == -1) {
-            Toast.makeText(this, "Please select a valid end date",
+            Toast.makeText(getApplicationContext(), "Please select a valid end date",
                     Toast.LENGTH_LONG).show();
             return false;
         } else if (startDay > endDay && startMonth >= endMonth && startYear >= endYear) {

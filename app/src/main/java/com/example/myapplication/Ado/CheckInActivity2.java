@@ -265,7 +265,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
 
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     if (villageNameSpinner.getSelectedItemPosition() == 0 && villageNameSpinner.getCount() == 2) {
-                        Toast.makeText(CheckInActivity2.this, "Select a valid Village Name",
+                        Toast.makeText(getApplicationContext(), "Select a valid Village Name",
                                 Toast.LENGTH_SHORT).show();
                         return true;
                     } else if (villageNameSpinner.getSelectedItem().toString().equals("Other") && !isNameAdapterSet) {
@@ -328,7 +328,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
                 } else if (mImages.size() < 4)
                     openCameraIntent();
                 else
-                    Toast.makeText(CheckInActivity2.this, "Max Photos Reached...",
+                    Toast.makeText(getApplicationContext(), "Max Photos Reached...",
                             Toast.LENGTH_SHORT).show();
             }
         });
@@ -344,7 +344,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
 //                            Toast.makeText(CheckInActivity2.this, "Please add a photo of" +
 //                                    " Chalaan", Toast.LENGTH_SHORT).show();
                     if (mImages.isEmpty())
-                        Toast.makeText(CheckInActivity2.this, "Please add atleast one picture of incident!",
+                        Toast.makeText(getApplicationContext(), "Please add atleast one picture of incident!",
                                 Toast.LENGTH_SHORT).show();
                     else {
                         showdialogbox("Sumbit Report", "Are you sure?", "Yes",
@@ -355,53 +355,53 @@ public class CheckInActivity2 extends AppCompatActivity implements
                                                 + "     " + farmerfatherSpinner.getSelectedItem().toString() + "    "
                                                 + (farmerNames == null) + "     " + farmerFatherNames.size());
                                         if (villageNameSpinner.getSelectedItemPosition() == 0 && villageNames.size() == 2)
-                                            Toast.makeText(CheckInActivity2.this, "Please select a Valid Village Name",
+                                            Toast.makeText(getApplicationContext(), "Please select a Valid Village Name",
                                                     Toast.LENGTH_SHORT).show();
                                         else if (farmerfatherSpinner.getSelectedItemPosition() == 0
                                                 || farmerNames == null)
-                                            Toast.makeText(CheckInActivity2.this, "Please select a farmer and father name",
+                                            Toast.makeText(getApplicationContext(), "Please select a farmer and father name",
                                                     Toast.LENGTH_SHORT).show();
                                         else if (farmerfatherSpinner.getSelectedItem().toString().equals("Other")) {
                                             if (farmerfatherEditText.getText().toString().trim().isEmpty()
                                                     || fatherNameEditText.getText().toString().trim().isEmpty())
-                                                Toast.makeText(CheckInActivity2.this, "Please select a farmer name",
+                                                Toast.makeText(getApplicationContext(), "Please select a farmer name",
                                                         Toast.LENGTH_LONG).show();
                                             if (fatherNameEditText.getText().toString().trim().isEmpty())
-                                                Toast.makeText(CheckInActivity2.this, "Please select a father name",
+                                                Toast.makeText(getApplicationContext(), "Please select a father name",
                                                         Toast.LENGTH_SHORT).show();
                                             if (remarksEditText.getText().toString().isEmpty())
-                                                Toast.makeText(CheckInActivity2.this, "Please fill Remarks",
+                                                Toast.makeText(getApplicationContext(), "Please fill Remarks",
                                                         Toast.LENGTH_SHORT).show();
                                             else if (reasonEditText.getText().toString().isEmpty())
-                                                Toast.makeText(CheckInActivity2.this, "Please fill Incident " +
+                                                Toast.makeText(getApplicationContext(), "Please fill Incident " +
                                                         "Reason", Toast.LENGTH_SHORT).show();
                                             else if (murrabbaEditText.getText().toString().trim().isEmpty())
-                                                Toast.makeText(CheckInActivity2.this, "Please fill Murrabba Number",
+                                                Toast.makeText(getApplicationContext(), "Please fill Murrabba Number",
                                                         Toast.LENGTH_SHORT).show();
                                             else if (fireParam.equals(""))
-                                                Toast.makeText(CheckInActivity2.this, "Please select an option " +
+                                                Toast.makeText(getApplicationContext(), "Please select an option " +
                                                         "Fire or No Fire", Toast.LENGTH_SHORT).show();
                                             else if (fireParam.equalsIgnoreCase("fire")) {
                                                 if (amountEditText.getText().toString().isEmpty())
-                                                    Toast.makeText(CheckInActivity2.this, "Please enter an amount"
+                                                    Toast.makeText(getApplicationContext(), "Please enter an amount"
                                                             , Toast.LENGTH_SHORT).show();
                                                 else if (!isChalaan && !isFir)
-                                                    Toast.makeText(CheckInActivity2.this, "Please select an action" +
+                                                    Toast.makeText(getApplicationContext(), "Please select an action" +
                                                             "Chalaan/FIR", Toast.LENGTH_SHORT).show();
                                             } else
                                                 submitReport();
                                         }
                                         else if (remarksEditText.getText().toString().isEmpty())
-                                            Toast.makeText(CheckInActivity2.this, "Please fill Remarks",
+                                            Toast.makeText(getApplicationContext(), "Please fill Remarks",
                                                     Toast.LENGTH_SHORT).show();
                                         else if (reasonEditText.getText().toString().isEmpty())
-                                            Toast.makeText(CheckInActivity2.this, "Please fill Incident " +
+                                            Toast.makeText(getApplicationContext(), "Please fill Incident " +
                                                     "Reason", Toast.LENGTH_SHORT).show();
                                         else if (murrabbaEditText.getText().toString().trim().isEmpty())
-                                            Toast.makeText(CheckInActivity2.this, "Please fill Murrabba Number",
+                                            Toast.makeText(getApplicationContext(), "Please fill Murrabba Number",
                                                     Toast.LENGTH_SHORT).show();
                                         else if (fireParam.equals(""))
-                                            Toast.makeText(CheckInActivity2.this, "Please select an option " +
+                                            Toast.makeText(getApplicationContext(), "Please select an option " +
                                                     "Fire or No Fire", Toast.LENGTH_SHORT).show();
                                         else
                                             submitReport();
@@ -499,7 +499,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
                     adapter.notifyDataSetChanged();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Toast.makeText(this, "Unable to load Image, please try again!",
+                    Toast.makeText(getApplicationContext(), "Unable to load Image, please try again!",
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -560,10 +560,10 @@ public class CheckInActivity2 extends AppCompatActivity implements
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof NoConnectionError)
-                            Toast.makeText(CheckInActivity2.this, "Please Check your Internet Connection",
+                            Toast.makeText(getApplicationContext(), "Please Check your Internet Connection",
                                     Toast.LENGTH_SHORT).show();
                         else
-                            Toast.makeText(CheckInActivity2.this, "Something went wrong, please try again!",
+                            Toast.makeText(getApplicationContext(), "Something went wrong, please try again!",
                                     Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onErrorResponse: fetchVillageNames " + error);
                     }
@@ -621,7 +621,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
                             }
                             String message = rootObject.getString("message");
                             if (farmerNames.size() == 1) {
-                                Toast.makeText(CheckInActivity2.this, message, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                                 farmerFatherNames.add("Other");
                                 ArrayAdapter<String> adaptername = new ArrayAdapter<>(getApplicationContext(),
                                         android.R.layout.simple_dropdown_item_1line, farmerFatherNames);
@@ -658,10 +658,10 @@ public class CheckInActivity2 extends AppCompatActivity implements
                         Log.d(TAG, "onErrorResponse: FARMER " + error.networkResponse + "  " + error);
                         isBusy = false;
                         if (error instanceof NoConnectionError)
-                            Toast.makeText(CheckInActivity2.this, "Please Check your Internet Connection",
+                            Toast.makeText(getApplicationContext(), "Please Check your Internet Connection",
                                     Toast.LENGTH_SHORT).show();
                         else
-                            Toast.makeText(CheckInActivity2.this, "Something went wrong, please try again!",
+                            Toast.makeText(getApplicationContext(), "Something went wrong, please try again!",
                                     Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onErrorResponse: getFarmerDetails " + error);
                         nameProgressBar.setVisibility(View.GONE);
@@ -747,7 +747,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
                 //postParams.put("number", mobile);
 
             } catch (JSONException e) {
-                Toast.makeText(this, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
                 reportSubmitLoading.dismiss();
                 Log.d(TAG, "submitReport: " + e);
             }
@@ -773,9 +773,9 @@ public class CheckInActivity2 extends AppCompatActivity implements
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             if (error instanceof NoConnectionError)
-                                Toast.makeText(CheckInActivity2.this, "Check your internet connection!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Check your internet connection!", Toast.LENGTH_LONG).show();
                             else {
-                                Toast.makeText(CheckInActivity2.this, "Something went wrong, Please try again!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Something went wrong, Please try again!", Toast.LENGTH_SHORT).show();
                                 Log.d(TAG, "onErrorResponse: reportSubmitRequest " + error);
                             }
                             reportSubmitLoading.dismiss();
@@ -858,12 +858,12 @@ public class CheckInActivity2 extends AppCompatActivity implements
                                          Log.d(TAG, "onResponse: " + response);
                                          photosUploadedCount++;
                                          if (photosUploadedCount == mImages.size()) {
-                                             Toast.makeText(CheckInActivity2.this, "Photos Uploaded", Toast.LENGTH_SHORT).show();
+                                             Toast.makeText(getApplicationContext(), "Photos Uploaded", Toast.LENGTH_SHORT).show();
                                              notificationBuilder.setContentText("Upload Successful!")
                                                      .setProgress(0, 0, false)
                                                      .setOngoing(false);
                                              notificationManager.notify(1, notificationBuilder.build());
-                                             Toast.makeText(CheckInActivity2.this, "Report Submitted Successfully", Toast.LENGTH_SHORT).show();
+                                             Toast.makeText(getApplicationContext(), "Report Submitted Successfully", Toast.LENGTH_SHORT).show();
                                              reportSubmitLoading.dismiss();
                                              getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                              Intent intent = new Intent(CheckInActivity2.this, AdoActivity.class);
@@ -887,7 +887,7 @@ public class CheckInActivity2 extends AppCompatActivity implements
                                                  .setOngoing(false);
                                          notificationManager.notify(1, notificationBuilder.build());
                                          reportSubmitLoading.dismiss();
-                                         Toast.makeText(CheckInActivity2.this, "Photos Upload failed, please try again", Toast.LENGTH_SHORT).show();
+                                         Toast.makeText(getApplicationContext(), "Photos Upload failed, please try again", Toast.LENGTH_SHORT).show();
                                      }
 
                                  }

@@ -157,7 +157,7 @@ public class DdaselectAdo extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "onErrorResponse: "+error.getLocalizedMessage());
                 if (error instanceof NoConnectionError)
-                    Toast.makeText(DdaselectAdo.this, "Please Check your internet connection",
+                    Toast.makeText(getApplicationContext(), "Please Check your internet connection",
                             Toast.LENGTH_LONG).show();
                 isNextBusy = false;
                 progressBar.setVisibility(View.GONE);

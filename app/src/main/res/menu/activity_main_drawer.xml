@@ -25,7 +25,7 @@
             android:icon="@drawable/ic_locations"
             android:title="@string/menu_location" />
         <item android:id="@+id/district_stat"
-            android:title="District Stat"
+            android:title="DISTRICT STATS"
             android:icon="@drawable/ic_stat"/>
     </group>
 </menu>

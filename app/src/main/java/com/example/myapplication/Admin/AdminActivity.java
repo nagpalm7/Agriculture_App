@@ -223,7 +223,7 @@ public class AdminActivity extends AppCompatActivity
         } else
             if(!doubleBackToExitPressedOnce) {
                 this.doubleBackToExitPressedOnce = true;
-                Toast.makeText(this, "Please click BACK again to exit.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Please click BACK again to exit.", Toast.LENGTH_LONG).show();
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -331,7 +331,7 @@ public class AdminActivity extends AppCompatActivity
         } else if (id == R.id.district_stat)
         {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new count_fragment()).commit();
-            getSupportActionBar().setTitle("District Statistics");
+            getSupportActionBar().setTitle("DISTRICT STATS");
         }
 
 

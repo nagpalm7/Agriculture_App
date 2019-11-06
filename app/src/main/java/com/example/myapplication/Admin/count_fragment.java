@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -61,6 +62,10 @@ public class count_fragment extends Fragment {
     private String URL;
     private Count_Adapter adapter;
     private PieData pieData;
+    private Button allStatButton;
+    private TextView totalPendingTextView;
+    private TextView totalOngoingTextView;
+    private TextView totalCompletedTextView;
 
     public count_fragment() {
         // Required empty public constructor
@@ -75,6 +80,10 @@ public class count_fragment extends Fragment {
         pierecycler=view.findViewById(R.id.pierecycler);
         pie=view.findViewById(R.id.pie);
         btndate=view.findViewById(R.id.btndate);
+        allStatButton = view.findViewById(R.id.total_stat_button);
+        totalPendingTextView = view.findViewById(R.id.total_pending);
+        totalOngoingTextView = view.findViewById(R.id.total_ongoing);
+        totalCompletedTextView = view.findViewById(R.id.total_completed);
         distlist=new ArrayList<>();
         pending=new ArrayList<>();
         ongoing=new ArrayList<>();
@@ -90,7 +99,7 @@ public class count_fragment extends Fragment {
         final SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
 
-        date = year + "-" + (month + 1) + "-" + day;
+        date = year + "-" + (month + 1) + "-" + (day - 1);
         btndate.setText(date);
         URL="http://18.224.202.135/api/count-reports/?date="+date;
 
@@ -105,9 +114,9 @@ public class count_fragment extends Fragment {
                         date=year+"-"+month+"-"+dayOfMonth;
                         btndate.setText(date);
                         URL="http://18.224.202.135/api/count-reports/?date="+date;
-                        getData();
+                        getData(URL);
                     }
-                },year,month,day);
+                },year,month,day-1);
                 datePickerDialog.show();
             }
         });
@@ -119,12 +128,19 @@ public class count_fragment extends Fragment {
                 try {
                     String data1=response.toString();
                     JSONObject object=new JSONObject(data1);
-                    Integer pen_c=Integer.valueOf(object.getString("pending_count"));
-                    Integer ong_c=Integer.valueOf(object.getString("ongoing_count"));
-                    Integer cp=Integer.valueOf(object.getString("completed_count"));
+                    int pen_c=Integer.valueOf(object.getString("pending_count"));
+                    int ong_c=Integer.valueOf(object.getString("ongoing_count"));
+                    int cp=Integer.valueOf(object.getString("completed_count"));
                     val.add(new PieEntry(ong_c,"Ongoing"));
                     val.add(new PieEntry(pen_c,"Pending"));
                     val.add(new PieEntry(cp,"Completed"));
+                    totalPendingTextView.setText(String.valueOf(pen_c));
+                    totalOngoingTextView.setText(String.valueOf(ong_c));
+                    totalCompletedTextView.setText(String.valueOf(cp));
+                    /*distlist.add("TOTAL");
+                    pending.add(pen_c);
+                    ongoing.add(ong_c);
+                    completed.add(cp);*/
                     JSONObject resultsObject = object.getJSONObject("results");
                     Iterator<String> itr = resultsObject.keys();
                     while(itr.hasNext())
@@ -173,9 +189,19 @@ public class count_fragment extends Fragment {
             }
         });
 
-
-
-
+        allStatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = "http://18.224.202.135/api/count-reports/";
+                Calendar c= Calendar.getInstance();
+                int day=c.get(Calendar.DAY_OF_MONTH);
+                int month=c.get(Calendar.MONTH);
+                int year=c.get(Calendar.YEAR);
+                String date = year + "-" + (month + 1) + "-" + day;
+                btndate.setText(date);
+                getData(url);
+            }
+        });
         return view;
     }
 
@@ -184,10 +210,10 @@ public class count_fragment extends Fragment {
         PieDataSet pieDataSet=new PieDataSet(val,"Value");
         pie.setDrawHoleEnabled(false);
         pieDataSet.setValueTextSize(12);
-
+        pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
         pieData = new PieData(pieDataSet);
         pie.setData(pieData);
-        pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+        pie.setDrawEntryLabels(false);
         pie.animateXY(2000,2000);
 
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
@@ -197,7 +223,7 @@ public class count_fragment extends Fragment {
         pierecycler.setAdapter(adapter);
     }
 
-    private void getData()
+    private void getData(String url)
     {
         RequestQueue mqueue= Volley.newRequestQueue(getActivity());
         val.clear();
@@ -206,18 +232,25 @@ public class count_fragment extends Fragment {
         ongoing.clear();
         completed.clear();
         pieData.clearValues();
-        JsonObjectRequest json= new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest json= new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     String data1=response.toString();
                     JSONObject object=new JSONObject(data1);
-                    Integer pen_c=Integer.valueOf(object.getString("pending_count"));
-                    Integer ong_c=Integer.valueOf(object.getString("ongoing_count"));
-                    Integer cp=Integer.valueOf(object.getString("completed_count"));
+                    int pen_c=Integer.valueOf(object.getString("pending_count"));
+                    int ong_c=Integer.valueOf(object.getString("ongoing_count"));
+                    int cp=Integer.valueOf(object.getString("completed_count"));
                     val.add(new PieEntry(ong_c,"Ongoing"));
                     val.add(new PieEntry(pen_c,"Pending"));
                     val.add(new PieEntry(cp,"Completed"));
+                    totalPendingTextView.setText(String.valueOf(pen_c));
+                    totalOngoingTextView.setText(String.valueOf(ong_c));
+                    totalCompletedTextView.setText(String.valueOf(cp));
+                    /*distlist.add("TOTAL");
+                    pending.add(pen_c);
+                    ongoing.add(ong_c);
+                    completed.add(cp);*/
                     JSONObject resultsObject = object.getJSONObject("results");
                     Iterator<String> itr = resultsObject.keys();
                     while(itr.hasNext())
@@ -259,9 +292,11 @@ public class count_fragment extends Fragment {
     {
         PieDataSet pieDataSet=new PieDataSet(val,"Value");
         pieDataSet.setValueTextSize(12);
+        pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
         pieData.addDataSet(pieDataSet);
         pie.setData(pieData);
         pie.animateXY(2000,2000);
+        pie.setDrawEntryLabels(false);
         adapter.notifyDataSetChanged();
         pie.notifyDataSetChanged();
         pie.invalidate();

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -57,7 +58,7 @@ public class adoListofDistrict extends AppCompatActivity {
     private LinearLayoutManager layoutManager;
     private GridLayoutManager gridlayout;
     private boolean isNextBusy = false;
-    private View view;
+    private RelativeLayout relativeLayout;
     private final String TAG = "ado_info_fragment";
     private RecyclerView Rview;
     private AlertDialog dialog;
@@ -81,8 +82,10 @@ public class adoListofDistrict extends AppCompatActivity {
         {
             Log.d(TAG, "onCreate: INTENT EXTRA " + e);
         }
-        getSupportActionBar().setTitle(curr_dist + "ADOs");
+        getSupportActionBar().setTitle(curr_dist + " ADOs");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         progressBar = findViewById(R.id.ado_list_progressbar);
+        relativeLayout = findViewById(R.id.relativeLayout);
         recyclerViewAdater = new RecyclerViewAdater(this, username, userinfo, mUserId, false,
                 mPkList, mDdoNames, mDistrictNames);
         Rview = findViewById(R.id.recyclerViewado);
@@ -128,7 +131,7 @@ public class adoListofDistrict extends AppCompatActivity {
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, ado_list, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                //view.setBackground(getResources().getDrawable(R.drawable.data_background));
+                //relativeLayout.setBackground(getResources().getDrawable(R.drawable.data_background));
 
 
                 Log.d(TAG, "onResponse: sizes"+username.size()+userinfo.size());
@@ -142,8 +145,8 @@ public class adoListofDistrict extends AppCompatActivity {
                         recyclerViewAdater.mShowShimmer = false;
                         recyclerViewAdater.notifyDataSetChanged();
 
-                        view.setBackground(getResources().getDrawable(R.mipmap.no_entry_background));
-                        //view.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
+                        relativeLayout.setBackground(getResources().getDrawable(R.mipmap.no_entry_background));
+                        //relativeLayout.getView().setBackground(getActivity().getResources().getDrawable(R.drawable.no_entry_background));
                     }
                     for (int i = 0; i < resultsArray.length(); i++) {
                         JSONObject singleObject = resultsArray.getJSONObject(i);
@@ -195,7 +198,7 @@ public class adoListofDistrict extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NoConnectionError)
-                    Toast.makeText(adoListofDistrict.this, "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Check Your Internt Connection Please!", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onErrorResponse: " + error);
             }
         }) {
@@ -290,7 +293,7 @@ public class adoListofDistrict extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NoConnectionError)
-                    Toast.makeText(adoListofDistrict.this, "Check Your Internt Connection Please!",
+                    Toast.makeText(getApplicationContext(), "Check Your Internt Connection Please!",
                             Toast.LENGTH_SHORT).show();
                 isNextBusy = false;
             }
@@ -337,5 +340,11 @@ public class adoListofDistrict extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }

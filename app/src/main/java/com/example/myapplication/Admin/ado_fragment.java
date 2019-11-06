@@ -157,6 +157,8 @@ public class ado_fragment extends Fragment {
                 for(int i=0;i<response.length();i++){
                     try {
                         JSONObject singleObject = response.getJSONObject(i);
+                        if (singleObject.getString("district").equalsIgnoreCase("gurugram"))
+                            continue;
                         mdistrictlist.add(singleObject.getString("district"));
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -173,7 +175,7 @@ public class ado_fragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(),"something went wrong",Toast.LENGTH_LONG);
+                Toast.makeText(getActivity(),"something went wrong",Toast.LENGTH_LONG).show();
 
             }
         }){
