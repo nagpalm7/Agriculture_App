@@ -243,7 +243,10 @@ public class count_fragment extends Fragment {
         legend.setCustom(legendEntries);
         pieDataSet=new PieDataSet(val,"");
        // pie.setDrawHoleEnabled(false);
-        pieDataSet.setValueTextSize(12);
+        pieDataSet.setValueTextSize(15);
+        pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+
+      //  pieDataSet.setValueTextColor(getActivity().getResources().getColor(R.color.peach));
         pieDataSet.setColors(colors);
         pie.getDescription().setText("");
 
@@ -356,7 +359,9 @@ public class count_fragment extends Fragment {
         legend.setCustom(legendEntries);
 
         pieDataSet=new PieDataSet(val,"");
-        pieDataSet.setValueTextSize(12);
+        pieDataSet.setValueTextSize(15);
+        pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+       // pieDataSet.setValueTextColor(getActivity().getResources().getColor(R.color.peach));
         pieDataSet.setColors(colors);
         pie.getDescription().setText("");
 

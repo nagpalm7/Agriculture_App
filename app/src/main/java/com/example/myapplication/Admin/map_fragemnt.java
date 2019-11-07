@@ -103,7 +103,7 @@ public class map_fragemnt extends Fragment {
                 .setCancelable(false).build();
         dialog.show();
         next = url_assigned;
-        final LinearLayout bottomsheetLayout = view.findViewById(R.id.map_bottom_sheet);
+      /*  final LinearLayout bottomsheetLayout = view.findViewById(R.id.map_bottom_sheet);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             bottomsheetLayout.setOutlineProvider(new ViewOutlineProvider() {
                 @Override
@@ -112,10 +112,11 @@ public class map_fragemnt extends Fragment {
                 }
             });
             bottomsheetLayout.setClipToOutline(true);
-        }
+        }   */
         pendingView = view.findViewById(R.id.pending_count);
         ongoingView = view.findViewById(R.id.ongoing_count);
         completedView = view.findViewById(R.id.completed_count);
+
 
         isUpdateAvail();
 
@@ -218,6 +219,16 @@ public class map_fragemnt extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+           /*   try {
+                  int pending=Integer.valueOf(response.getString("pending_count"));
+                  int ongoing=Integer.valueOf(response.getString("ongoing_count"));
+                  int completed=Integer.valueOf(response.getString("completed_count"));
+                 String total = String.valueOf(pending+ongoing+completed);
+                  counttotal.setText(total);
+
+              } catch (JSONException e)  {
+                  e.printStackTrace();
+              } */
 
 
             }
