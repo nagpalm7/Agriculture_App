@@ -48,9 +48,13 @@ public class Count_Adapter extends RecyclerView.Adapter<Count_Adapter.MyviewHold
         holder.pendingval2.setText(pending.get(position).toString());
         holder.ongoingval2.setText(ongoing.get(position).toString());
         holder.completedval2.setText(completed.get(position).toString());
+        holder.setIsRecyclable(true);
         if(position%2==0){
            // holder.linearcount.setBackgroundColor(707070);
-            holder.linearcount.setBackgroundColor(context.getResources().getColor(R.color.default_grey));
+            holder.linearcount.setBackgroundColor(context.getResources().getColor(R.color.light_grey));
+        }
+        else{
+            holder.linearcount.setBackgroundColor(context.getResources().getColor(R.color.white));
         }
 
     }
