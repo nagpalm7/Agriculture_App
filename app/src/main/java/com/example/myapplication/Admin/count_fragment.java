@@ -204,13 +204,14 @@ public class count_fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String url = "http://18.224.202.135/api/count-reports/";
-                Calendar c= Calendar.getInstance();
+              /*  Calendar c= Calendar.getInstance();
                 int day=c.get(Calendar.DAY_OF_MONTH);
                 int month=c.get(Calendar.MONTH);
-                int year=c.get(Calendar.YEAR);
-                String date = year + "-" + (month + 1) + "-" + day;
+                int year=c.get(Calendar.YEAR); */
+                String date = year+"-"+(month + 1)+"-"+day;
                 btndate.setText(date);
                 getData(url);
+               // updateUI();
             }
         });
         return view;
@@ -241,7 +242,7 @@ public class count_fragment extends Fragment {
 
         Legend legend=pie.getLegend();
         legend.setCustom(legendEntries);
-        pieDataSet=new PieDataSet(val,"");
+        PieDataSet pieDataSet=new PieDataSet(val,"");
        // pie.setDrawHoleEnabled(false);
         pieDataSet.setValueTextSize(15);
         pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
@@ -250,7 +251,7 @@ public class count_fragment extends Fragment {
         pieDataSet.setColors(colors);
         pie.getDescription().setText("");
 
-        pieData = new PieData(pieDataSet);
+        PieData pieData = new PieData(pieDataSet);
         pie.setData(pieData);
       //  pie.setDrawEntryLabels(false);
         pie.animateXY(2000,2000);
@@ -270,7 +271,7 @@ public class count_fragment extends Fragment {
         pending.clear();
         ongoing.clear();
         completed.clear();
-        pieData.clearValues();
+       // pieData.clearValues();
         JsonObjectRequest json= new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -358,14 +359,14 @@ public class count_fragment extends Fragment {
         Legend legend=pie.getLegend();
         legend.setCustom(legendEntries);
 
-        pieDataSet=new PieDataSet(val,"");
+        PieDataSet pieDataSet=new PieDataSet(val,"");
         pieDataSet.setValueTextSize(15);
         pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
        // pieDataSet.setValueTextColor(getActivity().getResources().getColor(R.color.peach));
         pieDataSet.setColors(colors);
         pie.getDescription().setText("");
 
-        pieData = new PieData(pieDataSet);
+        PieData pieData = new PieData(pieDataSet);
         pieData.addDataSet(pieDataSet);
         pie.setData(pieData);
         pie.animateXY(2000,2000);
