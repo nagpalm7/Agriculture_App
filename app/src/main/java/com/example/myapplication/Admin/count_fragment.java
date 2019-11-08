@@ -372,6 +372,7 @@ public class count_fragment extends Fragment {
         }
 
         Legend legend=pie.getLegend();
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         legend.setCustom(legendEntries);
 
         PieDataSet pieDataSet=new PieDataSet(val,"");
