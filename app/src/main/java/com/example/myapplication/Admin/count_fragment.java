@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +36,6 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.json.JSONObject;
 
@@ -145,6 +143,7 @@ public class count_fragment extends Fragment {
                     if(cp>0) {
                         val.add(new PieEntry(cp,""));
                     }
+                    Log.d("PIE", "onResponse: VALUES " + pen_c + " " + ong_c + " " + cp);
                     totalPendingTextView.setText(String.valueOf(pen_c));
                     totalOngoingTextView.setText(String.valueOf(ong_c));
                     totalCompletedTextView.setText(String.valueOf(cp));
@@ -289,6 +288,7 @@ public class count_fragment extends Fragment {
                     if(cp>0) {
                         val.add(new PieEntry(cp,""));
                     }
+                    Log.d("PIE", "onResponse: VALUES " + pen_c + " " + ong_c + " " + cp);
                     totalPendingTextView.setText(String.valueOf(pen_c));
                     totalOngoingTextView.setText(String.valueOf(ong_c));
                     totalCompletedTextView.setText(String.valueOf(cp));

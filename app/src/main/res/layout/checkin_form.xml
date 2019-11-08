@@ -335,7 +335,7 @@
 
                     <EditText
                         android:id="@+id/amount_edittext"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:background="@android:color/transparent"
                         android:inputType="number" />
@@ -373,33 +373,36 @@
                     android:weightSum="2"
                     android:orientation="horizontal">
 
-                    <RelativeLayout
+                    <!--<RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="1">-->
                     <RadioButton
                         android:id="@+id/fire_radio"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:onClick="FireRadioButtonClicked"
+                        android:layout_marginLeft="16dp"
                         android:text="FIRE"
                         android:textColor="@color/colorPrimaryDark" />
-                    </RelativeLayout>
+                    <!--</RelativeLayout>-->
 
-                    <RelativeLayout
+                    <!--<RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="1">-->
                     <RadioButton
                         android:id="@+id/no_fire_radio"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:text="NO FIRE"
                         android:onClick="FireRadioButtonClicked"
                         android:textColor="@color/colorPrimaryDark" />
-                    </RelativeLayout>
+                    <!--</RelativeLayout>-->
                 </RadioGroup>
 
             </RelativeLayout>
@@ -417,7 +420,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                >
 
                 <RadioGroup
                     android:id="@+id/radio_group"
@@ -426,33 +430,36 @@
                     android:weightSum="2"
                     android:orientation="horizontal">
 
-                    <RelativeLayout
+                    <!--RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="1">-->
 
                         <RadioButton
                             android:id="@+id/rbowner"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:text="OWNERSHIP"
+                            android:layout_marginLeft="16dp"
                             android:textColor="@color/colorPrimaryDark" />
-                    </RelativeLayout>
+                    <!--</RelativeLayout>-->
 
-                    <RelativeLayout
+                    <!--<RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="1">-->
 
                         <RadioButton
                             android:id="@+id/rblease"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:text="LEASE"
                             android:textColor="@color/colorPrimaryDark" />
-                    </RelativeLayout>
+                    <!--</RelativeLayout>-->
                 </RadioGroup>
 
             </RelativeLayout>
