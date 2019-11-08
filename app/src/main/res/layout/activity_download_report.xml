@@ -74,7 +74,7 @@
             android:layout_marginTop="8dp"
             android:drawableRight="@drawable/ic_arrow_drop_down"
             android:maxLength="10"
-            android:text="01-01-19XX" />
+            android:text="01-01-20XX" />
 
 
     </LinearLayout>
