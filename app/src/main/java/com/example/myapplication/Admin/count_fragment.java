@@ -35,9 +35,12 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.json.JSONObject;
 
@@ -104,7 +107,7 @@ public class count_fragment extends Fragment {
         final SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
 
-        date = year + "-" + (month + 1) + "-" + (day - 1);
+        date = year+"-"+(month + 1)+"-"+(day - 1);
         btndate.setText(date);
         URL="http://18.224.202.135/api/count-reports/?date="+date;
 
@@ -204,13 +207,14 @@ public class count_fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String url = "http://18.224.202.135/api/count-reports/";
-                Calendar c= Calendar.getInstance();
+              /*  Calendar c= Calendar.getInstance();
                 int day=c.get(Calendar.DAY_OF_MONTH);
                 int month=c.get(Calendar.MONTH);
-                int year=c.get(Calendar.YEAR);
-                String date = year + "-" + (month + 1) + "-" + day;
+                int year=c.get(Calendar.YEAR); */
+                String date = year+"-"+(month + 1)+"-"+day;
                 btndate.setText(date);
                 getData(url);
+               // updateUI();
             }
         });
         return view;
@@ -240,17 +244,29 @@ public class count_fragment extends Fragment {
         }
 
         Legend legend=pie.getLegend();
+
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         legend.setCustom(legendEntries);
-        pieDataSet=new PieDataSet(val,"");
+
+        class IntValue extends ValueFormatter implements IValueFormatter{
+
+            @Override
+            public String getFormattedValue(float value , Entry entry , int dataSetIndex , ViewPortHandler viewPortHandler) {
+                return String.valueOf((int)value);
+            }
+        }
+
+        PieDataSet pieDataSet=new PieDataSet(val,"");
        // pie.setDrawHoleEnabled(false);
         pieDataSet.setValueTextSize(15);
+        pieDataSet.setValueFormatter(new IntValue());
         pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
 
       //  pieDataSet.setValueTextColor(getActivity().getResources().getColor(R.color.peach));
         pieDataSet.setColors(colors);
         pie.getDescription().setText("");
 
-        pieData = new PieData(pieDataSet);
+        PieData pieData = new PieData(pieDataSet);
         pie.setData(pieData);
       //  pie.setDrawEntryLabels(false);
         pie.animateXY(2000,2000);
@@ -270,7 +286,7 @@ public class count_fragment extends Fragment {
         pending.clear();
         ongoing.clear();
         completed.clear();
-        pieData.clearValues();
+       // pieData.clearValues();
         JsonObjectRequest json= new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -356,16 +372,17 @@ public class count_fragment extends Fragment {
         }
 
         Legend legend=pie.getLegend();
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         legend.setCustom(legendEntries);
 
-        pieDataSet=new PieDataSet(val,"");
+        PieDataSet pieDataSet=new PieDataSet(val,"");
         pieDataSet.setValueTextSize(15);
         pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
        // pieDataSet.setValueTextColor(getActivity().getResources().getColor(R.color.peach));
         pieDataSet.setColors(colors);
         pie.getDescription().setText("");
 
-        pieData = new PieData(pieDataSet);
+        PieData pieData = new PieData(pieDataSet);
         pieData.addDataSet(pieDataSet);
         pie.setData(pieData);
         pie.animateXY(2000,2000);
