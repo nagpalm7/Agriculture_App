@@ -35,9 +35,12 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.json.JSONObject;
 
@@ -104,7 +107,7 @@ public class count_fragment extends Fragment {
         final SharedPreferences preferences = getActivity().getSharedPreferences("tokenFile", Context.MODE_PRIVATE);
         token = preferences.getString("token", "");
 
-        date = year + "-" + (month + 1) + "-" + (day - 1);
+        date = year+"-"+(month + 1)+"-"+(day - 1);
         btndate.setText(date);
         URL="http://18.224.202.135/api/count-reports/?date="+date;
 
@@ -241,10 +244,22 @@ public class count_fragment extends Fragment {
         }
 
         Legend legend=pie.getLegend();
+
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         legend.setCustom(legendEntries);
+
+        class IntValue extends ValueFormatter implements IValueFormatter{
+
+            @Override
+            public String getFormattedValue(float value , Entry entry , int dataSetIndex , ViewPortHandler viewPortHandler) {
+                return String.valueOf((int)value);
+            }
+        }
+
         PieDataSet pieDataSet=new PieDataSet(val,"");
        // pie.setDrawHoleEnabled(false);
         pieDataSet.setValueTextSize(15);
+        pieDataSet.setValueFormatter(new IntValue());
         pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
 
       //  pieDataSet.setValueTextColor(getActivity().getResources().getColor(R.color.peach));
