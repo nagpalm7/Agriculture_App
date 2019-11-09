@@ -296,6 +296,8 @@ public class count_fragment extends Fragment {
                     int pen_c=Integer.valueOf(object.getString("pending_count"));
                     int ong_c=Integer.valueOf(object.getString("ongoing_count"));
                     int cp=Integer.valueOf(object.getString("completed_count"));
+                    val.clear();
+                    Log.d("clear","OnResponse "+val);
                     if(pen_c>0) {
                         val.add(new PieEntry(pen_c,""));
                     }
@@ -305,6 +307,7 @@ public class count_fragment extends Fragment {
                     if(cp>0) {
                         val.add(new PieEntry(cp,""));
                     }
+                    Log.d("val","OnResponse value"+ val);
                     totalPendingTextView.setText(String.valueOf(pen_c));
                     totalOngoingTextView.setText(String.valueOf(ong_c));
                     totalCompletedTextView.setText(String.valueOf(cp));
@@ -318,7 +321,7 @@ public class count_fragment extends Fragment {
                     {
                         String place = itr.next();
                         Object districtObject = resultsObject.get(place);
-                        Log.d("Logs", "onResponse: place" + place + "object " + districtObject);
+                      //  Log.d("Logs", "onResponse: place" + place + "object " + districtObject);
                         int pendingCount = ((JSONObject)districtObject).getInt("pending");
                         int ongoingCount = ((JSONObject)districtObject).getInt("ongoing");
                         int completedCount = ((JSONObject)districtObject).getInt("completed");
@@ -326,6 +329,7 @@ public class count_fragment extends Fragment {
                         pending.add(pendingCount);
                         ongoing.add(ongoingCount);
                         completed.add(completedCount);
+                        Log.d("counts", "onResponse: value" + val);
                     }
                     updateUI();
                 } catch (Exception e) {
