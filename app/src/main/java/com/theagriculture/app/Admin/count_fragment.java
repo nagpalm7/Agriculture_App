@@ -37,6 +37,7 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.theagriculture.app.R;
 
@@ -213,6 +214,7 @@ public class count_fragment extends Fragment {
                 String date = year+"-"+(month + 1)+"-"+day;
                 btndate.setText(date);
                 getData(url);
+               // updateUI();
             }
         });
         return view;
