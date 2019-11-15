@@ -303,6 +303,7 @@ public class pending_fragment extends Fragment {
                     } catch (JSONException e) {
                         Log.e(TAG, "onResponse: " + e.getLocalizedMessage());
                         e.printStackTrace();
+                        isNextBusy = false;
                     }
                 }
             }, new Response.ErrorListener() {
