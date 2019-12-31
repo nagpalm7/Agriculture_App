@@ -10,7 +10,8 @@
     <color name="table_row_cells">#9696FF</color>
     <color name="white">#ffffff</color>
     <color name="light_grey">#CCCBCB</color>
-    <color name="pending">#95A57C</color>
-    <color name="ongoing">#405980</color>
-    <color name="completed">#B33050</color>
+    <color name="grey_bar">#DFDFDF</color>
+    <color name="pending">#5E6B50</color>
+    <color name="ongoing">#324664</color>
+    <color name="completed">#922740</color>
 </resources>

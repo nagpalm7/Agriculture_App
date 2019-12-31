@@ -330,7 +330,7 @@ public class AdminActivity extends AppCompatActivity
             getSupportActionBar().setTitle("HOME");
         } else if (id == R.id.district_stat)
         {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new count_fragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new Barchart_fragment()).commit();
             getSupportActionBar().setTitle("DISTRICT STATS");
         }
 
